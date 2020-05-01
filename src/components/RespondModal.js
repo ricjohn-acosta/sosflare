@@ -65,10 +65,8 @@ const RespondModal = ({ isOpen }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Transition modal</h2>
-            <p id="transition-modal-description">
-              react-transition-group animates me.
-            </p>
+            <h2>SOS Details</h2>
+            <p>Form here</p>
           </div>
         </Fade>
       </Modal>
