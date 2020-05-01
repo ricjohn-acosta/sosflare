@@ -735,15 +735,17 @@ footer {
 .site-content {
   min-height    : 100%;
   flex-grow     : 1;
-  margin-right  : 20%;
-  margin-left   : 20%;
+  /* margin-right  : 20%;
+  margin-left   : 20%; */
   padding-bottom: 30px;
 }
 
 .divider {
   position   : absolute;
   left       : 50%;
-  top        : 40%;
-  bottom     : 42%;
+  top        : 35%;
+  bottom     : 48%;
   border-left: 1px solid hsl(0, 0%, 93%);
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');

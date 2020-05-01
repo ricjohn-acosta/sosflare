@@ -3,6 +3,7 @@ import store from "./createStore"
 import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
 import { createFirestoreInstance } from "redux-firestore"
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 
 import firebase from "./fire"
 // react-redux-firebase config
@@ -19,6 +20,12 @@ const rrfProps = {
   createFirestoreInstance,
 }
 
+const THEME = createMuiTheme({
+  typography: {
+    fontFamily: "'Roboto', sans-serif"
+  },
+})
+
 // eslint-disable-next-line react/display-name,react/prop-types
 export default ({ element }) => {
   // Instantiating store in `wrapRootElement` handler ensures:
@@ -27,7 +34,7 @@ export default ({ element }) => {
   return (
     <Provider store={store}>
       <ReactReduxFirebaseProvider {...rrfProps}>
-        {element}
+        <MuiThemeProvider theme={THEME}>{element}</MuiThemeProvider>
       </ReactReduxFirebaseProvider>
     </Provider>
   )
