@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid"
 const hub = () => {
   return (
     <Layout>
+
       <HubContainer />
     </Layout>
   )
