@@ -13,7 +13,7 @@ const HubCards = () => {
   const classes = useStyles()
   return (
     <>
-      <Paper className={classes.wrapper}>HUB CARDS</Paper>
+      <Paper className={classes.wrapper} elevation={0}>HUB CARDS</Paper>
     </>
   )
 }
