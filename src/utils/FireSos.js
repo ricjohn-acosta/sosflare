@@ -102,3 +102,4 @@ export const mrMonsters = [
   { monster: "Zinogre" },
   { monster: "Zorah Magdaros" },
 ]
+

@@ -1,5 +1,7 @@
 import React from "react"
 import { lrhrMonsters, mrMonsters, formValidation } from "../utils/FireSos.js"
+import { addCard } from "../store/actions/cards"
+import { connect } from "react-redux"
 
 import { Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
@@ -42,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FireSos = () => {
+const FireSos = ({ addCard }) => {
   const classes = useStyles()
   const [platform, setPlatform] = React.useState("")
   const [sessionId, setSessionId] = React.useState("")
@@ -86,22 +88,16 @@ const FireSos = () => {
     setResetMonsters(false)
   }
 
-  const handleSubmit = () => {
-    return console.log(
-      platform,
-      sessionId,
-      rank,
-      monsterType,
-      targetMonster,
-      description
-    )
+  const handleSubmit = e => {
+    e.preventDefault()
+    addCard(platform, sessionId, rank, monsterType, targetMonster, description)
   }
 
   const createMenuItems = () => {
     let array = [
-      <MenuItem value={"Normal"}>Normal</MenuItem>,
-      <MenuItem value={"Tempered"}>Tempered</MenuItem>,
-      <MenuItem value={"Arch Tempered"}>Arch Tempered</MenuItem>,
+      <MenuItem key="1" value={"Normal"}>Normal</MenuItem>,
+      <MenuItem key="2" value={"Tempered"}>Tempered</MenuItem>,
+      <MenuItem key="3" value={"Arch Tempered"}>Arch Tempered</MenuItem>,
     ]
     return array
   }
@@ -109,7 +105,7 @@ const FireSos = () => {
   console.log(resetMonsters)
   return (
     <Paper className={classes.formContainer}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <h2>SOS Details</h2>
 
         <Grid
@@ -174,7 +170,6 @@ const FireSos = () => {
               <br />
             </FormControl>
             <Autocomplete
-              // inputValue={resetMonsters ? targetMonster : ""}
               fullWidth
               disabled={!rank || !monsterType ? true : false}
               options={rank === "MR" ? mrMonsters : lrhrMonsters}
@@ -227,4 +222,27 @@ const FireSos = () => {
   )
 }
 
-export default FireSos
+const mapDispatchToProps = dispatch => {
+  return {
+    addCard: (
+      platform,
+      sessionId,
+      rank,
+      monsterType,
+      targetMonster,
+      description
+    ) =>
+      dispatch(
+        addCard(
+          platform,
+          sessionId,
+          rank,
+          monsterType,
+          targetMonster,
+          description
+        )
+      ),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(FireSos)

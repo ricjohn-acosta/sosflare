@@ -104,5 +104,5 @@ const mapStateToProps = ({ firestore, test }) => {
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => [{ collection: "test" }])
+  // firestoreConnect(props => [{ collection: "test" }])
 )(IndexPage)

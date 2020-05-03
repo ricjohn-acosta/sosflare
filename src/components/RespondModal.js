@@ -62,7 +62,9 @@ const RespondModal = () => {
         }}
       >
         <Fade in={open}>
-          <FireSos />
+          <div>
+            <FireSos />
+          </div>
         </Fade>
       </Modal>
     </>

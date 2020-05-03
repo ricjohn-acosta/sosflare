@@ -5,7 +5,7 @@ import { ReactReduxFirebaseProvider } from "react-redux-firebase"
 import { createFirestoreInstance } from "redux-firestore"
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 
-import firebase from "./fire"
+import firebase from "../../fire"
 // react-redux-firebase config
 const rrfConfig = {
   userProfile: "users",
