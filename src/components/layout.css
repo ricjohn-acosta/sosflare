@@ -743,8 +743,8 @@ footer {
 .divider {
   position   : absolute;
   left       : 50%;
-  top        : 35%;
-  bottom     : 48%;
+  top        : 40%;
+  bottom     : 45%;
   border-left: 1px solid hsl(0, 0%, 93%);
 }
 

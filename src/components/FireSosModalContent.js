@@ -46,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 const FireSosModalContent = ({ addCard }) => {
   const classes = useStyles()
+  const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
   const [sessionId, setSessionId] = React.useState("")
   const [rank, setRank] = React.useState("")
@@ -53,6 +54,10 @@ const FireSosModalContent = ({ addCard }) => {
   const [monsterType, setMonsterType] = React.useState("")
   const [targetMonster, setTargetMonster] = React.useState("")
   const [description, setDescription] = React.useState("")
+
+  const handleUsername = event => {
+    setUsername(event.target.value)
+  }
 
   const handlePlatform = event => {
     setPlatform(event.target.value)
@@ -95,9 +100,15 @@ const FireSosModalContent = ({ addCard }) => {
 
   const createMenuItems = () => {
     let array = [
-      <MenuItem key="1" value={"Normal"}>Normal</MenuItem>,
-      <MenuItem key="2" value={"Tempered"}>Tempered</MenuItem>,
-      <MenuItem key="3" value={"Arch Tempered"}>Arch Tempered</MenuItem>,
+      <MenuItem key="1" value={"Normal"}>
+        Normal
+      </MenuItem>,
+      <MenuItem key="2" value={"Tempered"}>
+        Tempered
+      </MenuItem>,
+      <MenuItem key="3" value={"Arch Tempered"}>
+        Arch Tempered
+      </MenuItem>,
     ]
     return array
   }
@@ -115,6 +126,27 @@ const FireSosModalContent = ({ addCard }) => {
           spacing={5}
         >
           <Grid item sm={12}>
+            {/*
+            USERNAME FIELD
+            */}
+            <FormControl
+              className={classes.formControl}
+              variant="filled"
+              size="small"
+            >
+              <TextField
+                label="Username"
+                placeholder="Enter a username"
+                variant="filled"
+                size="small"
+                onChange={handleUsername}
+                inputProps={{ maxLength: 15 }}
+              />
+            </FormControl>
+            &nbsp;
+            {/*
+            PLATFORM FIELD
+            */}
             <FormControl
               className={classes.formControl}
               variant="filled"
@@ -128,15 +160,23 @@ const FireSosModalContent = ({ addCard }) => {
               </Select>
               <br />
             </FormControl>
+            {/*
+            SESSION FIELD
+            */}
             <TextField
               label="Session ID"
               placeholder="Enter your current session ID"
               variant="filled"
               fullWidth
               onChange={handleSessionId}
+              inputProps={{ maxLength: 30 }}
             />
           </Grid>
+          <hr />
           <Grid item sm={12}>
+            {/*
+            RANK FIELD
+            */}
             <FormControl
               className={classes.formControl}
               variant="filled"
@@ -151,6 +191,9 @@ const FireSosModalContent = ({ addCard }) => {
               <br />
             </FormControl>
             &nbsp;
+            {/*
+            MONSTER TYPE FIELD
+            */}
             <FormControl
               disabled={!rank ? true : false}
               className={classes.formControl}
@@ -169,6 +212,9 @@ const FireSosModalContent = ({ addCard }) => {
               </Select>
               <br />
             </FormControl>
+            {/*
+            TARGET MONSTER FIELD
+            */}
             <Autocomplete
               fullWidth
               disabled={!rank || !monsterType ? true : false}
@@ -185,6 +231,10 @@ const FireSosModalContent = ({ addCard }) => {
               )}
             />
           </Grid>
+          <hr />
+          {/*
+            DESCRIPTION FIELD
+            */}
           <Grid item sm={12}>
             <TextField
               onChange={handleDescription}
@@ -194,18 +244,24 @@ const FireSosModalContent = ({ addCard }) => {
               fullWidth
               multiline
               rows={10}
+              inputProps={{ maxLength: 350 }}
             />
           </Grid>
           <Grid item sm={12} />
         </Grid>
 
-        {!platform ||
+        {!username ||
+        !platform ||
         !sessionId ||
         !rank ||
         !monsterType ||
         !targetMonster ||
         !description ? (
-          <Tooltip title="Please fill up the form" placement="bottom" enterTouchDelay={1}>
+          <Tooltip
+            title="Please fill up the form"
+            placement="bottom"
+            enterTouchDelay={1}
+          >
             <div>
               <Button disabled fullWidth>
                 FIRE SOS
