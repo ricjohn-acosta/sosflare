@@ -20,10 +20,11 @@ const HubContainer = () => {
     <>
       <div className={classes.wrapper}>
         <Grid container direction="row">
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} lg={4}>
             <HubBar />
+            <br />
           </Grid>
-          <Grid item xs={12} sm={8}>
+          <Grid item xs={12} lg={8}>
             <HubCards />
           </Grid>
         </Grid>

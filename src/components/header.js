@@ -62,9 +62,7 @@ const Header = ({ siteTitle }) => {
               size="large"
               variant="text"
             >
-              <Button color="inherit">
-                <Typography className="login">Login</Typography>
-              </Button>
+              <Button color="inherit">Login</Button>
               <Button color="inherit">Signup</Button>
             </ButtonGroup>
           </Grid>

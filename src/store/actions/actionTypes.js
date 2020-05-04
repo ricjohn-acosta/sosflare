@@ -1,0 +1,5 @@
+// CARD ACTIONS
+export const ADD_CARD_START = "ADD_CARD_START"
+export const ADD_CARD_SUCCESS = "ADD_CARD_SUCCESS"
+export const ADD_CARD_FAIL = "ADD_CARD_FAIL"
+export const ADD_CARD_END = "ADD_CARD_END"

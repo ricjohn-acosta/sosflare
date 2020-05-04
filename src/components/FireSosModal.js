@@ -1,33 +1,39 @@
 import React from "react"
+import FireSosModalContent from "./FireSosModalContent"
+
 import Modal from "@material-ui/core/Modal"
 import Backdrop from "@material-ui/core/Backdrop"
 import Fade from "@material-ui/core/Fade"
 import { makeStyles } from "@material-ui/core/styles"
 import Button from "@material-ui/core/Button"
+import { Paper } from "@material-ui/core"
 
 const useStyles = makeStyles(theme => ({
   modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    borderRadius: "100px",
   },
   fireSosBtn: {
-    float: "right",
-    right: "5%",
-    padding: "50px",
-    color: "black",
-    backgroundColor: "#d6f0fd",
-    overflow: "hidden",
+    [theme.breakpoints.down("sm")]: {
+      color: "black",
+      backgroundColor: "#d6f0fd",
+      overflow: "hidden",
+    },
+
+    [theme.breakpoints.up("sm")]: {
+      float: "right",
+      right: "5%",
+      padding: "50px",
+      color: "black",
+      backgroundColor: "#d6f0fd",
+      overflow: "hidden",
+    },
   },
 }))
 
-const RespondModal = ({ isOpen }) => {
+const FireSosModal = () => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => {
@@ -64,9 +70,8 @@ const RespondModal = ({ isOpen }) => {
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper}>
-            <h2>SOS Details</h2>
-            <p>Form here</p>
+          <div>
+            <FireSosModalContent />
           </div>
         </Fade>
       </Modal>
@@ -74,4 +79,4 @@ const RespondModal = ({ isOpen }) => {
   )
 }
 
-export default RespondModal
+export default FireSosModal
