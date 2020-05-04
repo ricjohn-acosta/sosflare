@@ -3,22 +3,16 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
 import HubCard from "./HubCard"
-
+import moment from "moment"
 import Grid from "@material-ui/core/Grid"
 import { Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-// import Card from "@material-ui/core/Card"
-// import CardActionArea from "@material-ui/core/CardActionArea"
-// import CardActions from "@material-ui/core/CardActions"
-// import CardContent from "@material-ui/core/CardContent"
-// import CardMedia from "@material-ui/core/CardMedia"
-// import Button from "@material-ui/core/Button"
-// import Typography from "@material-ui/core/Typography"
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
     [theme.breakpoints.up("lg")]: {
       minHeight: "70vh",
+      padding: "50px",
     },
     [theme.breakpoints.down("md")]: {
       minHeight: "70vh",
@@ -34,45 +28,31 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards }) => {
-  const makeCard = () => {
-    if (requested && cards) {
-      Object.values(cards).map(card => {
-        return (
-          <>
-            <HubCard
-              owner={card.owner}
-              description={card.description}
-              monsterType={card.monster_type}
-              platform={card.platform}
-              rank={card.rank}
-              sessionId={card.session_id}
-              targetMonster={card.target_monster}
-            />
-          </>
-        )
-      })
-      console.log(Object.values(cards))
-    }
-  }
+const HubCards = ({ requested, cards, assets }) => {
   const classes = useStyles()
+  const currentTime = moment()
 
+  const getMonsterImage = (targetMonster) => {
+    
+  }
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
         <Grid container direction="row" spacing={4}>
-          {requested && cards
+          {requested && cards && assets
             ? Object.values(cards).map(card => {
                 return (
                   <>
                     <HubCard
-                      owner={card.owner}
+                      username={card.username}
                       description={card.description}
                       monsterType={card.monster_type}
                       platform={card.platform}
                       rank={card.rank}
                       sessionId={card.session_id}
                       targetMonster={card.target_monster}
+                      monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
+                      startTime={currentTime.from(card.date_created, true)}
                     />
                   </>
                 )
@@ -84,14 +64,15 @@ const HubCards = ({ requested, cards }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, cards }) => {
+const mapStateToProps = ({ firestore }) => {
   return {
     cards: firestore.data.cards,
+    assets: firestore.data.assets,
     requested: firestore.status.requested,
   }
 }
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => ["cards"])
+  firestoreConnect(props => [{ collection: "cards" }, { collection: "assets" }])
 )(HubCards)

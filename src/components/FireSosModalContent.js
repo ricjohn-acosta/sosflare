@@ -2,6 +2,7 @@ import React from "react"
 import { lrhrMonsters, mrMonsters, formValidation } from "../utils/FireSos.js"
 import { addCard } from "../store/actions/cards"
 import { connect } from "react-redux"
+import { Link } from "gatsby"
 
 import { Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
@@ -41,6 +42,9 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(0),
     minWidth: 150,
+  },
+  link: {
+    textDecoration: "none",
   },
 }))
 
@@ -95,7 +99,15 @@ const FireSosModalContent = ({ addCard }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    addCard(platform, sessionId, rank, monsterType, targetMonster, description)
+    addCard(
+      username,
+      platform,
+      sessionId,
+      rank,
+      monsterType,
+      targetMonster,
+      description
+    )
   }
 
   const createMenuItems = () => {
@@ -269,9 +281,25 @@ const FireSosModalContent = ({ addCard }) => {
             </div>
           </Tooltip>
         ) : (
-          <Button type="submit" fullWidth>
-            FIRE SOS
-          </Button>
+          <Link to="/hub" className={classes.link}>
+            <Button
+              type="submit"
+              onClick={() => {
+                addCard(
+                  username,
+                  platform,
+                  sessionId,
+                  rank,
+                  monsterType,
+                  targetMonster,
+                  description
+                )
+              }}
+              fullWidth
+            >
+              FIRE SOS
+            </Button>
+          </Link>
         )}
       </form>
     </Paper>
@@ -281,6 +309,7 @@ const FireSosModalContent = ({ addCard }) => {
 const mapDispatchToProps = dispatch => {
   return {
     addCard: (
+      username,
       platform,
       sessionId,
       rank,
@@ -290,6 +319,7 @@ const mapDispatchToProps = dispatch => {
     ) =>
       dispatch(
         addCard(
+          username,
           platform,
           sessionId,
           rank,
