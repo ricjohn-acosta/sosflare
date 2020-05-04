@@ -1,5 +1,5 @@
 import React from "react"
-import FireSos from "./FireSos"
+import FireSosModalContent from "./FireSosModalContent"
 
 import Modal from "@material-ui/core/Modal"
 import Backdrop from "@material-ui/core/Backdrop"
@@ -16,16 +16,24 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "100px",
   },
   fireSosBtn: {
-    float: "right",
-    right: "5%",
-    padding: "50px",
-    color: "black",
-    backgroundColor: "#d6f0fd",
-    overflow: "hidden",
+    [theme.breakpoints.down("sm")]: {
+      color: "black",
+      backgroundColor: "#d6f0fd",
+      overflow: "hidden",
+    },
+
+    [theme.breakpoints.up("sm")]: {
+      float: "right",
+      right: "5%",
+      padding: "50px",
+      color: "black",
+      backgroundColor: "#d6f0fd",
+      overflow: "hidden",
+    },
   },
 }))
 
-const RespondModal = () => {
+const FireSosModal = () => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => {
@@ -63,7 +71,7 @@ const RespondModal = () => {
       >
         <Fade in={open}>
           <div>
-            <FireSos />
+            <FireSosModalContent />
           </div>
         </Fade>
       </Modal>
@@ -71,4 +79,4 @@ const RespondModal = () => {
   )
 }
 
-export default RespondModal
+export default FireSosModal

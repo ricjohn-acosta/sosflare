@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FireSos = ({ addCard }) => {
+const FireSosModalContent = ({ addCard }) => {
   const classes = useStyles()
   const [platform, setPlatform] = React.useState("")
   const [sessionId, setSessionId] = React.useState("")
@@ -205,7 +205,7 @@ const FireSos = ({ addCard }) => {
         !monsterType ||
         !targetMonster ||
         !description ? (
-          <Tooltip title="Please fill up the form" placement="bottom">
+          <Tooltip title="Please fill up the form" placement="bottom" enterTouchDelay={1}>
             <div>
               <Button disabled fullWidth>
                 FIRE SOS
@@ -245,4 +245,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(FireSos)
+export default connect(null, mapDispatchToProps)(FireSosModalContent)
