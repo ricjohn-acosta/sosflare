@@ -32,12 +32,11 @@ const HubCards = ({ requested, cards }) => {
   const classes = useStyles()
   const currentTime = moment()
 
-
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
         <Grid container direction="row" spacing={4}>
-          {requested && cards && assets
+          {requested && cards
             ? Object.values(cards).map(card => {
                 return (
                   <>
