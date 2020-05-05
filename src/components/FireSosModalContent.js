@@ -118,7 +118,7 @@ const FireSosModalContent = ({ addCard }) => {
       <MenuItem key="2" value={"Tempered"}>
         Tempered
       </MenuItem>,
-      <MenuItem key="3" value={"Arch Tempered"}>
+      <MenuItem key="3" label={"Arch tempered"} value={"ArchTempered"}>
         Arch Tempered
       </MenuItem>,
     ]

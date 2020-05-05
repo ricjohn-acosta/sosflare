@@ -18,6 +18,7 @@ import VpnKeyIcon from "@material-ui/icons/VpnKey"
 import { ListItemIcon } from "@material-ui/core"
 import FlareIcon from "@material-ui/icons/Flare"
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
+import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles(theme => ({
   cardWrapper: {
@@ -39,6 +40,9 @@ const useStyles = makeStyles(theme => ({
   },
   rank: {
     textAlign: "center",
+    paddingTop: "5px",
+    position: "relative",
+    right: "20%",
   },
   icons: {
     marginLeft: "10px",
@@ -51,6 +55,21 @@ const useStyles = makeStyles(theme => ({
   card: {
     display: "flex",
   },
+  consoleIcons: {
+    width: "35px",
+    height: "35px",
+    margin: "0px",
+    float: "left",
+  },
+  Normal: {
+    backgroundColor: "#C8C8C8",
+  },
+  Tempered: {
+    backgroundColor: "#9966FF",
+  },
+  ArchTempered: {
+    backgroundColor: "#FF9900",
+  },
 }))
 
 const HubCard = ({
@@ -58,66 +77,101 @@ const HubCard = ({
   sessionId,
   targetMonster,
   rank,
+  platform,
   assets,
   requested,
   monsterImage,
+  monsterType,
   startTime,
 }) => {
   const classes = useStyles()
+  const [tooltipState, setTooltipState] = React.useState(false)
   const url = monsterImage
+
+  const handletoolTip = () => {
+    setTooltipState(true)
+  }
+
+  const resetState = () => {
+    setTooltipState(false)
+  }
 
   return (
     <Grid item className={classes.card} xs={12} sm={12} md={4}>
       <Card className={classes.cardWrapper}>
-        <CardContent>
-          <Typography className={classes.rank}>{rank}</Typography>
+        <CardContent className={classes[monsterType]}>
+          <Grid container direction="row">
+            <Grid item sm={3}>
+              <Icon>
+                <img
+                  className={classes.consoleIcons}
+                  src={require(`../images/${platform}.png`)}
+                />
+              </Icon>
+            </Grid>
+            <Grid item sm={9}>
+              <Typography className={classes.rank}>{rank}</Typography>
+            </Grid>
+          </Grid>
         </CardContent>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            src={url}
-            alt="Contemplative Reptile"
-            title="Contemplative Reptile"
-            className={classes.image}
-          />
-          <CardContent className={classes.cardContent}>
-            <Typography gutterBottom variant="h5" component="h2">
-              Target: {targetMonster}
-            </Typography>
-            <Typography variant="body2" color="textPrimary">
-              <List dense disableGutters>
-                <ListItem className={classes.listItem}>
-                  <ListItemIcon className={classes.icons}>
-                    <VpnKeyIcon />
-                  </ListItemIcon>
-                  Session ID:&nbsp;
-                  <Typography variant="body3" color="textSecondary">
-                    {sessionId}
-                  </Typography>
-                </ListItem>
-                <ListItem className={classes.listItem}>
-                  <ListItemIcon className={classes.icons}>
-                    <FlareIcon />
-                  </ListItemIcon>
-                  Flare by :&nbsp;
-                  <Typography variant="body3" color="textSecondary">
-                    {username}
-                  </Typography>
-                </ListItem>
+        <Tooltip title="copied session id!" placement="top-mid" open={tooltipState}>
+          <CardActionArea
+            onClick={() => {
+              navigator.clipboard.writeText(sessionId)
+              handletoolTip()
+            }}
+            onMouseLeave={resetState}
+          >
+            <CardMedia
+              component="img"
+              src={url}
+              alt="Contemplative Reptile"
+              title="Contemplative Reptile"
+              className={classes.image}
+            />
+            <CardContent className={classes.cardContent}>
+              <Typography gutterBottom variant="h5" component="h2">
+                Target: {targetMonster}
+              </Typography>
+              <Typography variant="body2" color="textPrimary">
+                <List dense disableGutters>
+                  <ListItem className={classes.listItem}>
+                    <ListItemIcon className={classes.icons}>
+                      <VpnKeyIcon />
+                    </ListItemIcon>
+                    Session ID:&nbsp;
+                    <Typography variant="body3" color="textSecondary">
+                      {sessionId}
+                    </Typography>
+                  </ListItem>
+                  <ListItem className={classes.listItem}>
+                    <ListItemIcon className={classes.icons}>
+                      <FlareIcon />
+                    </ListItemIcon>
+                    Flare by :&nbsp;
+                    <Typography variant="body3" color="textSecondary">
+                      {username}
+                    </Typography>
+                  </ListItem>
 
-                <ListItem className={classes.listItem}>
-                  <ListItemIcon className={classes.icons}>
-                    <AccessAlarmIcon />
-                  </ListItemIcon>
-                  In session :&nbsp;
-                  <Typography variant="body3" color="textSecondary">
-                    {startTime}
-                  </Typography>
-                </ListItem>
-              </List>
-            </Typography>
-          </CardContent>
-        </CardActionArea>
+                  <ListItem className={classes.listItem}>
+                    <ListItemIcon className={classes.icons}>
+                      <AccessAlarmIcon />
+                    </ListItemIcon>
+                    In session :&nbsp;
+                    <Typography
+                      id="sessionId"
+                      variant="body3"
+                      color="textSecondary"
+                    >
+                      {startTime}
+                    </Typography>
+                  </ListItem>
+                </List>
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </Tooltip>
         <CardContent>
           <Button>See details</Button>
         </CardContent>

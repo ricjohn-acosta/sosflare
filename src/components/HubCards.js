@@ -32,9 +32,7 @@ const HubCards = ({ requested, cards, assets }) => {
   const classes = useStyles()
   const currentTime = moment()
 
-  const getMonsterImage = (targetMonster) => {
-    
-  }
+
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
