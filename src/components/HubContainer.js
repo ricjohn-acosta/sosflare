@@ -11,6 +11,9 @@ const useStyles = makeStyles({
     marginRight: "10%",
     marginLeft: "10%",
   },
+  hubBarContainer: {
+    paddingTop: "25px"
+  }
 })
 
 const HubContainer = () => {
@@ -20,11 +23,12 @@ const HubContainer = () => {
     <>
       <div className={classes.wrapper}>
         <Grid container direction="row">
-          <Grid item xs={12} lg={4}>
+          <Grid className={classes.hubBarContainer}item xs={12} lg={4}>
             <HubBar />
             <br />
           </Grid>
           <Grid item xs={12} lg={8}>
+            
             <HubCards />
           </Grid>
         </Grid>

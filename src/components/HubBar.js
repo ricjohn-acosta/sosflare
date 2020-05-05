@@ -1,6 +1,8 @@
 import React from "react"
+import HubBarTools from "./HubBarTools"
 import { Paper, Typography } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
+
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -8,6 +10,7 @@ const useStyles = makeStyles(theme => ({
       marginLeft: "100px",
       marginRight: "100px",
       minHeight: "50vh",
+      padding: "25px"
     },
 
     [theme.breakpoints.down("md")]: {
@@ -26,9 +29,9 @@ const useStyles = makeStyles(theme => ({
     },
 
     [theme.breakpoints.down("md")]: {
-      minHeight: "10vh",
-      marginLeft: "150px",
-      marginRight: "150px",
+      minHeight: "5vh",
+      marginLeft: "30px",
+      marginRight: "30px",
       padding: "25px",
       backgroundColor: "#fbfbfb",
     },
@@ -59,7 +62,7 @@ const HubBar = () => {
   return (
     <>
       <Paper className={classes.wrapper}>
-        Search specific owner, Filter by monsters, Filter ascending, Filter descending
+        <HubBarTools/>
       </Paper>
       <br />
       <Paper variant="outlined" className={classes.hint}>
