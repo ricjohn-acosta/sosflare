@@ -180,14 +180,5 @@ const HubCard = ({
   )
 }
 
-const mapStateToProps = ({ firestore }) => {
-  return {
-    assets: firestore.data.assets,
-    requested: firestore.status.requested,
-  }
-}
 
-export default compose(
-  connect(mapStateToProps),
-  firestoreConnect(props => [{ collection: "assets" }])
-)(HubCard)
+export default HubCard

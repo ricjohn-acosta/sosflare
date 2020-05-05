@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards, assets }) => {
+const HubCards = ({ requested, cards }) => {
   const classes = useStyles()
   const currentTime = moment()
 
@@ -65,12 +65,11 @@ const HubCards = ({ requested, cards, assets }) => {
 const mapStateToProps = ({ firestore }) => {
   return {
     cards: firestore.data.cards,
-    assets: firestore.data.assets,
     requested: firestore.status.requested,
   }
 }
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => [{ collection: "cards" }, { collection: "assets" }])
+  firestoreConnect(props => [{ collection: "cards" }])
 )(HubCards)
