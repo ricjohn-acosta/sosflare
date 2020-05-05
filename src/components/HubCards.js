@@ -70,5 +70,11 @@ const mapStateToProps = ({ firestore }) => {
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => [{ collection: "cards" }])
+  firestoreConnect(props => [
+    {
+      collection: "cards",
+      limit: 9,
+      orderBy: ["date_created", "desc"],
+    },
+  ])
 )(HubCards)

@@ -39,10 +39,18 @@ const useStyles = makeStyles(theme => ({
     margin: "0",
   },
   rank: {
-    textAlign: "center",
-    paddingTop: "5px",
-    position: "relative",
-    right: "20%",
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "center",
+      paddingTop: "5px",
+      position: "relative",
+      left: "25vw",
+    },
+    [theme.breakpoints.up("sm")]: {
+      textAlign: "center",
+      paddingTop: "5px",
+      position: "relative",
+      right: "20%",
+    },
   },
   icons: {
     marginLeft: "10px",
@@ -114,7 +122,11 @@ const HubCard = ({
             </Grid>
           </Grid>
         </CardContent>
-        <Tooltip title="copied session id!" placement="top-mid" open={tooltipState}>
+        <Tooltip
+          title="copied session id!"
+          placement="top-mid"
+          open={tooltipState}
+        >
           <CardActionArea
             onClick={() => {
               navigator.clipboard.writeText(sessionId)
@@ -125,8 +137,8 @@ const HubCard = ({
             <CardMedia
               component="img"
               src={url}
-              alt="Contemplative Reptile"
-              title="Contemplative Reptile"
+              alt={targetMonster}
+              title={targetMonster}
               className={classes.image}
             />
             <CardContent className={classes.cardContent}>
@@ -179,6 +191,5 @@ const HubCard = ({
     </Grid>
   )
 }
-
 
 export default HubCard

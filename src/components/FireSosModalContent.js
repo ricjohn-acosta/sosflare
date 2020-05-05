@@ -1,23 +1,18 @@
 import React from "react"
-import { lrhrMonsters, mrMonsters, formValidation } from "../utils/FireSos.js"
+import { lrhrMonsters, mrMonsters } from "../utils/FireSos.js"
 import { addCard } from "../store/actions/cards"
 import { connect } from "react-redux"
 import { Link } from "gatsby"
-
 import { Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-import { ButtonGroup } from "@material-ui/core"
 import Select from "@material-ui/core/Select"
 import InputLabel from "@material-ui/core/InputLabel"
 import MenuItem from "@material-ui/core/MenuItem"
 import FormControl from "@material-ui/core/FormControl"
-import RadioGroup from "@material-ui/core/RadioGroup"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Radio from "@material-ui/core/Radio"
 import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles(theme => ({
@@ -152,7 +147,7 @@ const FireSosModalContent = ({ addCard }) => {
                 variant="filled"
                 size="small"
                 onChange={handleUsername}
-                inputProps={{ maxLength: 15 }}
+                inputProps={{ maxLength: 12 }}
               />
             </FormControl>
             &nbsp;
