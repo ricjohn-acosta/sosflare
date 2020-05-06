@@ -104,6 +104,10 @@ const HubCard = ({
     setTooltipState(false)
   }
 
+  const copyText = () => {
+    navigator.clipboard.writeText(sessionId)
+  }
+
   return (
     <Grid item className={classes.card} xs={12} sm={12} md={4}>
       <Card className={classes.cardWrapper}>
@@ -128,9 +132,7 @@ const HubCard = ({
           open={tooltipState}
         >
           <CardActionArea
-            onClick={() => {
-              handletoolTip()
-            }}
+            onClick={() => {copyText(); handletoolTip()}}
             onMouseLeave={resetState}
           >
             <CardMedia
@@ -152,7 +154,7 @@ const HubCard = ({
                     </ListItemIcon>
                     Session ID:&nbsp;
                     <Typography variant="body3" color="textSecondary">
-                      {sessionId}
+                      <span id="sessionId">{sessionId}</span>
                     </Typography>
                   </ListItem>
                   <ListItem className={classes.listItem}>
@@ -170,11 +172,7 @@ const HubCard = ({
                       <AccessAlarmIcon />
                     </ListItemIcon>
                     In session :&nbsp;
-                    <Typography
-                      id="sessionId"
-                      variant="body3"
-                      color="textSecondary"
-                    >
+                    <Typography variant="body3" color="textSecondary">
                       {startTime}
                     </Typography>
                   </ListItem>

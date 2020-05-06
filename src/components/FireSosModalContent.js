@@ -30,8 +30,9 @@ const useStyles = makeStyles(theme => ({
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
       padding: 0,
-      width: "80vw",
+      width: "100vw",
       height: "80vh",
+      overflowX:"hidden"
     },
     [theme.breakpoints.up("md")]: {
       backgroundColor: theme.palette.background.paper,
