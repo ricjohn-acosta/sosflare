@@ -1,5 +1,5 @@
 import * as actions from "./actionTypes"
-import moment from "moment";
+import moment from "moment"
 
 export function addCard(
   username,
@@ -13,7 +13,7 @@ export function addCard(
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
     const firestore = getFirebase().firestore()
-    const date_created = moment().format();
+    const date_created = moment().format()
 
     firestore
       .collection("cards")
@@ -26,7 +26,7 @@ export function addCard(
         monster_type: monsterType,
         target_monster: targetMonster,
         description,
-        date_created: date_created
+        date_created: date_created,
       })
       .then(() => {
         console.log("CARD ADDED TO DB")
@@ -39,3 +39,16 @@ export function addCard(
     dispatch({ type: actions.ADD_CARD_END })
   }
 }
+
+export function sort(sortType) {
+  return dispatch => {
+    dispatch({ type: actions.SORT_BY_MONSTER, payload: sortType })
+  }
+}
+
+export function findUser(bool) {
+  return dispatch => {
+    dispatch({ type: actions.FIND_USER, payload: bool })
+  }
+}
+

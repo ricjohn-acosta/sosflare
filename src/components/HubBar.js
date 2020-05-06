@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
 
     [theme.breakpoints.down("md")]: {
       minHeight: "10vh",
+      padding: "50px"
     },
   },
 

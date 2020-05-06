@@ -3,6 +3,8 @@ import * as actions from "../actions/actionTypes"
 const initialState = {
   error: null,
   loading: false,
+  sortBy: null,
+  find: null,
 }
 
 // HELPER FUNCTIONS
@@ -34,6 +36,20 @@ const addCardEnd = state => {
   }
 }
 
+const sortBy = (state, payload) => {
+  return {
+    ...state,
+    sortBy: payload,
+  }
+}
+
+const find = (state, payload) => {
+  return {
+    ...state,
+    find: payload,
+  }
+}
+
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case actions.ADD_CARD_START:
@@ -47,6 +63,12 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.ADD_CARD_END:
       return addCardEnd(state)
+
+    case actions.SORT_BY_MONSTER:
+      return sortBy(state, payload)
+
+    case actions.FIND_USER:
+      return find(state, payload)
 
     default:
       return state

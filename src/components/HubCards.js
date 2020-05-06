@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
 import HubCard from "./HubCard"
+import HubCardSorter from "./HubCardSorter"
 import moment from "moment"
 import Grid from "@material-ui/core/Grid"
 import { Paper } from "@material-ui/core"
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards }) => {
+const HubCards = ({ requested, cards, type, user }) => {
   const classes = useStyles()
   const currentTime = moment()
 
@@ -36,10 +37,10 @@ const HubCards = ({ requested, cards }) => {
     <>
       <Paper className={classes.wrapper} elevation={1}>
         <Grid container direction="row" spacing={4}>
-          {requested && cards
-            ? Object.values(cards).map(card => {
-                return (
-                  <>
+          <HubCardSorter sortBy={type} find={user}>
+            {requested && cards
+              ? Object.values(cards).map(card => {
+                  return (
                     <HubCard
                       username={card.username}
                       description={card.description}
@@ -50,21 +51,24 @@ const HubCards = ({ requested, cards }) => {
                       targetMonster={card.target_monster}
                       monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
                       startTime={currentTime.from(card.date_created, true)}
+                      timestamp={card.date_created}
                     />
-                  </>
-                )
-              })
-            : null}
+                  )
+                })
+              : null}
+          </HubCardSorter>
         </Grid>
       </Paper>
     </>
   )
 }
 
-const mapStateToProps = ({ firestore }) => {
+const mapStateToProps = ({ firestore, cards }) => {
   return {
     cards: firestore.data.cards,
     requested: firestore.status.requested,
+    type: cards.sortBy,
+    user: cards.find,
   }
 }
 
