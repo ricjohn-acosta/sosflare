@@ -95,7 +95,7 @@ const HubCard = ({
   const classes = useStyles()
   const [tooltipState, setTooltipState] = React.useState(false)
   const url = monsterImage
-
+  const isIOSDevice = navigator.userAgent.match(/ipad|iphone/i)
   const handletoolTip = () => {
     setTooltipState(true)
   }
@@ -104,8 +104,12 @@ const HubCard = ({
     setTooltipState(false)
   }
 
-  const copyText = () => {
-    navigator.clipboard.writeText(sessionId)
+  const copyText = sessionId => {
+    if (isIOSDevice) {
+      navigator.clipboard.writeText(sessionId)
+    } else {
+      navigator.clipboard.writeText(sessionId)
+    }
   }
 
   return (
@@ -132,7 +136,10 @@ const HubCard = ({
           open={tooltipState}
         >
           <CardActionArea
-            onClick={() => {copyText(); handletoolTip()}}
+            onClick={() => {
+              copyText(sessionId)
+              handletoolTip()
+            }}
             onMouseLeave={resetState}
           >
             <CardMedia
@@ -153,8 +160,12 @@ const HubCard = ({
                       <VpnKeyIcon />
                     </ListItemIcon>
                     Session ID:&nbsp;
-                    <Typography variant="body3" color="textSecondary">
-                      <span id="sessionId">{sessionId}</span>
+                    <Typography
+                      id="sessionId"
+                      variant="body3"
+                      color="textSecondary"
+                    >
+                      {sessionId}
                     </Typography>
                   </ListItem>
                   <ListItem className={classes.listItem}>
