@@ -138,7 +138,7 @@ const HubCard = ({
           <CardActionArea
             onClick={() => {
               copyText(sessionId)
-              handletoolTip()
+              // handletoolTip()
             }}
             onMouseLeave={resetState}
           >
