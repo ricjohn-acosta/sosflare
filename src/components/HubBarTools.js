@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   formGroup: {
     [theme.breakpoints.down("sm")]: {
       position: "relative",
-      right: "15vw"
+      right: "15vw",
     },
     [theme.breakpoints.down("md")]: {
       paddingLeft: "50px",
@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up("lg")]: {
       float: "left",
       position: "relative",
-      left: "30px",
+      left: "50px",
     },
   },
 }))
@@ -79,7 +79,8 @@ const HubBarTools = props => {
 
   const handleCheckboxMonster = event => {
     setCheckboxMonster(event.target.checked)
-    props.findUser("")
+    setCheckboxNewest(false)
+    setCheckboxOldest(false)
     if (!sortByMonster) {
       props.sort("monster")
     } else {
@@ -88,6 +89,8 @@ const HubBarTools = props => {
   }
   const handleCheckboxNewest = event => {
     setCheckboxNewest(event.target.checked)
+    setCheckboxMonster(false)
+    setCheckboxOldest(false)
     if (!sortByNewest) {
       props.sort("newest")
     } else {
@@ -96,6 +99,8 @@ const HubBarTools = props => {
   }
   const handleCheckboxOldest = event => {
     setCheckboxOldest(event.target.checked)
+    setCheckboxNewest(false)
+    setCheckboxMonster(false)
     if (!sortByOldest) {
       props.sort("oldest")
     } else {
@@ -127,9 +132,6 @@ const HubBarTools = props => {
               input: classes.inputInput,
             }}
             inputProps={{ "aria-label": "search" }}
-            // onKeyDown={e =>
-            //   e.keyCode === 13 ? props.findUser(e.target.value) : null
-            // }
             onChange={e => props.findUser(e.target.value)}
           />
         </div>
@@ -148,9 +150,12 @@ const HubBarTools = props => {
               value="SORT_MONSTER"
               control={
                 <Checkbox
+                  checked={sortByMonster}
                   color="primary"
-                  disabled={sortByOldest || sortByNewest ? true : false}
+                  value={"test"}
+                  // disabled={sortByOldest || sortByNewest ? true : false}
                   onChange={handleCheckboxMonster}
+                  // onChange={e => {console.log(e.target.value)}}
                 />
               }
               label={
@@ -162,8 +167,9 @@ const HubBarTools = props => {
               value="SORT_NEWEST"
               control={
                 <Checkbox
+                  checked={sortByNewest}
                   color="primary"
-                  disabled={sortByMonster || sortByOldest ? true : false}
+                  // disabled={sortByMonster || sortByOldest ? true : false}
                   onChange={handleCheckboxNewest}
                 />
               }
@@ -174,8 +180,9 @@ const HubBarTools = props => {
               value="SORT_OLDEST"
               control={
                 <Checkbox
+                  checked={sortByOldest}
                   color="primary"
-                  disabled={sortByMonster || sortByNewest ? true : false}
+                  // disabled={sortByMonster || sortByNewest ? true : false}
                   onChange={handleCheckboxOldest}
                 />
               }

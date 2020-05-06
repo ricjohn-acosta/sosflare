@@ -129,7 +129,6 @@ const HubCard = ({
         >
           <CardActionArea
             onClick={() => {
-              navigator.clipboard.writeText(sessionId)
               handletoolTip()
             }}
             onMouseLeave={resetState}

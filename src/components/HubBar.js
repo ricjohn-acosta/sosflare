@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
       marginLeft: "100px",
       marginRight: "100px",
       minHeight: "50vh",
-      padding: "25px"
+      padding: "15px"
     },
 
     [theme.breakpoints.down("md")]: {

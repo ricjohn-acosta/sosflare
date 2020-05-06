@@ -25,12 +25,20 @@ const useStyles = makeStyles(theme => ({
     height: "90vh",
     overflow: "auto",
 
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: 0,
+      width: "80vw",
+      height: "80vh",
+    },
+    [theme.breakpoints.up("md")]: {
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
       padding: theme.spacing(5, 10, 5),
-      width: "80vw",
+      width: "50vw",
       height: "80vh",
     },
   },
@@ -40,6 +48,9 @@ const useStyles = makeStyles(theme => ({
   },
   link: {
     textDecoration: "none",
+  },
+  test: {
+    width: "150px",
   },
 }))
 
@@ -82,14 +93,6 @@ const FireSosModalContent = ({ addCard }) => {
 
   const handleDescription = event => {
     setDescription(event.target.value)
-  }
-
-  const handleResetMonstersOn = event => {
-    setResetMonsters(true)
-  }
-
-  const handleResetMonstersOff = event => {
-    setResetMonsters(false)
   }
 
   const handleSubmit = e => {
@@ -136,19 +139,17 @@ const FireSosModalContent = ({ addCard }) => {
             {/*
             USERNAME FIELD
             */}
-            <FormControl
-              className={classes.formControl}
-              variant="filled"
-              size="small"
-            >
+            <FormControl className={classes.formControl} variant="filled">
               <TextField
+                className={classes.test}
                 label="Username"
-                placeholder="Enter a username"
+                placeholder="Username"
                 variant="filled"
                 size="small"
                 onChange={handleUsername}
                 inputProps={{ maxLength: 12 }}
               />
+              <br />
             </FormControl>
             &nbsp;
             {/*
