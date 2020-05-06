@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@material-ui/styles": "^4.9.10",
+    "clipboard-polyfill": "^2.8.6",
     "firebase": "^7.14.2",
     "formik": "^2.1.4",
     "gatsby": "^2.21.0",

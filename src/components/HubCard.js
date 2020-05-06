@@ -1,4 +1,5 @@
 import React from "react"
+import * as clipboard from "clipboard-polyfill/dist/clipboard-polyfill.promise"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
@@ -137,8 +138,8 @@ const HubCard = ({
         >
           <CardActionArea
             onClick={() => {
-              copyText(sessionId)
-              // handletoolTip()
+              clipboard.writeText(sessionId)
+              handletoolTip()
             }}
             onMouseLeave={resetState}
           >
