@@ -105,14 +105,6 @@ const HubCard = ({
     setTooltipState(false)
   }
 
-  const copyText = sessionId => {
-    if (isIOSDevice) {
-      navigator.clipboard.writeText(sessionId)
-    } else {
-      navigator.clipboard.writeText(sessionId)
-    }
-  }
-
   return (
     <Grid item className={classes.card} xs={12} sm={12} md={4}>
       <Card className={classes.cardWrapper}>
