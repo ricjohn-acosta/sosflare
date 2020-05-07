@@ -728,7 +728,7 @@ footer {
 
 .site-container {
   display       : flex;
-  min-height    : 100vh;
+  min-height    : 120vh;
   flex-direction: column;
 }
 
@@ -737,14 +737,14 @@ footer {
   flex-grow     : 1;
   /* margin-right  : 20%;
   margin-left   : 20%; */
-  padding-bottom: 30px;
+  padding-bottom: 70px;
 }
 
 .divider {
   position   : absolute;
   left       : 50%;
-  top        : 35%;
-  bottom     : 48%;
+  top        : 40%;
+  bottom     : 45%;
   border-left: 1px solid hsl(0, 0%, 93%);
 }
 

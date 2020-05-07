@@ -1,22 +1,18 @@
 import React from "react"
-import { lrhrMonsters, mrMonsters, formValidation } from "../utils/FireSos.js"
+import { lrhrMonsters, mrMonsters } from "../utils/FireSos.js"
 import { addCard } from "../store/actions/cards"
 import { connect } from "react-redux"
-
+import { Link } from "gatsby"
 import { Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import Grid from "@material-ui/core/Grid"
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
 import Autocomplete from "@material-ui/lab/Autocomplete"
-import { ButtonGroup } from "@material-ui/core"
 import Select from "@material-ui/core/Select"
 import InputLabel from "@material-ui/core/InputLabel"
 import MenuItem from "@material-ui/core/MenuItem"
 import FormControl from "@material-ui/core/FormControl"
-import RadioGroup from "@material-ui/core/RadioGroup"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Radio from "@material-ui/core/Radio"
 import Tooltip from "@material-ui/core/Tooltip"
 
 const useStyles = makeStyles(theme => ({
@@ -29,12 +25,21 @@ const useStyles = makeStyles(theme => ({
     height: "90vh",
     overflow: "auto",
 
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
+      backgroundColor: theme.palette.background.paper,
+      border: "2px solid #000",
+      boxShadow: theme.shadows[5],
+      padding: 0,
+      width: "100vw",
+      height: "80vh",
+      overflowX:"hidden"
+    },
+    [theme.breakpoints.up("md")]: {
       backgroundColor: theme.palette.background.paper,
       border: "2px solid #000",
       boxShadow: theme.shadows[5],
       padding: theme.spacing(5, 10, 5),
-      width: "80vw",
+      width: "50vw",
       height: "80vh",
     },
   },
@@ -42,10 +47,17 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(0),
     minWidth: 150,
   },
+  link: {
+    textDecoration: "none",
+  },
+  test: {
+    width: "150px",
+  },
 }))
 
 const FireSosModalContent = ({ addCard }) => {
   const classes = useStyles()
+  const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
   const [sessionId, setSessionId] = React.useState("")
   const [rank, setRank] = React.useState("")
@@ -53,6 +65,10 @@ const FireSosModalContent = ({ addCard }) => {
   const [monsterType, setMonsterType] = React.useState("")
   const [targetMonster, setTargetMonster] = React.useState("")
   const [description, setDescription] = React.useState("")
+
+  const handleUsername = event => {
+    setUsername(event.target.value)
+  }
 
   const handlePlatform = event => {
     setPlatform(event.target.value)
@@ -80,24 +96,30 @@ const FireSosModalContent = ({ addCard }) => {
     setDescription(event.target.value)
   }
 
-  const handleResetMonstersOn = event => {
-    setResetMonsters(true)
-  }
-
-  const handleResetMonstersOff = event => {
-    setResetMonsters(false)
-  }
-
   const handleSubmit = e => {
     e.preventDefault()
-    addCard(platform, sessionId, rank, monsterType, targetMonster, description)
+    addCard(
+      username,
+      platform,
+      sessionId,
+      rank,
+      monsterType,
+      targetMonster,
+      description
+    )
   }
 
   const createMenuItems = () => {
     let array = [
-      <MenuItem key="1" value={"Normal"}>Normal</MenuItem>,
-      <MenuItem key="2" value={"Tempered"}>Tempered</MenuItem>,
-      <MenuItem key="3" value={"Arch Tempered"}>Arch Tempered</MenuItem>,
+      <MenuItem key="1" value={"Normal"}>
+        Normal
+      </MenuItem>,
+      <MenuItem key="2" value={"Tempered"}>
+        Tempered
+      </MenuItem>,
+      <MenuItem key="3" label={"Arch tempered"} value={"ArchTempered"}>
+        Arch Tempered
+      </MenuItem>,
     ]
     return array
   }
@@ -115,6 +137,25 @@ const FireSosModalContent = ({ addCard }) => {
           spacing={5}
         >
           <Grid item sm={12}>
+            {/*
+            USERNAME FIELD
+            */}
+            <FormControl className={classes.formControl} variant="filled">
+              <TextField
+                className={classes.test}
+                label="Username"
+                placeholder="Username"
+                variant="filled"
+                size="small"
+                onChange={handleUsername}
+                inputProps={{ maxLength: 12 }}
+              />
+              <br />
+            </FormControl>
+            &nbsp;
+            {/*
+            PLATFORM FIELD
+            */}
             <FormControl
               className={classes.formControl}
               variant="filled"
@@ -128,15 +169,23 @@ const FireSosModalContent = ({ addCard }) => {
               </Select>
               <br />
             </FormControl>
+            {/*
+            SESSION FIELD
+            */}
             <TextField
               label="Session ID"
               placeholder="Enter your current session ID"
               variant="filled"
               fullWidth
               onChange={handleSessionId}
+              inputProps={{ maxLength: 30 }}
             />
           </Grid>
+          <hr />
           <Grid item sm={12}>
+            {/*
+            RANK FIELD
+            */}
             <FormControl
               className={classes.formControl}
               variant="filled"
@@ -151,6 +200,9 @@ const FireSosModalContent = ({ addCard }) => {
               <br />
             </FormControl>
             &nbsp;
+            {/*
+            MONSTER TYPE FIELD
+            */}
             <FormControl
               disabled={!rank ? true : false}
               className={classes.formControl}
@@ -169,6 +221,9 @@ const FireSosModalContent = ({ addCard }) => {
               </Select>
               <br />
             </FormControl>
+            {/*
+            TARGET MONSTER FIELD
+            */}
             <Autocomplete
               fullWidth
               disabled={!rank || !monsterType ? true : false}
@@ -185,6 +240,10 @@ const FireSosModalContent = ({ addCard }) => {
               )}
             />
           </Grid>
+          <hr />
+          {/*
+            DESCRIPTION FIELD
+            */}
           <Grid item sm={12}>
             <TextField
               onChange={handleDescription}
@@ -194,18 +253,24 @@ const FireSosModalContent = ({ addCard }) => {
               fullWidth
               multiline
               rows={10}
+              inputProps={{ maxLength: 350 }}
             />
           </Grid>
           <Grid item sm={12} />
         </Grid>
 
-        {!platform ||
+        {!username ||
+        !platform ||
         !sessionId ||
         !rank ||
         !monsterType ||
         !targetMonster ||
         !description ? (
-          <Tooltip title="Please fill up the form" placement="bottom" enterTouchDelay={1}>
+          <Tooltip
+            title="Please fill up the form"
+            placement="bottom"
+            enterTouchDelay={1}
+          >
             <div>
               <Button disabled fullWidth>
                 FIRE SOS
@@ -213,9 +278,25 @@ const FireSosModalContent = ({ addCard }) => {
             </div>
           </Tooltip>
         ) : (
-          <Button type="submit" fullWidth>
-            FIRE SOS
-          </Button>
+          <Link to="/hub" className={classes.link}>
+            <Button
+              type="submit"
+              onClick={() => {
+                addCard(
+                  username,
+                  platform,
+                  sessionId,
+                  rank,
+                  monsterType,
+                  targetMonster,
+                  description
+                )
+              }}
+              fullWidth
+            >
+              FIRE SOS
+            </Button>
+          </Link>
         )}
       </form>
     </Paper>
@@ -225,6 +306,7 @@ const FireSosModalContent = ({ addCard }) => {
 const mapDispatchToProps = dispatch => {
   return {
     addCard: (
+      username,
       platform,
       sessionId,
       rank,
@@ -234,6 +316,7 @@ const mapDispatchToProps = dispatch => {
     ) =>
       dispatch(
         addCard(
+          username,
           platform,
           sessionId,
           rank,

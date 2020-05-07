@@ -3,6 +3,7 @@ import { Link } from "gatsby"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
+import { useStaticQuery, graphql } from "gatsby"
 
 import Layout from "../components/layout"
 import Image from "../components/image"
@@ -56,12 +57,6 @@ const useStyles = makeStyles(theme => ({
 
 const IndexPage = ({ requested, test1 }) => {
   const classes = useStyles()
-
-  const fetchData = () => {
-    if (requested && test1) {
-      return <div>{test1.test.test}</div>
-    }
-  }
 
   return (
     <Layout>
