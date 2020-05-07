@@ -5,5 +5,8 @@ export const ADD_CARD_FAIL = "ADD_CARD_FAIL"
 export const ADD_CARD_END = "ADD_CARD_END"
 
 // TOOLBAR ACTIONS
-export const SORT_BY_MONSTER = "SORT_BY_MONSTER"
+export const SORT_CARDS = "SORT_CARDS"
 export const FIND_USER = "FIND_USER"
+
+// USER ACTIONS
+export const SIGN_IN_ANON = "SIGN_IN_ANON"

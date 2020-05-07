@@ -64,7 +64,7 @@ export default (state = initialState, { type, payload }) => {
     case actions.ADD_CARD_END:
       return addCardEnd(state)
 
-    case actions.SORT_BY_MONSTER:
+    case actions.SORT_CARDS:
       return sortBy(state, payload)
 
     case actions.FIND_USER:

@@ -39,9 +39,11 @@ const HubCards = ({ requested, cards, type, user }) => {
         <Grid container direction="row" spacing={4}>
           <HubCardSorter sortBy={type} find={user}>
             {requested && cards
-              ? Object.values(cards).map(card => {
+              ? Object.values(cards).map((card, index) => {
+                  console.log(card)
                   return (
                     <HubCard
+                      key={index}
                       username={card.username}
                       description={card.description}
                       monsterType={card.monster_type}
@@ -51,7 +53,7 @@ const HubCards = ({ requested, cards, type, user }) => {
                       targetMonster={card.target_monster}
                       monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
                       startTime={currentTime.from(card.date_created, true)}
-                      timestamp={card.date_created}
+                      timestamp={card.timestamp}
                     />
                   )
                 })

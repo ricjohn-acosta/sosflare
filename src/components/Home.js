@@ -16,7 +16,6 @@ import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
 import cards from "../store/reducers/cards"
 import { navigate } from "gatsby"
-import HubContainer from "../components/HubContainer"
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -59,54 +58,50 @@ const useStyles = makeStyles(theme => ({
 const IndexPage = ({ cards, uid }) => {
   const classes = useStyles()
 
-  if (uid) {
-    return <Redirect from="/" to="/hub" noThrow />
-  } else {
-    return (
-      <Layout>
-        <div className={classes.wrapper}>
-          <Box className={classes.title}>
-            <h1>Hunt with friends!</h1>
-            <h3>
-              Get other hunters to help you with your hunts by firing an SOS or
-              assist your fellow hunters by responding to their SOS!
-            </h3>
-          </Box>
-          <Paper className={classes.paper} elevation={2}>
-            <Box component="div" className={classes.box}>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
-                  <FireSos />
-                </Grid>
-                <Hidden mdDown>
-                  <div className="divider" />
-                </Hidden>
-                <Hidden hidden smUp>
-                  <Grid item xs={12}>
-                    <br />
-                  </Grid>
-                </Hidden>
-                <Grid item xs={12} sm={6}>
-                  <Link to="/hub" className={classes.link}>
-                    <Button
-                      className={classes.respondSosBtn}
-                      size="large"
-                      variant="outlined"
-                      color="primary"
-                      disableRipple
-                      fullWidth
-                    >
-                      <h3 className={classes.test}>RESPOND TO SOS</h3>
-                    </Button>
-                  </Link>
-                </Grid>
+  return (
+    <Layout>
+      <div className={classes.wrapper}>
+        <Box className={classes.title}>
+          <h1>Hunt with friends!</h1>
+          <h3>
+            Get other hunters to help you with your hunts by firing an SOS or
+            assist your fellow hunters by responding to their SOS!
+          </h3>
+        </Box>
+        <Paper className={classes.paper} elevation={2}>
+          <Box component="div" className={classes.box}>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <FireSos />
               </Grid>
-            </Box>
-          </Paper>
-        </div>
-      </Layout>
-    )
-  }
+              <Hidden mdDown>
+                <div className="divider" />
+              </Hidden>
+              <Hidden hidden smUp>
+                <Grid item xs={12}>
+                  <br />
+                </Grid>
+              </Hidden>
+              <Grid item xs={12} sm={6}>
+                <Link to="/hub" className={classes.link}>
+                  <Button
+                    className={classes.respondSosBtn}
+                    size="large"
+                    variant="outlined"
+                    color="primary"
+                    disableRipple
+                    fullWidth
+                  >
+                    <h3 className={classes.test}>RESPOND TO SOS</h3>
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </div>
+    </Layout>
+  )
 }
 
 const mapStateToProps = ({ firestore, firebase }) => {

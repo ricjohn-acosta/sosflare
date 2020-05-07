@@ -87,8 +87,6 @@ const HubCard = ({
   targetMonster,
   rank,
   platform,
-  assets,
-  requested,
   monsterImage,
   monsterType,
   startTime,
@@ -123,11 +121,7 @@ const HubCard = ({
             </Grid>
           </Grid>
         </CardContent>
-        <Tooltip
-          title="copied session id!"
-          placement="top-mid"
-          open={tooltipState}
-        >
+        <Tooltip title="copied session id!" placement="top" open={tooltipState}>
           <CardActionArea
             onClick={() => {
               clipboard.writeText(sessionId)
@@ -146,8 +140,12 @@ const HubCard = ({
               <Typography gutterBottom variant="h5" component="h2">
                 Target: {targetMonster}
               </Typography>
-              <Typography variant="body2" color="textPrimary">
-                <List dense disableGutters>
+              <Typography
+                component={"span"}
+                variant="body2"
+                color="textPrimary"
+              >
+                <List dense>
                   <ListItem className={classes.listItem}>
                     <ListItemIcon className={classes.icons}>
                       <VpnKeyIcon />
@@ -155,7 +153,7 @@ const HubCard = ({
                     Session ID:&nbsp;
                     <Typography
                       id="sessionId"
-                      variant="body3"
+                      variant="body2"
                       color="textSecondary"
                     >
                       {sessionId}
@@ -166,7 +164,7 @@ const HubCard = ({
                       <FlareIcon />
                     </ListItemIcon>
                     Flare by :&nbsp;
-                    <Typography variant="body3" color="textSecondary">
+                    <Typography variant="body2" color="textSecondary">
                       {username}
                     </Typography>
                   </ListItem>
@@ -176,7 +174,7 @@ const HubCard = ({
                       <AccessAlarmIcon />
                     </ListItemIcon>
                     In session :&nbsp;
-                    <Typography variant="body3" color="textSecondary">
+                    <Typography variant="body2" color="textSecondary">
                       {startTime}
                     </Typography>
                   </ListItem>

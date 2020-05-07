@@ -12,37 +12,56 @@ export function addCard(
 ) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
+    const userId = getState().firebase.auth.uid
+    const firebase = getFirebase()
     const firestore = getFirebase().firestore()
     const date_created = moment().format()
+    const timestamp = new Date()
 
-    firestore
-      .collection("cards")
-      .doc()
-      .set({
-        username,
-        platform,
-        session_id: sessionId,
-        rank,
-        monster_type: monsterType,
-        target_monster: targetMonster,
-        description,
-        date_created: date_created,
-      })
+    firebase
+      .auth()
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
       .then(() => {
-        console.log("CARD ADDED TO DB")
-        dispatch({ type: actions.ADD_CARD_SUCCESS })
+        firebase
+          .auth()
+          .signInAnonymously()
+          .then(data => {
+            console.log(data)
+            firestore
+              .collection("cards")
+              .doc(data.user.uid)
+              .set({
+                username,
+                platform,
+                session_id: sessionId,
+                rank,
+                monster_type: monsterType,
+                target_monster: targetMonster,
+                description,
+                date_created: date_created,
+                timestamp,
+              })
+              .then(() => {
+                console.log("CARD ADDED TO DB")
+                dispatch({ type: actions.ADD_CARD_SUCCESS })
+              })
+              .catch(err => {
+                console.log(err)
+                dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
+              })
+            dispatch({ type: actions.ADD_CARD_END })
+          })
+          .catch(function (error) {
+            console.log(error.code)
+            console.log(error.message)
+          })
       })
-      .catch(err => {
-        console.log(err)
-        dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
-      })
-    dispatch({ type: actions.ADD_CARD_END })
   }
 }
 
 export function sort(sortType) {
   return dispatch => {
-    dispatch({ type: actions.SORT_BY_MONSTER, payload: sortType })
+    dispatch({ type: actions.SORT_CARDS, payload: sortType })
   }
 }
 
@@ -51,4 +70,3 @@ export function findUser(bool) {
     dispatch({ type: actions.FIND_USER, payload: bool })
   }
 }
-
