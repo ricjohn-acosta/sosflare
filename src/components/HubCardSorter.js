@@ -1,4 +1,7 @@
 import React from "react"
+import { connect } from "react-redux"
+import { compose } from "redux"
+import { firestoreConnect } from "react-redux-firebase"
 
 const sortMonster = (a, b) => {
   if (a.props.targetMonster < b.props.targetMonster) {
@@ -34,11 +37,13 @@ const HubCardSorter = ({ children, sortBy, find }) => {
     } else {
       return children
     }
-  } else if (sortBy === "monster") {
+  } else if (sortBy === "monster" || null) {
     return React.Children.toArray(children).sort(sortMonster)
-  } else if (sortBy === "newest") {
-    return React.Children.toArray(children).sort(sortNewest)
-  } else if (sortBy === "oldest") {
+  } else if (sortBy === "newest" || null) {
+    const testArray = React.Children.toArray(children).sort(sortNewest)
+    console.log(testArray)
+    return testArray
+  } else if (sortBy === "oldest" || null) {
     return React.Children.toArray(children).sort(sortOldest)
   } else {
     return children

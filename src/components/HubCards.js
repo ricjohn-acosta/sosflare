@@ -33,32 +33,35 @@ const HubCards = ({ requested, cards, type, user }) => {
   const classes = useStyles()
   const currentTime = moment()
 
+  const loadCards = () => {
+    if (requested && cards) {
+      return (
+        <HubCardSorter sortBy={type} find={user}>
+          {Object.values(cards).map((card) => {
+            return (
+              <HubCard
+                username={card.username}
+                description={card.description}
+                monsterType={card.monster_type}
+                platform={card.platform}
+                rank={card.rank}
+                sessionId={card.session_id}
+                targetMonster={card.target_monster}
+                monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
+                startTime={currentTime.from(card.date_created, true)}
+                timestamp={card.timestamp}
+              />
+            )
+          })}
+        </HubCardSorter>
+      )
+    }
+  }
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
         <Grid container direction="row" spacing={4}>
-          <HubCardSorter sortBy={type} find={user}>
-            {requested && cards
-              ? Object.values(cards).map((card, index) => {
-                  console.log(card)
-                  return (
-                    <HubCard
-                      key={index}
-                      username={card.username}
-                      description={card.description}
-                      monsterType={card.monster_type}
-                      platform={card.platform}
-                      rank={card.rank}
-                      sessionId={card.session_id}
-                      targetMonster={card.target_monster}
-                      monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
-                      startTime={currentTime.from(card.date_created, true)}
-                      timestamp={card.timestamp}
-                    />
-                  )
-                })
-              : null}
-          </HubCardSorter>
+          {loadCards()}
         </Grid>
       </Paper>
     </>
@@ -67,7 +70,7 @@ const HubCards = ({ requested, cards, type, user }) => {
 
 const mapStateToProps = ({ firestore, cards }) => {
   return {
-    cards: firestore.data.cards,
+    cards: firestore.ordered.cards,
     requested: firestore.status.requested,
     type: cards.sortBy,
     user: cards.find,
@@ -80,7 +83,7 @@ export default compose(
     {
       collection: "cards",
       limit: 9,
-      orderBy: ["date_created", "desc"],
+      orderBy: ["timestamp", "desc"],
     },
   ])
 )(HubCards)

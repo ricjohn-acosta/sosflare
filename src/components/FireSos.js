@@ -86,7 +86,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FireSos = ({ addCard, auth, cards }) => {
+const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -98,6 +98,7 @@ const FireSos = ({ addCard, auth, cards }) => {
   const [description, setDescription] = React.useState("")
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [signedIn, setSignedin] = React.useState(false)
 
   const handleUsername = event => {
     setUsername(event.target.value)
@@ -145,17 +146,33 @@ const FireSos = ({ addCard, auth, cards }) => {
     setOpen(false)
   }
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    addCard(
-      username,
-      platform,
-      sessionId,
-      rank,
-      monsterType,
-      targetMonster,
-      description
-    )
+  const handleSigninStateOn = () => {
+    setSignedin(true)
+  }
+
+  const handleSigninStateOff = () => {
+    setSignedin(false)
+  }
+  // const handleSubmit = e => {
+  //   e.preventDefault()
+  //   addCard(
+  //     username,
+  //     platform,
+  //     sessionId,
+  //     rank,
+  //     monsterType,
+  //     targetMonster,
+  //     description
+  //   )
+  // }
+  const hasUserFiredSos = () => {
+    if (auth && cards) {
+      if (cards.hasOwnProperty(auth.uid)) {
+        return true
+      }
+    } else {
+      return false
+    }
   }
 
   const checkAutocompleteInput = monsterName => {
@@ -176,17 +193,6 @@ const FireSos = ({ addCard, auth, cards }) => {
       )
     }
   }
-
-  const hasUserFiredSos = () => {
-    if (auth && cards) {
-      if (cards.hasOwnProperty(auth.uid)) {
-        return true
-      }
-    } else {
-      return false
-    }
-  }
-
   const createMenuItems = () => {
     let array = [
       <MenuItem key="1" value={"Normal"}>
@@ -200,6 +206,89 @@ const FireSos = ({ addCard, auth, cards }) => {
       </MenuItem>,
     ]
     return array
+  }
+
+  // const asyncSignin = async () => {
+  //   return console.log(signInAnonymously)
+  // }
+  // const asyncAddCard = async () => {
+  //   await asyncSignin()
+  //   addCard(
+  //     username,
+  //     platform,
+  //     sessionId,
+  //     rank,
+  //     monsterType,
+  //     targetMonster,
+  //     description
+  //   )
+  // }
+
+  function resolveSignin() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        signInAnonymously()
+        resolve("User signed in")
+      }, 1000)
+    })
+  }
+
+  function resolveAddCard() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        addCard(
+          username,
+          platform,
+          sessionId,
+          rank,
+          monsterType,
+          targetMonster,
+          description
+        )
+        resolve("CARD ADDED")
+      }, 2000)
+    })
+  }
+  const signAndAdd = async () => {
+    // let mockState = false
+    // if (!mockState) {
+    //   signInAnonymously()
+    //   let mockState = true
+    //   console.log(mockState)
+    // }
+    // if (mockState) {
+    //   addCard(
+    //     username,
+    //     platform,
+    //     sessionId,
+    //     rank,
+    //     monsterType,
+    //     targetMonster,
+    //     description
+    //   )
+    //   console.log("works")
+    //   handleSigninStateOff()
+    // } else {
+    //   console.log(mockState)
+    // }
+    const signinResult = await resolveSignin()
+    const addCardResult = await resolveAddCard()
+    console.log(signinResult)
+    console.log(addCardResult)
+  }
+
+  const test = (e) => {
+    e.preventDefault()
+    console.log("test")
+    addCard(
+      username,
+      platform,
+      sessionId,
+      rank,
+      monsterType,
+      targetMonster,
+      description
+    )
   }
 
   return (
@@ -239,7 +328,9 @@ const FireSos = ({ addCard, auth, cards }) => {
                 <CloseIcon />
               </IconButton>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form
+              onSubmit={test}
+            >
               <h2>SOS Details</h2>
 
               <Grid
@@ -403,20 +494,18 @@ const FireSos = ({ addCard, auth, cards }) => {
                 <Link to="/hub" className={classes.link}>
                   <Button
                     type="submit"
-                    onClick={() =>
-                      // signinPromiseFunction().then(() => {addCard()})
-                      {
-                        addCard(
-                          username,
-                          platform,
-                          sessionId,
-                          rank,
-                          monsterType,
-                          targetMonster,
-                          description
-                        )
-                      }
-                    }
+                    onClick={() => {
+                      addCard(
+                        username,
+                        platform,
+                        sessionId,
+                        rank,
+                        monsterType,
+                        targetMonster,
+                        description
+                      )
+                      // signInAnonymously()
+                    }}
                     fullWidth
                   >
                     FIRE SOS

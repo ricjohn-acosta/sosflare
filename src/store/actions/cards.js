@@ -1,4 +1,5 @@
 import * as actions from "./actionTypes"
+import { signUp } from "./auth"
 import moment from "moment"
 
 export function addCard(
@@ -18,44 +19,32 @@ export function addCard(
     const date_created = moment().format()
     const timestamp = new Date()
 
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(() => {
-        firebase
-          .auth()
-          .signInAnonymously()
-          .then(data => {
-            console.log(data)
-            firestore
-              .collection("cards")
-              .doc(data.user.uid)
-              .set({
-                username,
-                platform,
-                session_id: sessionId,
-                rank,
-                monster_type: monsterType,
-                target_monster: targetMonster,
-                description,
-                date_created: date_created,
-                timestamp,
-              })
-              .then(() => {
-                console.log("CARD ADDED TO DB")
-                dispatch({ type: actions.ADD_CARD_SUCCESS })
-              })
-              .catch(err => {
-                console.log(err)
-                dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
-              })
-            dispatch({ type: actions.ADD_CARD_END })
-          })
-          .catch(function (error) {
-            console.log(error.code)
-            console.log(error.message)
-          })
+    firestore
+      .collection("cards")
+      .doc(username)
+      .set({
+        username,
+        platform,
+        session_id: sessionId,
+        rank,
+        monster_type: monsterType,
+        target_monster: targetMonster,
+        description,
+        date_created: date_created,
+        timestamp,
       })
+      .then(() => {
+        dispatch(
+          signUp("defaultemail@default.com", username, "default", sessionId)
+        )
+        console.log("CARD ADDED TO DB")
+        dispatch({ type: actions.ADD_CARD_SUCCESS })
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
+      })
+    dispatch({ type: actions.ADD_CARD_END })
   }
 }
 
