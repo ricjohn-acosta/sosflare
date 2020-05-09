@@ -37,7 +37,7 @@ const HubCards = ({ requested, cards, type, user }) => {
     if (requested && cards) {
       return (
         <HubCardSorter sortBy={type} find={user}>
-          {Object.values(cards).map((card) => {
+          {Object.values(cards).map(card => {
             return (
               <HubCard
                 username={card.username}
@@ -79,11 +79,21 @@ const mapStateToProps = ({ firestore, cards }) => {
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => [
-    {
-      collection: "cards",
-      limit: 9,
-      orderBy: ["timestamp", "desc"],
-    },
-  ])
+  firestoreConnect(props => {
+
+    const test = () => {
+      if(props.cards !== undefined) {
+        console.log(props.cards)
+        return props.cards[props.cards.length-1]
+      }
+    }
+    test()
+    return [
+      {
+        collection: "cards",
+        limit: 9,
+        orderBy: ["timestamp", "desc"],
+      },
+    ]
+  })
 )(HubCards)
