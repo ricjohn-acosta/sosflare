@@ -27,7 +27,7 @@ const sortOldest = (a, b) => {
   return 0
 }
 
-const HubCardSorter = ({ children, sortBy, find }) => {
+const HubCardsSorter = ({ children, sortBy, find }) => {
   const user = React.Children.toArray(children).find(
     object => object.props.username === find
   )
@@ -50,4 +50,4 @@ const HubCardSorter = ({ children, sortBy, find }) => {
   }
 }
 
-export default HubCardSorter
+export default HubCardsSorter

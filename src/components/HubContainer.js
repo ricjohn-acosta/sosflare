@@ -6,6 +6,7 @@ import InfoIcon from "@material-ui/icons/Info"
 import Icon from "@material-ui/core/Icon"
 import HubBar from "./HubBar"
 import HubCards from "./HubCards"
+import HubCardsPagination from "./HubCardsPagination"
 
 const useStyles = makeStyles({
   wrapper: {
@@ -41,6 +42,8 @@ const HubContainer = () => {
               </Typography>
             </div>
             <HubCards />
+            {/*Pagination component is here*/}
+            <HubCardsPagination />
           </Grid>
         </Grid>
       </div>

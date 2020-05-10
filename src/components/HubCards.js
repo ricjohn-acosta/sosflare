@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
 import HubCard from "./HubCard"
-import HubCardSorter from "./HubCardSorter"
+import HubCardsSorter from "./HubCardsSorter"
 import moment from "moment"
 import Grid from "@material-ui/core/Grid"
 import { Paper } from "@material-ui/core"
@@ -33,11 +33,45 @@ const HubCards = ({ requested, cards, type, user }) => {
   const classes = useStyles()
   const currentTime = moment()
 
+  const loadNextPage = () => {
+    let array = []
+    let cardsPerPage = 9
+    let itemCount = 0
+    // Page 1: i=0, i<=8
+    // Page 2: i=9, i<=17
+    // Page 3: i=18, i<=26...
+    // startAt=0
+    if (requested && cards) {
+      // let i = currentPage * cardsPerPage; i <= currentPage * cardsPerPage - 1; i++
+      for (let i = 0; i <= 8; i++) {
+        if (cards[i]) {
+          itemCount++
+          console.log(cards.length)
+          array.push(
+            <HubCard
+              username={cards[i].username}
+              description={cards[i].description}
+              monsterType={cards[i].monster_type}
+              platform={cards[i].platform}
+              rank={cards[i].rank}
+              sessionId={cards[i].session_id}
+              targetMonster={cards[i].target_monster}
+              monsterImage={require(`../images/monsters/${cards[i].target_monster}.png`)}
+              startTime={currentTime.from(cards[i].date_created, true)}
+              timestamp={cards[i].timestamp}
+            />
+          )
+        }
+      }
+    }
+    console.log(itemCount)
+    return array
+  }
   const loadCards = () => {
     if (requested && cards) {
       return (
-        <HubCardSorter sortBy={type} find={user}>
-          {Object.values(cards).map(card => {
+        <HubCardsSorter sortBy={type} find={user}>
+          {/* {Object.values(cards).map(card => {
             return (
               <HubCard
                 username={card.username}
@@ -52,11 +86,13 @@ const HubCards = ({ requested, cards, type, user }) => {
                 timestamp={card.timestamp}
               />
             )
-          })}
-        </HubCardSorter>
+          })} */}
+          {loadNextPage()}
+        </HubCardsSorter>
       )
     }
   }
+
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
@@ -80,19 +116,21 @@ const mapStateToProps = ({ firestore, cards }) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect(props => {
-
     const test = () => {
-      if(props.cards !== undefined) {
-        console.log(props.cards)
-        return props.cards[props.cards.length-1]
+      if (props.cards !== undefined) {
+        console.log(props.cards[props.cards.length - 2])
+        return props.cards[props.cards.length - 2]
       }
     }
     test()
     return [
       {
+        // collection: "cards",
+        // limit: 9,
+        // orderBy: ["timestamp", "desc"],
         collection: "cards",
-        limit: 9,
         orderBy: ["timestamp", "desc"],
+        limit: 18, // limit: 9(currentPage)
       },
     ]
   })
