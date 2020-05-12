@@ -42,8 +42,12 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
     // startAt=0
     if (requested && cards) {
       // let i = 'currentPage * cardsPerPage; i <= 'currentPage * cardsPerPage - 1; i++
-      console.log("test", (currentPage-1) * cardsPerPage)
-      for (let i = (currentPage-1) * cardsPerPage; i <= currentPage * cardsPerPage - 1; i++) {
+      console.log("test", (currentPage - 1) * cardsPerPage)
+      for (
+        let i = (currentPage - 1) * cardsPerPage;
+        i <= currentPage * cardsPerPage - 1;
+        i++
+      ) {
         // for(let i = 9; i <=17; i++){
         if (cards[i]) {
           console.log(cards.length)
@@ -110,7 +114,7 @@ const mapStateToProps = ({ firestore, cards }) => {
     requested: firestore.status.requested,
     type: cards.sortBy,
     user: cards.find,
-    currentPage: cards.currentPage
+    currentPage: cards.currentPage,
   }
 }
 
@@ -119,19 +123,19 @@ export default compose(
   firestoreConnect(props => {
     const test = () => {
       if (props.cards !== undefined) {
-        console.log(props.cards[props.cards.length - 2])
-        return props.cards[props.cards.length - 2]
+        console.log(
+          "last monster in array",
+          props.cards[props.cards.length - 1]
+        )
+        return props.cards[props.cards[props.cards.length - 1]]
       }
     }
     test()
     return [
       {
-        // collection: "cards",
-        // limit: 9,
-        // orderBy: ["timestamp", "desc"],
         collection: "cards",
         orderBy: ["timestamp", "desc"],
-        limit: 18, // limit: 9(currentPage)
+        limit: 10 * props.currentPage,
       },
     ]
   })

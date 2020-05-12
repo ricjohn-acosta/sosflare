@@ -62,6 +62,6 @@ export function findUser(bool) {
 
 export function changePage(currentPage) {
   return dispatch => {
-    dispatch({type: actions.CHANGE_PAGE, payload: currentPage})
+    dispatch({ type: actions.CHANGE_PAGE, payload: currentPage })
   }
 }

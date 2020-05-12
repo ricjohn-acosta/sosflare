@@ -1,18 +1,30 @@
 import React from "react"
 import { connect } from "react-redux"
 import { changePage } from "../store/actions/cards"
+import { Typography, Button } from "@material-ui/core"
+import ArrowRightRoundedIcon from "@material-ui/icons/ArrowRightRounded"
+import ArrowLeftRoundedIcon from "@material-ui/icons/ArrowLeftRounded"
+import { Icon } from "@material-ui/core"
+import IconButton from "@material-ui/core/IconButton"
+import { makeStyles } from "@material-ui/core/styles"
+const useStyles = makeStyles(theme => ({
+  iconButtons: {
+    padding: "0px",
+  },
+}))
 
 const HubCardsPagination = ({ requested, cards, changePage }) => {
+  const classes = useStyles()
   const [currentPage, setCurrentPage] = React.useState(1)
 
   const handleNextPage = event => {
-    setCurrentPage(++event.target.value)
-    changePage(Number(event.target.value))
+    setCurrentPage(++event.currentTarget.value)
+    changePage(Number(event.currentTarget.value))
   }
 
   const handlePrevPage = event => {
-    setCurrentPage(--event.target.value)
-    changePage(Number(event.target.value))
+    setCurrentPage(--event.currentTarget.value)
+    changePage(Number(event.currentTarget.value))
   }
 
   const checkPageCount = () => {
@@ -34,15 +46,19 @@ const HubCardsPagination = ({ requested, cards, changePage }) => {
   return (
     <>
       {currentPage !== 1 ? (
-        <button value={currentPage} onClick={handlePrevPage}>
-          previous page
-        </button>
+        <IconButton className={classes.iconButtons}value={currentPage} onClick={handlePrevPage}>
+          <ArrowLeftRoundedIcon />
+        </IconButton>
       ) : null}
-      Page {currentPage}
+      <Typography> Page {currentPage}</Typography>
       {currentPage < checkPageCount() ? (
-        <button value={currentPage} onClick={handleNextPage}>
-          next page
-        </button>
+        <IconButton
+          className={classes.iconButtons}
+          value={currentPage}
+          onClick={handleNextPage}
+        >
+          <ArrowRightRoundedIcon />
+        </IconButton>
       ) : null}
     </>
   )

@@ -556,14 +556,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(FireSos)
-
-// export default compose(
-//   connect(mapStateToProps, mapDispatchToProps),
-//   firestoreConnect(props => [
-//     {
-//       collection: "cards",
-//       limit: 9,
-//       orderBy: ["date_created", "desc"],
-//     },
-//   ])
-// )(FireSos)
