@@ -42,7 +42,7 @@ const HubCards = ({ requested, cards, type, user }) => {
     // Page 3: i=18, i<=26...
     // startAt=0
     if (requested && cards) {
-      // let i = currentPage * cardsPerPage; i <= currentPage * cardsPerPage - 1; i++
+      // let i = 'currentPage * cardsPerPage; i <= 'currentPage * cardsPerPage - 1; i++
       for (let i = 0; i <= 8; i++) {
         if (cards[i]) {
           cardCount++

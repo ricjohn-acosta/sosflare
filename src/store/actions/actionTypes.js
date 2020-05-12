@@ -4,9 +4,10 @@ export const ADD_CARD_SUCCESS = "ADD_CARD_SUCCESS"
 export const ADD_CARD_FAIL = "ADD_CARD_FAIL"
 export const ADD_CARD_END = "ADD_CARD_END"
 
-// TOOLBAR ACTIONS
+// CARD ACTIONS
 export const SORT_CARDS = "SORT_CARDS"
 export const FIND_USER = "FIND_USER"
+export const CHANGE_PAGE = "CHANGE_PAGE"
 
 // USER ACTIONS
 export const SIGN_IN_ANON = "SIGN_IN_ANON"

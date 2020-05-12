@@ -59,3 +59,9 @@ export function findUser(bool) {
     dispatch({ type: actions.FIND_USER, payload: bool })
   }
 }
+
+export function changePage(currentPage) {
+  return dispatch => {
+    dispatch({type: actions.CHANGE_PAGE, payload: currentPage})
+  }
+}

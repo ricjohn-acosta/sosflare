@@ -5,6 +5,7 @@ const initialState = {
   loading: false,
   sortBy: null,
   find: null,
+  currentPage: 1,
 }
 
 // HELPER FUNCTIONS
@@ -50,6 +51,13 @@ const find = (state, payload) => {
   }
 }
 
+const changePage = (state, payload) => {
+  return {
+    ...state,
+    currentPage: payload,
+  }
+}
+
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case actions.ADD_CARD_START:
@@ -69,6 +77,9 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.FIND_USER:
       return find(state, payload)
+
+    case actions.CHANGE_PAGE:
+      return changePage(state, payload)
 
     default:
       return state
