@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 
 const HubCardsPagination = ({ requested, cards }) => {
   const [currentPage, setCurrentPage] = React.useState(1)
-  // const [pageCount, setPageCount] = React.useState(1)
+  const [pageCount, setPageCount] = React.useState(1)
 
   const handleNextPage = event => {
     setCurrentPage(++event.target.value)
@@ -15,7 +15,9 @@ const HubCardsPagination = ({ requested, cards }) => {
 
   const checkPageCount = () => {
     if (requested && cards) {
-      return Math.trunc(cards.length / 9 + 1)
+      console.log("number of cards in array: ", cards.length)
+      console.log("number of pages: ", cards.length % 9 === 0 ? cards.length % 9 + 1 : Math.trunc(cards.length / 9 + 1))
+      return cards.length % 9 === 0 ? cards.length % 9 + 1 : Math.trunc(cards.length / 9 + 1)  
     }
   }
 

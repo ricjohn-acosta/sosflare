@@ -2,7 +2,7 @@ import * as actions from "./actionTypes"
 
 export function signUp(email, username, password, sessionId) {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    dispatch({ type: actions.AUTH_START, payload: true })
+    // dispatch({ type: actions.AUTH_START, payload: true })
     const firebase = getFirebase()
     const firestore = getFirebase().firestore()
 
@@ -21,12 +21,12 @@ export function signUp(email, username, password, sessionId) {
           .then(() => {
             console.log("USER ADDED TO FIRESTORE")
           })
-        dispatch({ type: actions.AUTH_SUCCESS })
+        // dispatch({ type: actions.AUTH_SUCCESS })
       })
       .catch(err => {
         console.log(err)
-        dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+        // dispatch({ type: actions.AUTH_FAIL, payload: err.message })
       })
-    dispatch({ type: actions.AUTH_END })
+    // dispatch({ type: actions.AUTH_END })
   }
 }
