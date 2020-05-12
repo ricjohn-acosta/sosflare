@@ -63,7 +63,7 @@ const Header = ({ siteTitle }) => {
               variant="text"
             >
               <Button color="inherit">Login</Button>
-              <Button color="inherit">Signup</Button>
+              {/* <Button color="inherit">Signup</Button> */}
             </ButtonGroup>
           </Grid>
         </Grid>

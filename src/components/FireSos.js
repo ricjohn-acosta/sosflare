@@ -261,7 +261,7 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
                   </Icon>
                   <Typography variant="caption">
                     Firing an SOS will automatically make you an account for
-                    managing your flares! Choose your username wisely. :)
+                    managing your flares!
                   </Typography>
                 </div>
                 <Grid item sm={12}>
@@ -419,20 +419,8 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
                   </div>
                 </Tooltip>
               ) : (
-                // <Link to="/hub" className={classes.link}>
                 <Button
                   type="submit"
-                  // onClick={() => {
-                  //   addCard(
-                  //     username,
-                  //     platform,
-                  //     sessionId,
-                  //     rank,
-                  //     monsterType,
-                  //     targetMonster,
-                  //     description
-                  //   )
-                  // }}
                   fullWidth
                 >
                   FIRE SOS
