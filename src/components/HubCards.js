@@ -36,7 +36,7 @@ const HubCards = ({ requested, cards, type, user }) => {
   const loadNextPage = () => {
     let array = []
     let cardsPerPage = 9
-    let itemCount = 0
+    let cardCount = 0
     // Page 1: i=0, i<=8
     // Page 2: i=9, i<=17
     // Page 3: i=18, i<=26...
@@ -45,7 +45,7 @@ const HubCards = ({ requested, cards, type, user }) => {
       // let i = currentPage * cardsPerPage; i <= currentPage * cardsPerPage - 1; i++
       for (let i = 0; i <= 8; i++) {
         if (cards[i]) {
-          itemCount++
+          cardCount++
           console.log(cards.length)
           array.push(
             <HubCard
@@ -64,7 +64,6 @@ const HubCards = ({ requested, cards, type, user }) => {
         }
       }
     }
-    console.log(itemCount)
     return array
   }
   const loadCards = () => {
