@@ -20,6 +20,9 @@ import CloseIcon from "@material-ui/icons/Close"
 import Modal from "@material-ui/core/Modal"
 import Backdrop from "@material-ui/core/Backdrop"
 import Fade from "@material-ui/core/Fade"
+import InfoIcon from "@material-ui/icons/Info"
+import Icon from "@material-ui/core/Icon"
+import { Typography } from "@material-ui/core"
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
@@ -84,9 +87,15 @@ const useStyles = makeStyles(theme => ({
       overflow: "hidden",
     },
   },
+  hintContainer: {
+    display: "flex",
+    position: "relative",
+    left: "10px",
+    padding: "5px",
+  },
 }))
 
-const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
+const FireSos = ({ addCard, auth, cards, userTaken }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -98,7 +107,6 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
   const [description, setDescription] = React.useState("")
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
   const [open, setOpen] = React.useState(false)
-  const [signedIn, setSignedin] = React.useState(false)
 
   const handleUsername = event => {
     setUsername(event.target.value)
@@ -146,25 +154,6 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
     setOpen(false)
   }
 
-  const handleSigninStateOn = () => {
-    setSignedin(true)
-  }
-
-  const handleSigninStateOff = () => {
-    setSignedin(false)
-  }
-  // const handleSubmit = e => {
-  //   e.preventDefault()
-  //   addCard(
-  //     username,
-  //     platform,
-  //     sessionId,
-  //     rank,
-  //     monsterType,
-  //     targetMonster,
-  //     description
-  //   )
-  // }
   const hasUserFiredSos = () => {
     if (auth && cards) {
       if (cards.hasOwnProperty(auth.uid)) {
@@ -208,78 +197,8 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
     return array
   }
 
-  // const asyncSignin = async () => {
-  //   return console.log(signInAnonymously)
-  // }
-  // const asyncAddCard = async () => {
-  //   await asyncSignin()
-  //   addCard(
-  //     username,
-  //     platform,
-  //     sessionId,
-  //     rank,
-  //     monsterType,
-  //     targetMonster,
-  //     description
-  //   )
-  // }
-
-  function resolveSignin() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        signInAnonymously()
-        resolve("User signed in")
-      }, 1000)
-    })
-  }
-
-  function resolveAddCard() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        addCard(
-          username,
-          platform,
-          sessionId,
-          rank,
-          monsterType,
-          targetMonster,
-          description
-        )
-        resolve("CARD ADDED")
-      }, 2000)
-    })
-  }
-  const signAndAdd = async () => {
-    // let mockState = false
-    // if (!mockState) {
-    //   signInAnonymously()
-    //   let mockState = true
-    //   console.log(mockState)
-    // }
-    // if (mockState) {
-    //   addCard(
-    //     username,
-    //     platform,
-    //     sessionId,
-    //     rank,
-    //     monsterType,
-    //     targetMonster,
-    //     description
-    //   )
-    //   console.log("works")
-    //   handleSigninStateOff()
-    // } else {
-    //   console.log(mockState)
-    // }
-    const signinResult = await resolveSignin()
-    const addCardResult = await resolveAddCard()
-    console.log(signinResult)
-    console.log(addCardResult)
-  }
-
-  const test = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
-    console.log("test")
     addCard(
       username,
       platform,
@@ -290,7 +209,6 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
       description
     )
   }
-
   return (
     <>
       <Button
@@ -328,9 +246,7 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
                 <CloseIcon />
               </IconButton>
             </div>
-            <form
-              onSubmit={test}
-            >
+            <form onSubmit={handleSubmit}>
               <h2>SOS Details</h2>
 
               <Grid
@@ -339,6 +255,15 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
                 direction="column"
                 spacing={5}
               >
+                <div className={classes.hintContainer}>
+                  <Icon>
+                    <InfoIcon fontSize={"small"} />
+                  </Icon>
+                  <Typography variant="caption">
+                    Firing an SOS will automatically make you an account for
+                    managing your flares! Choose your username wisely. :)
+                  </Typography>
+                </div>
                 <Grid item sm={12}>
                   {/*
             USERNAME FIELD
@@ -352,6 +277,8 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
                       size="small"
                       onChange={handleUsername}
                       inputProps={{ maxLength: 12 }}
+                      error={userTaken ? true : false}
+                      helperText={userTaken ? userTaken : null}
                     />
                     <br />
                   </FormControl>
@@ -471,7 +398,8 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
               {/**
                * FIRE SOS BUTTON
                */}
-              {autoCompleteError ||
+              {userTaken ||
+              autoCompleteError ||
               !username ||
               !platform ||
               !sessionId ||
@@ -491,26 +419,25 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
                   </div>
                 </Tooltip>
               ) : (
-                <Link to="/hub" className={classes.link}>
-                  <Button
-                    type="submit"
-                    onClick={() => {
-                      addCard(
-                        username,
-                        platform,
-                        sessionId,
-                        rank,
-                        monsterType,
-                        targetMonster,
-                        description
-                      )
-                      // signInAnonymously()
-                    }}
-                    fullWidth
-                  >
-                    FIRE SOS
-                  </Button>
-                </Link>
+                // <Link to="/hub" className={classes.link}>
+                <Button
+                  type="submit"
+                  // onClick={() => {
+                  //   addCard(
+                  //     username,
+                  //     platform,
+                  //     sessionId,
+                  //     rank,
+                  //     monsterType,
+                  //     targetMonster,
+                  //     description
+                  //   )
+                  // }}
+                  fullWidth
+                >
+                  FIRE SOS
+                </Button>
+                // </Link>
               )}
             </form>
           </Paper>
@@ -520,11 +447,12 @@ const FireSos = ({ addCard, auth, cards, signInAnonymously }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, firebase }) => {
+const mapStateToProps = ({ firestore, firebase, cards }) => {
   return {
     cards: firestore.data,
     uid: firebase.auth.uid,
     auth: firebase.auth,
+    userTaken: cards.error,
   }
 }
 

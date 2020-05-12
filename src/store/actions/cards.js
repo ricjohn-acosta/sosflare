@@ -13,41 +13,58 @@ export function addCard(
 ) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
-    const userId = getState().firebase.auth.uid
-    const firebase = getFirebase()
     const firestore = getFirebase().firestore()
     const date_created = moment().format()
     const timestamp = new Date()
     const id = Date.now()
+    const userId = getState().firebase.auth.uid
 
     firestore
-      .collection("cards")
-      .doc()
-      .set({
-        id,
-        username,
-        platform,
-        session_id: sessionId,
-        rank,
-        monster_type: monsterType,
-        target_monster: targetMonster,
-        description,
-        date_created: date_created,
-        timestamp,
-      })
+      .collection("users")
+      .where("user_name", "==", username)
+      .get()
       .then(data => {
-        console.log(data)
-        dispatch(
-          signUp("defaultemail@default.com", username, "default", sessionId, id)
-        )
-        console.log("CARD ADDED TO DB")
-        dispatch({ type: actions.ADD_CARD_SUCCESS })
+        if (data.empty) {
+          dispatch(
+            signUp(
+              "defaultemail@default.com",
+              username,
+              "default",
+              sessionId,
+              id
+            )
+          )
+          firestore
+            .collection("cards")
+            .doc()
+            .set({
+              id,
+              username,
+              platform,
+              session_id: sessionId,
+              rank,
+              monster_type: monsterType,
+              target_monster: targetMonster,
+              description,
+              date_created: date_created,
+              timestamp,
+            })
+            .then(data => {
+              console.log(data)
+
+              console.log("CARD ADDED TO DB")
+              dispatch({ type: actions.ADD_CARD_SUCCESS })
+            })
+            .catch(err => {
+              console.log(err)
+              dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
+            })
+          dispatch({ type: actions.ADD_CARD_END })
+        } else {
+          console.log("USERNAME TAKEN!")
+          dispatch({ type: actions.ADD_CARD_FAIL, payload: "USERNAME TAKEN" })
+        }
       })
-      .catch(err => {
-        console.log(err)
-        dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
-      })
-    dispatch({ type: actions.ADD_CARD_END })
   }
 }
 

@@ -9,7 +9,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import FireSos from "../components/FireSos"
 import { makeStyles } from "@material-ui/core/styles"
-import { Paper } from "@material-ui/core"
+import { Paper, Typography } from "@material-ui/core"
 import Hidden from "@material-ui/core/Hidden"
 import Grid from "@material-ui/core/Grid"
 import Box from "@material-ui/core/Box"
@@ -54,6 +54,17 @@ const useStyles = makeStyles(theme => ({
       marginLeft: "20%",
     },
   },
+
+  loginInfo: {
+    [theme.breakpoints.down("sm")]: {
+      position: "relative",
+      textAlign: "center",
+    },
+    [theme.breakpoints.up("sm")]: {
+      textAlign: "center",
+      paddingRight: "50px"
+    },
+  },
 }))
 
 const IndexPage = ({ cards, uid }) => {
@@ -77,6 +88,9 @@ const IndexPage = ({ cards, uid }) => {
               <Grid container>
                 <Grid item xs={12} sm={6}>
                   <FireSos />
+                  <div className={classes.loginInfo}>
+                    <Typography>or login!</Typography>
+                  </div>
                 </Grid>
                 <Hidden mdDown>
                   <div className="divider" />
