@@ -29,23 +29,23 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards, type, user }) => {
+const HubCards = ({ requested, cards, type, user, currentPage }) => {
   const classes = useStyles()
   const currentTime = moment()
 
   const loadNextPage = () => {
     let array = []
     let cardsPerPage = 9
-    let cardCount = 0
     // Page 1: i=0, i<=8
     // Page 2: i=9, i<=17
     // Page 3: i=18, i<=26...
     // startAt=0
     if (requested && cards) {
       // let i = 'currentPage * cardsPerPage; i <= 'currentPage * cardsPerPage - 1; i++
-      for (let i = 0; i <= 8; i++) {
+      console.log("test", (currentPage-1) * cardsPerPage)
+      for (let i = (currentPage-1) * cardsPerPage; i <= currentPage * cardsPerPage - 1; i++) {
+        // for(let i = 9; i <=17; i++){
         if (cards[i]) {
-          cardCount++
           console.log(cards.length)
           array.push(
             <HubCard
@@ -66,6 +66,7 @@ const HubCards = ({ requested, cards, type, user }) => {
     }
     return array
   }
+
   const loadCards = () => {
     if (requested && cards) {
       return (
@@ -109,6 +110,7 @@ const mapStateToProps = ({ firestore, cards }) => {
     requested: firestore.status.requested,
     type: cards.sortBy,
     user: cards.find,
+    currentPage: cards.currentPage
   }
 }
 

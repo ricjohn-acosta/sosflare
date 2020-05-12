@@ -7,12 +7,12 @@ const HubCardsPagination = ({ requested, cards, changePage }) => {
 
   const handleNextPage = event => {
     setCurrentPage(++event.target.value)
-    changePage(event.target.value)
+    changePage(Number(event.target.value))
   }
 
   const handlePrevPage = event => {
     setCurrentPage(--event.target.value)
-    changePage(event.target.value)
+    changePage(Number(event.target.value))
   }
 
   const checkPageCount = () => {
