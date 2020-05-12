@@ -1,6 +1,6 @@
 import * as actions from "./actionTypes"
 
-export function signUp(email, username, password, sessionId) {
+export function signUp(email, username, password, sessionId, id) {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     // dispatch({ type: actions.AUTH_START, payload: true })
     const firebase = getFirebase()
@@ -17,7 +17,7 @@ export function signUp(email, username, password, sessionId) {
         firestore
           .collection("users")
           .doc(res.user.uid)
-          .set({ user_name: username, flare: sessionId })
+          .set({ user_name: username, flare: sessionId, id: id })
           .then(() => {
             console.log("USER ADDED TO FIRESTORE")
           })

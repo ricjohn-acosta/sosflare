@@ -18,11 +18,13 @@ export function addCard(
     const firestore = getFirebase().firestore()
     const date_created = moment().format()
     const timestamp = new Date()
+    const id = Date.now()
 
     firestore
       .collection("cards")
-      .doc(username)
+      .doc()
       .set({
+        id,
         username,
         platform,
         session_id: sessionId,
@@ -33,9 +35,10 @@ export function addCard(
         date_created: date_created,
         timestamp,
       })
-      .then(() => {
+      .then(data => {
+        console.log(data)
         dispatch(
-          signUp("defaultemail@default.com", username, "default", sessionId)
+          signUp("defaultemail@default.com", username, "default", sessionId, id)
         )
         console.log("CARD ADDED TO DB")
         dispatch({ type: actions.ADD_CARD_SUCCESS })

@@ -20,6 +20,7 @@ import { ListItemIcon } from "@material-ui/core"
 import FlareIcon from "@material-ui/icons/Flare"
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
 import Tooltip from "@material-ui/core/Tooltip"
+import { green } from "@material-ui/core/colors"
 
 const useStyles = makeStyles(theme => ({
   cardWrapper: {
@@ -79,9 +80,16 @@ const useStyles = makeStyles(theme => ({
   ArchTempered: {
     backgroundColor: "#FF9900",
   },
+  editBtn: {
+    backgroundColor: "#99FF66",
+    "&:hover": {
+      backgroundColor: "#33FF66",
+    },
+  },
 }))
 
 const HubCard = ({
+  id,
   username,
   sessionId,
   targetMonster,
@@ -90,6 +98,7 @@ const HubCard = ({
   monsterImage,
   monsterType,
   startTime,
+  userCreated,
 }) => {
   const classes = useStyles()
   const [tooltipState, setTooltipState] = React.useState(false)
@@ -185,10 +194,22 @@ const HubCard = ({
         </Tooltip>
         <CardContent>
           <Button>See details</Button>
+          {userCreated === id ? (
+            <Button className={classes.editBtn} variant="contained">
+              Edit
+            </Button>
+          ) : null}
         </CardContent>
       </Card>
+      {console.log(Date.now())}
     </Grid>
   )
 }
 
-export default HubCard
+const mapStateToProps = ({ firebase }) => {
+  return {
+    userCreated: firebase.profile.id,
+  }
+}
+
+export default connect(mapStateToProps)(HubCard)

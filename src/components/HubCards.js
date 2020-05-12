@@ -53,6 +53,7 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
           console.log(cards.length)
           array.push(
             <HubCard
+              id={cards[i].id}
               username={cards[i].username}
               description={cards[i].description}
               monsterType={cards[i].monster_type}
@@ -63,6 +64,7 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
               monsterImage={require(`../images/monsters/${cards[i].target_monster}.png`)}
               startTime={currentTime.from(cards[i].date_created, true)}
               timestamp={cards[i].timestamp}
+              dateCreated={cards[i].dateCreated}
             />
           )
         }
@@ -121,16 +123,6 @@ const mapStateToProps = ({ firestore, cards }) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect(props => {
-    const test = () => {
-      if (props.cards !== undefined) {
-        console.log(
-          "last monster in array",
-          props.cards[props.cards.length - 1]
-        )
-        return props.cards[props.cards[props.cards.length - 1]]
-      }
-    }
-    test()
     return [
       {
         collection: "cards",
