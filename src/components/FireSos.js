@@ -24,7 +24,6 @@ import InfoIcon from "@material-ui/icons/Info"
 import Icon from "@material-ui/core/Icon"
 import { Typography } from "@material-ui/core"
 import CircularProgress from "@material-ui/core/CircularProgress"
-import LinearProgress from "@material-ui/core/LinearProgress"
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
@@ -97,18 +96,19 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
+const FireSos = ({ addCard, cardLoading, userTaken }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
   const [sessionId, setSessionId] = React.useState("")
   const [rank, setRank] = React.useState("")
-  const [resetMonsters, setResetMonsters] = React.useState(false)
+  // const [resetMonsters, setResetMonsters] = React.useState(false)
   const [monsterType, setMonsterType] = React.useState("")
   const [targetMonster, setTargetMonster] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
   const [open, setOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   const handleUsername = event => {
     setUsername(event.target.value)
@@ -120,7 +120,7 @@ const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
 
   const handleRank = event => {
     setRank(event.target.value)
-    setResetMonsters(true)
+    // setResetMonsters(true)
   }
 
   const handleMonsterType = event => {
@@ -133,7 +133,7 @@ const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
 
   const handleTargetMonster = event => {
     setTargetMonster(event.target.value)
-    setResetMonsters(false)
+    // setResetMonsters(false)
   }
 
   const handleDescription = event => {
@@ -156,6 +156,23 @@ const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
     setOpen(false)
   }
 
+  const handleLoading = () => {
+    setLoading(true)
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    handleLoading()
+    addCard(
+      username,
+      platform,
+      sessionId,
+      rank,
+      monsterType,
+      targetMonster,
+      description
+    )
+  }
   // const hasUserFiredSos = () => {
   //   if (auth && cards) {
   //     if (cards.hasOwnProperty(auth.uid)) {
@@ -199,18 +216,6 @@ const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
     return array
   }
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    addCard(
-      username,
-      platform,
-      sessionId,
-      rank,
-      monsterType,
-      targetMonster,
-      description
-    )
-  }
   return (
     <>
       <Button
@@ -422,12 +427,12 @@ const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
               ) : (
                 <>
                   <Button type="submit" fullWidth>
-                    FIRE SOS &nbsp;
+                    FIRE SOS &nbsp; {loading ? <CircularProgress /> : null}
                   </Button>
                 </>
               )}
             </form>
-            {isLoading ? <LinearProgress /> : null}
+            {/* {handleLoading()} */}
           </Paper>
         </Fade>
       </Modal>
@@ -435,11 +440,10 @@ const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, firebase, cards, auth }) => {
+const mapStateToProps = ({ firestore, firebase, cards }) => {
   return {
     cards: firestore.data,
     uid: firebase.auth.uid,
-    isLoading: auth.loading,
     userTaken: cards.error,
   }
 }
