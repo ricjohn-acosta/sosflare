@@ -67,12 +67,12 @@ const Header = ({ siteTitle, uid }) => {
               variant="text"
             >
               {uid || (
-                <Button color="inherit" component={Link} to="login">
+                <Button color="inherit" component={Link} to="/login">
                   Login
                 </Button>
               )}
               {!uid || (
-                <Button color="inherit" component={Link} to="profile">
+                <Button color="inherit" component={Link} to="/profile">
                   Profile
                 </Button>
               )}
