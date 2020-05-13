@@ -29,7 +29,7 @@ const sortOldest = (a, b) => {
 
 const HubCardsSorter = ({ children, sortBy, find }) => {
   const user = React.Children.toArray(children).find(
-    object => object.props.username === find
+    card => card.props.username === find
   )
   if (find) {
     if (user) {

@@ -33,7 +33,7 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
   const classes = useStyles()
   const currentTime = moment()
 
-  const loadCards = () => {
+  const fetchCards = () => {
     let array = []
     let cardsPerPage = 9
     // Page 1: i=0, i<=8
@@ -73,11 +73,11 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
     return array
   }
 
-  const HubCards = () => {
+  const displayCards = () => {
     if (requested && cards) {
       return (
         <HubCardsSorter sortBy={type} find={user}>
-          {loadCards()}
+          {fetchCards()}
         </HubCardsSorter>
       )
     }
@@ -87,7 +87,7 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
     <>
       <Paper className={classes.wrapper} elevation={1}>
         <Grid container direction="row" spacing={4}>
-          {loadCards()}
+          {displayCards()}
         </Grid>
       </Paper>
     </>

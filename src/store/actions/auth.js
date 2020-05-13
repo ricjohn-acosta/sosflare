@@ -2,7 +2,7 @@ import * as actions from "./actionTypes"
 
 export function signUp(email, username, password, sessionId, id) {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    // dispatch({ type: actions.AUTH_START, payload: true })
+    dispatch({ type: actions.AUTH_START })
     const firebase = getFirebase()
     const firestore = getFirebase().firestore()
 
@@ -21,12 +21,31 @@ export function signUp(email, username, password, sessionId, id) {
           .then(() => {
             console.log("USER ADDED TO FIRESTORE")
           })
-        // dispatch({ type: actions.AUTH_SUCCESS })
+        dispatch({ type: actions.AUTH_SUCCESS })
       })
       .catch(err => {
         console.log(err)
-        // dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+        dispatch({ type: actions.AUTH_FAIL, payload: err.message })
       })
-    // dispatch({ type: actions.AUTH_END })
+    dispatch({ type: actions.AUTH_END })
   }
+}
+
+export function logIn(email, password) {
+  return (dispatch, getState, { getFirebase }) => {
+    dispatch({ type: actions.AUTH_START });
+    const firebase = getFirebase();
+
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log("USER LOGGED IN ");
+        dispatch({ type: actions.AUTH_SUCCESS });
+      })
+      .catch((err) => {
+        dispatch({ type: actions.AUTH_FAIL, payload: err.message });
+      });
+    dispatch({ type: actions.AUTH_END });
+  };
 }

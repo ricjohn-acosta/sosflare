@@ -1,4 +1,6 @@
 import React from "react"
+import { logIn } from "../store/actions/auth"
+import { connect } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 import Paper from "@material-ui/core/Paper"
 import Button from "@material-ui/core/Button"
@@ -8,6 +10,7 @@ import EmailIcon from "@material-ui/icons/Email"
 import Typography from "@material-ui/core/Typography"
 import InputAdornment from "@material-ui/core/InputAdornment"
 import LockIcon from "@material-ui/icons/Lock"
+
 const useStyles = makeStyles(theme => ({
   formContainer: {
     [theme.breakpoints.down("sm")]: {
@@ -35,11 +38,28 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Login = () => {
+const Login = ({ login }) => {
   const classes = useStyles()
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
+
+  const handleEmail = e => {
+    setEmail(e.target.value)
+  }
+
+  const handlePassword = e => {
+    setPassword(e.target.value)
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    console.log(email)
+    console.log(password)
+    login(email, password)
+  }
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <Paper className={classes.formContainer}>
           <Grid container direction="column" align="center">
             <div>
@@ -52,6 +72,7 @@ const Login = () => {
                 label="Email"
                 fullWidth
                 type="email"
+                onChange={handleEmail}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -66,6 +87,7 @@ const Login = () => {
                 label="Password"
                 fullWidth
                 type="password"
+                onChange={handlePassword}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -87,4 +109,10 @@ const Login = () => {
   )
 }
 
-export default Login
+const mapDispatchToProps = dispatch => {
+  return {
+    login: (email, password) => dispatch(logIn(email, password)),
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Login)

@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.up("sm")]: {
       textAlign: "center",
-      paddingRight: "50px"
+      paddingRight: "50px",
     },
   },
 }))
@@ -90,7 +90,7 @@ const IndexPage = ({ cards, uid }) => {
                   <FireSos />
                   <div className={classes.loginInfo}>
                     <Link to="/login">
-                    <Typography>or login!</Typography>
+                      <Typography>or login!</Typography>
                     </Link>
                   </div>
                 </Grid>
@@ -125,14 +125,10 @@ const IndexPage = ({ cards, uid }) => {
   }
 }
 
-const mapStateToProps = ({ firestore, firebase }) => {
+const mapStateToProps = ({ firebase }) => {
   return {
-    cards: firestore.data.cards,
     uid: firebase.auth.uid,
   }
 }
 
-export default compose(
-  connect(mapStateToProps)
-  // firestoreConnect(props => [{ collection: "test" }])
-)(IndexPage)
+export default connect(mapStateToProps)(IndexPage)

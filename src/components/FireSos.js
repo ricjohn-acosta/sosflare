@@ -23,6 +23,8 @@ import Fade from "@material-ui/core/Fade"
 import InfoIcon from "@material-ui/icons/Info"
 import Icon from "@material-ui/core/Icon"
 import { Typography } from "@material-ui/core"
+import CircularProgress from "@material-ui/core/CircularProgress"
+import LinearProgress from "@material-ui/core/LinearProgress"
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
@@ -95,7 +97,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FireSos = ({ addCard, auth, cards, userTaken }) => {
+const FireSos = ({ addCard, isLoading, cards, userTaken }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -106,15 +108,10 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
   const [targetMonster, setTargetMonster] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
-  const [usernameChanged, setUsernameChanged] = React.useState(false)
   const [open, setOpen] = React.useState(false)
 
   const handleUsername = event => {
     setUsername(event.target.value)
-  }
-
-  const handleUsernameChanged = event => {
-    setUsername(true)
   }
 
   const handlePlatform = event => {
@@ -159,15 +156,15 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
     setOpen(false)
   }
 
-  const hasUserFiredSos = () => {
-    if (auth && cards) {
-      if (cards.hasOwnProperty(auth.uid)) {
-        return true
-      }
-    } else {
-      return false
-    }
-  }
+  // const hasUserFiredSos = () => {
+  //   if (auth && cards) {
+  //     if (cards.hasOwnProperty(auth.uid)) {
+  //       return true
+  //     }
+  //   } else {
+  //     return false
+  //   }
+  // }
 
   const checkAutocompleteInput = monsterName => {
     if (monsterName === "") {
@@ -224,7 +221,7 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
         color="primary"
         disableRipple
         fullWidth
-        disabled={!hasUserFiredSos() ? false : true}
+        // disabled={!hasUserFiredSos() ? false : true}
       >
         <h3>FIRE SOS</h3>
       </Button>
@@ -403,8 +400,7 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
               {/**
                * FIRE SOS BUTTON
                */}
-              {
-              autoCompleteError ||
+              {autoCompleteError ||
               !username ||
               !platform ||
               !sessionId ||
@@ -424,12 +420,14 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
                   </div>
                 </Tooltip>
               ) : (
-                <Button type="submit" fullWidth>
-                  FIRE SOS
-                </Button>
-                // </Link>
+                <>
+                  <Button type="submit" fullWidth>
+                    FIRE SOS &nbsp;
+                  </Button>
+                </>
               )}
             </form>
+            {isLoading ? <LinearProgress /> : null}
           </Paper>
         </Fade>
       </Modal>
@@ -437,11 +435,11 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, firebase, cards }) => {
+const mapStateToProps = ({ firestore, firebase, cards, auth }) => {
   return {
     cards: firestore.data,
     uid: firebase.auth.uid,
-    auth: firebase.auth,
+    isLoading: auth.loading,
     userTaken: cards.error,
   }
 }

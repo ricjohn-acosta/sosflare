@@ -71,18 +71,11 @@ const Header = ({ siteTitle, uid }) => {
                   Login
                 </Button>
               )}
-              {uid || (
-                <Button color="inherit" component={Link} to="signup">
-                  SIGNUP
+              {!uid || (
+                <Button color="inherit" component={Link} to="profile">
+                  Profile
                 </Button>
               )}
-              <Button
-                color="inherit"
-                component={Link}
-                to={uid ? "profile" : "login"}
-              >
-                Profile
-              </Button>
             </ButtonGroup>
           </Grid>
         </Grid>
