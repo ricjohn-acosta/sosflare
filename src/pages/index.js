@@ -89,7 +89,9 @@ const IndexPage = ({ cards, uid }) => {
                 <Grid item xs={12} sm={6}>
                   <FireSos />
                   <div className={classes.loginInfo}>
+                    <Link to="/login">
                     <Typography>or login!</Typography>
+                    </Link>
                   </div>
                 </Grid>
                 <Hidden mdDown>

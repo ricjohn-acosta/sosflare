@@ -8,7 +8,7 @@ export function signUp(email, username, password, sessionId, id) {
 
     firebase
       .auth()
-      .createUserWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(`${id}@default.com`, password)
       .then(res => {
         const currentUser = firebase.auth().currentUser
         currentUser.updateProfile({ displayName: username }).then(() => {

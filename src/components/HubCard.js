@@ -81,9 +81,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#FF9900",
   },
   editBtn: {
-    backgroundColor: "#99FF66",
+    backgroundColor: "#33FF66",
+    color: "black",
     "&:hover": {
-      backgroundColor: "#33FF66",
+      backgroundColor: "#99FF66",
     },
   },
 }))
@@ -194,6 +195,7 @@ const HubCard = ({
         </Tooltip>
         <CardContent>
           <Button>See details</Button>
+          &nbsp;
           {userCreated === id ? (
             <Button className={classes.editBtn} variant="contained">
               Edit

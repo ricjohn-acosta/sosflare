@@ -106,10 +106,15 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
   const [targetMonster, setTargetMonster] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
+  const [usernameChanged, setUsernameChanged] = React.useState(false)
   const [open, setOpen] = React.useState(false)
 
   const handleUsername = event => {
     setUsername(event.target.value)
+  }
+
+  const handleUsernameChanged = event => {
+    setUsername(true)
   }
 
   const handlePlatform = event => {
@@ -398,7 +403,7 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
               {/**
                * FIRE SOS BUTTON
                */}
-              {userTaken ||
+              {
               autoCompleteError ||
               !username ||
               !platform ||
@@ -419,10 +424,7 @@ const FireSos = ({ addCard, auth, cards, userTaken }) => {
                   </div>
                 </Tooltip>
               ) : (
-                <Button
-                  type="submit"
-                  fullWidth
-                >
+                <Button type="submit" fullWidth>
                   FIRE SOS
                 </Button>
                 // </Link>

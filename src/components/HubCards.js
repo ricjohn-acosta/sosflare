@@ -33,7 +33,7 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
   const classes = useStyles()
   const currentTime = moment()
 
-  const loadNextPage = () => {
+  const loadCards = () => {
     let array = []
     let cardsPerPage = 9
     // Page 1: i=0, i<=8
@@ -63,7 +63,7 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
               targetMonster={cards[i].target_monster}
               monsterImage={require(`../images/monsters/${cards[i].target_monster}.png`)}
               startTime={currentTime.from(cards[i].date_created, true)}
-              timestamp={cards[i].timestamp}
+              timestamp={cards[i].date_created}
               dateCreated={cards[i].dateCreated}
             />
           )
@@ -73,27 +73,11 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
     return array
   }
 
-  const loadCards = () => {
+  const HubCards = () => {
     if (requested && cards) {
       return (
         <HubCardsSorter sortBy={type} find={user}>
-          {/* {Object.values(cards).map(card => {
-            return (
-              <HubCard
-                username={card.username}
-                description={card.description}
-                monsterType={card.monster_type}
-                platform={card.platform}
-                rank={card.rank}
-                sessionId={card.session_id}
-                targetMonster={card.target_monster}
-                monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
-                startTime={currentTime.from(card.date_created, true)}
-                timestamp={card.timestamp}
-              />
-            )
-          })} */}
-          {loadNextPage()}
+          {loadCards()}
         </HubCardsSorter>
       )
     }
