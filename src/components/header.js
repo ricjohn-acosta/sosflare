@@ -73,6 +73,11 @@ const Header = ({ siteTitle, uid }) => {
               )}
               {!uid || (
                 <Button color="inherit" component={Link} to="/profile">
+                  Logout
+                </Button>
+              )}
+              {!uid || (
+                <Button color="inherit" component={Link} to="/profile">
                   Profile
                 </Button>
               )}
