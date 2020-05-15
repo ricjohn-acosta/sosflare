@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "gatsby"
 import * as clipboard from "clipboard-polyfill/dist/clipboard-polyfill.promise"
 import { connect } from "react-redux"
 import { compose } from "redux"
@@ -194,7 +195,8 @@ const HubCard = ({
           </CardActionArea>
         </Tooltip>
         <CardContent>
-          <Button>See details</Button>
+          {/** Link button to /{sessionId} */}
+          <Button component={Link} to={`/hub/${sessionId}`} state={{username:"test"}}>See details</Button>
           &nbsp;
           {userCreated === id ? (
             <Button className={classes.editBtn} variant="contained">
