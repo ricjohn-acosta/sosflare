@@ -96,3 +96,16 @@ export function changePage(currentPage) {
     dispatch({ type: actions.CHANGE_PAGE, payload: currentPage })
   }
 }
+
+export function loadNextPage(lastItem) {
+  return dispatch => {
+    dispatch({ type: actions.NEXT_PAGE, payload: lastItem })
+  }
+}
+
+export function loadPrevPage(firstItem) {
+  return dispatch => {
+    dispatch({ type: actions.PREV_PAGE, payload: firstItem })
+  }
+}
+

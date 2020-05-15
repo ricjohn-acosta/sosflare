@@ -44,11 +44,13 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
       // let i = 'currentPage * cardsPerPage; i <= 'currentPage * cardsPerPage - 1; i++
       console.log("test", (currentPage - 1) * cardsPerPage)
       for (
-        let i = (currentPage - 1) * cardsPerPage;
-        i <= currentPage * cardsPerPage - 1;
-        i++
-      ) // let i = 0; i <= 9; i++
-      {
+        // let i = (currentPage - 1) * cardsPerPage;
+        // i <= currentPage * cardsPerPage - 1;
+        // i++
+        let i = 0;
+        i <= 8;
+        i++ // let i = 0; i <= 9; i++
+      ) {
         // for(let i = 9; i <=17; i++){
         if (cards[i]) {
           array.push(
@@ -100,7 +102,7 @@ const mapStateToProps = ({ firestore, cards }) => {
     requested: firestore.status.requested,
     type: cards.sortBy,
     user: cards.find,
-    test: firestore.data,
+    lastVisible: cards.lastItem,
     currentPage: cards.currentPage,
   }
 }
@@ -128,20 +130,26 @@ export default compose(
     //   }
     // }
 
-    let lastVisible;
-    if (props.cards) {
-      console.log("monster", props.cards[9].target_monster)
-      console.log(props.test.cards)
-      lastVisible = props.cards[9].target_monster
+    // let lastVisible;
+    // if (props.cards) {
+    //   console.log("monster", props.cards[9].target_monster)
+    //   console.log(props.test.cards)
+    //   lastVisible = props.cards[9].target_monster
+    // }
+    // console.log(lastVisible)
+    const test = () => {
+      if (props.currentPage === 1) {
+        return null
+      } else {
+        return props.lastVisible
+      }
     }
-    console.log(lastVisible)
-    let test = "Brute Tigrex"
     return [
       {
         collection: "cards",
         orderBy: ["target_monster"],
-        startAt: 0,
-        startAfter: lastVisible ,
+        // startAt: props.lastVisible,
+        startAfter: test(),
         limit: 10,
         // limit: 10 * props.currentPage,
       },

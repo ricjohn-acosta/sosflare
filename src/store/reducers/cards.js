@@ -6,6 +6,8 @@ const initialState = {
   sortBy: null,
   find: null,
   currentPage: 1,
+  lastItem: null,
+  firstItem: null,
 }
 
 // HELPER FUNCTIONS
@@ -57,6 +59,18 @@ const changePage = (state, payload) => {
     currentPage: payload,
   }
 }
+const loadNextPage = (state, payload) => {
+  return {
+    ...state,
+    lastItem: payload,
+  }
+}
+const loadPrevPage = (state, payload) => {
+  return {
+    ...state,
+    firstItem: payload,
+  }
+}
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -80,6 +94,12 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.CHANGE_PAGE:
       return changePage(state, payload)
+
+    case actions.NEXT_PAGE:
+      return loadNextPage(state, payload)
+      
+    case actions.PREV_PAGE:
+      return loadPrevPage(state, payload)
 
     default:
       return state

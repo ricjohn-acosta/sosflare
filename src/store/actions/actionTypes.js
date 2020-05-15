@@ -7,7 +7,11 @@ export const ADD_CARD_END = "ADD_CARD_END"
 // TOOLBAR ACTIONS
 export const SORT_CARDS = "SORT_CARDS"
 export const FIND_USER = "FIND_USER"
+
+// PAGINATION ACTIONS
 export const CHANGE_PAGE = "CHANGE_PAGE"
+export const NEXT_PAGE = "NEXT_PAGE"
+export const PREV_PAGE = "PREV_PAGE"
 
 // AUTH ACTIONS
 export const AUTH_START = "AUTH_START";
