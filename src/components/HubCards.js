@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards, type, user, currentPage }) => {
+const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
   const classes = useStyles()
   const currentTime = moment()
 
@@ -47,10 +47,10 @@ const HubCards = ({ requested, cards, type, user, currentPage }) => {
         let i = (currentPage - 1) * cardsPerPage;
         i <= currentPage * cardsPerPage - 1;
         i++
-      ) {
+      ) // let i = 0; i <= 9; i++
+      {
         // for(let i = 9; i <=17; i++){
         if (cards[i]) {
-          console.log(cards.length)
           array.push(
             <HubCard
               id={cards[i].id}
@@ -100,6 +100,7 @@ const mapStateToProps = ({ firestore, cards }) => {
     requested: firestore.status.requested,
     type: cards.sortBy,
     user: cards.find,
+    test: firestore.data,
     currentPage: cards.currentPage,
   }
 }
@@ -107,11 +108,42 @@ const mapStateToProps = ({ firestore, cards }) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect(props => {
+    // const lastVisible = () => {
+    //   return props.cards[props.cards.length-1].target_monster
+    // }
+
+    // const checkPage = () => {
+    //   if(props.currentPage !== 1) {
+    //     return lastVisible()
+    //   } else {
+    //     return props.cards[0].target_monster
+    //   }
+    // }
+
+    // const lastVisible = () => {
+    //   if (props.requested && props.test) {
+    //     // console.log("monster", props.cards[9].target_monster)
+    //     // console.log(props.test.cards.mDku0TX3u1VXNAIuOqQk.target_monster)
+    //     return props.test.cards.mDku0TX3u1VXNAIuOqQk.target_monster
+    //   }
+    // }
+
+    let lastVisible;
+    if (props.cards) {
+      console.log("monster", props.cards[9].target_monster)
+      console.log(props.test.cards)
+      lastVisible = props.cards[9].target_monster
+    }
+    console.log(lastVisible)
+    let test = "Brute Tigrex"
     return [
       {
         collection: "cards",
-        orderBy: ["timestamp", "desc"],
-        limit: 10 * props.currentPage,
+        orderBy: ["target_monster"],
+        startAt: 0,
+        startAfter: lastVisible ,
+        limit: 10,
+        // limit: 10 * props.currentPage,
       },
     ]
   })

@@ -212,7 +212,9 @@ const HubCard = ({
 
 const mapStateToProps = ({ firebase }) => {
   return {
-    userCreated: firebase.profile.id,
+    // userCreated: firebase.profile.id,
+    userCreated: firebase.auth.uid,
+
   }
 }
 

@@ -1,5 +1,5 @@
 import * as actions from "./actionTypes"
-import { signUp } from "./auth"
+import { createAnonAccount } from "./auth"
 import moment from "moment"
 
 export function addCard(
@@ -13,6 +13,7 @@ export function addCard(
 ) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
+    const firebase = getFirebase()
     const firestore = getFirebase().firestore()
     const date_created = moment().format()
     const timestamp = new Date()
@@ -20,49 +21,59 @@ export function addCard(
     const userId = getState().firebase.auth.uid
 
     firestore
-      .collection("users")
-      .where("user_name", "==", username)
+      .collection("cards")
+      .where("username", "==", username)
       .get()
       .then(data => {
         if (data.empty) {
-          dispatch(
-            signUp(
-              "defaultemail@default.com",
-              username,
-              "default",
-              sessionId,
-              id
-            )
-          )
-          firestore
-            .collection("cards")
-            .doc()
-            .set({
-              id,
-              username,
-              platform,
-              session_id: sessionId,
-              rank,
-              monster_type: monsterType,
-              target_monster: targetMonster,
-              description,
-              date_created: date_created,
-              timestamp,
+          // dispatch(
+          //   createAnonAccount(id)
+          // )
+          firebase
+            .auth()
+            .signInAnonymously()
+            .then(res => {
+              const currentUser = firebase.auth().currentUser
+              console.log(res)
+              firestore
+                .collection("cards")
+                .doc(res.user.uid)
+                .set({
+                  id: res.user.uid,
+                  username,
+                  platform,
+                  session_id: sessionId,
+                  rank,
+                  monster_type: monsterType,
+                  target_monster: targetMonster,
+                  description,
+                  date_created: date_created,
+                  timestamp,
+                })
+                .then(() => {
+                  console.log("CARD ADDED TO DB")
+                  dispatch({ type: actions.ADD_CARD_SUCCESS })
+                })
+                .catch(err => {
+                  console.log(err)
+                  dispatch({
+                    type: actions.ADD_CARD_FAIL,
+                    payload: err.message,
+                  })
+                })
+              dispatch({ type: actions.ADD_CARD_END })
+              currentUser
+                .updateProfile({ displayName: id.toString() })
+                .then(data => {
+                  console.log(data)
+                })
             })
-            .then(data => {
-              console.log(data)
-
-              console.log("CARD ADDED TO DB")
-              dispatch({ type: actions.ADD_CARD_SUCCESS })
+            .catch(e => {
+              console.log(e.message)
             })
-            .catch(err => {
-              console.log(err)
-              dispatch({ type: actions.ADD_CARD_FAIL, payload: err.message })
-            })
-          dispatch({ type: actions.ADD_CARD_END })
         } else {
           console.log("USERNAME TAKEN!")
-          dispatch({ type: actions.ADD_CARD_FAIL, payload: "USERNAME TAKEN" })
+          dispatch({ type: actions.ADD_CARD_FAIL, payload: "Someone with that username has already fired an SOS!" })
         }
       })
   }

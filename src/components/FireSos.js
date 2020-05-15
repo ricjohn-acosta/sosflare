@@ -427,7 +427,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
               ) : (
                 <>
                   <Button type="submit" fullWidth>
-                    FIRE SOS &nbsp; {loading ? <CircularProgress /> : null}
+                    FIRE SOS &nbsp; {loading && !userTaken ? <CircularProgress /> : null}
                   </Button>
                 </>
               )}

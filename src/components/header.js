@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   },
 })
 
-const Header = ({ siteTitle, uid, logout}) => {
+const Header = ({ siteTitle, uid, logout }) => {
   const classes = useStyles()
 
   return (
@@ -97,8 +97,8 @@ const Header = ({ siteTitle, uid, logout}) => {
             </IconButton>
           }
         >
-          Your email and password is currently using default values! Click here
-          to change your email and password or in your profile page.
+          You are currently on a temporary account. Click here to change your
+          email, password and username.
         </Alert>
       ) : null}
     </header>
