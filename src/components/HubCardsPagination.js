@@ -30,6 +30,7 @@ const HubCardsPagination = ({
     setCurrentPage(++event.currentTarget.value)
     console.log("Current page when pressed next page: ", currentPage)
     loadNextPage(getLastItem())
+    // loadNextPage(getLastItem().charAt(0))
     if (lastMonsterRef.indexOf(getLastItem()) === -1) {
       setRef([...lastMonsterRef, getLastItem()])
     }
@@ -43,7 +44,7 @@ const HubCardsPagination = ({
     // loadNextPage(test)
     // loadPrevPage(getFirstItem())
     console.log("Current page: ", currentPage)
-    loadNextPage(lastMonsterRef[currentPage-3])
+    loadNextPage(lastMonsterRef[currentPage - 3])
     changePage(Number(event.currentTarget.value))
   }
 
@@ -68,25 +69,19 @@ const HubCardsPagination = ({
     }
   }
 
-  const getFirstItem = () => {
-    if (requested && cards) {
-      return cards[0].target_monster
-    }
-  }
-
   // Take into account item count per page; so if cards.length is divisible by 9, disable next page button
   return (
     <>
       {console.log(lastMonsterRef)}
-      {currentPage !== 1 ? (
-        <IconButton
-          className={classes.iconButtons}
-          value={currentPage}
-          onClick={handlePrevPage}
-        >
-          <ArrowLeftRoundedIcon />
-        </IconButton>
-      ) : null}
+      {/* {currentPage !== 1 ? ( */}
+      <IconButton
+        className={classes.iconButtons}
+        value={currentPage}
+        onClick={handlePrevPage}
+      >
+        <ArrowLeftRoundedIcon />
+      </IconButton>
+      {/* // ) : null} */}
       <Typography> Page {currentPage}</Typography>
       {currentPage ? (
         <IconButton

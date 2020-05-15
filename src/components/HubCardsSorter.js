@@ -15,7 +15,7 @@ const sortMonster = (a, b) => {
 
 const sortNewest = (a, b) => {
   if (a.props.timestamp > b.props.timestamp) {
-    return 1
+    return -1
   }
   return 0
 }

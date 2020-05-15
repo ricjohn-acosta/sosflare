@@ -110,33 +110,6 @@ const mapStateToProps = ({ firestore, cards }) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect(props => {
-    // const lastVisible = () => {
-    //   return props.cards[props.cards.length-1].target_monster
-    // }
-
-    // const checkPage = () => {
-    //   if(props.currentPage !== 1) {
-    //     return lastVisible()
-    //   } else {
-    //     return props.cards[0].target_monster
-    //   }
-    // }
-
-    // const lastVisible = () => {
-    //   if (props.requested && props.test) {
-    //     // console.log("monster", props.cards[9].target_monster)
-    //     // console.log(props.test.cards.mDku0TX3u1VXNAIuOqQk.target_monster)
-    //     return props.test.cards.mDku0TX3u1VXNAIuOqQk.target_monster
-    //   }
-    // }
-
-    // let lastVisible;
-    // if (props.cards) {
-    //   console.log("monster", props.cards[9].target_monster)
-    //   console.log(props.test.cards)
-    //   lastVisible = props.cards[9].target_monster
-    // }
-    // console.log(lastVisible)
     const test = () => {
       if (props.currentPage === 1) {
         return null
@@ -144,15 +117,23 @@ export default compose(
         return props.lastVisible
       }
     }
+
+    const test1 = () => {
+      if(props.requested && props.cards) {
+        return props.cards[8]
+      }
+    }
     return [
       {
         collection: "cards",
         orderBy: ["target_monster"],
         // startAt: props.lastVisible,
-        startAfter: test(),
-        limit: 10,
+        startAt: test(),
+        // startAfter: test1(),
+        limit: 9,
         // limit: 10 * props.currentPage,
       },
+
     ]
   })
 )(HubCards)
