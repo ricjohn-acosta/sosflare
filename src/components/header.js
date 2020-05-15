@@ -1,6 +1,7 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
+import logOut from "../store/actions/auth"
 import { connect } from "react-redux"
 import { AppBar } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
@@ -40,7 +41,7 @@ const useStyles = makeStyles({
   },
 })
 
-const Header = ({ siteTitle, uid }) => {
+const Header = ({ siteTitle, uid, logout}) => {
   const classes = useStyles()
 
   return (
@@ -72,7 +73,7 @@ const Header = ({ siteTitle, uid }) => {
                 </Button>
               )}
               {!uid || (
-                <Button color="inherit" component={Link} to="/profile">
+                <Button color="inherit" onClick={logout}>
                   Logout
                 </Button>
               )}
@@ -118,4 +119,10 @@ const mapStateToProps = ({ firebase }) => {
   }
 }
 
-export default connect(mapStateToProps)(Header)
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(logOut()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

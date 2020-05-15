@@ -49,3 +49,18 @@ export function logIn(email, password) {
     dispatch({ type: actions.AUTH_END });
   };
 }
+
+export function logOut() {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        console.log("USER SIGNED OUT");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
