@@ -1,7 +1,4 @@
 import React from "react"
-import { connect } from "react-redux"
-import { compose } from "redux"
-import { firestoreConnect } from "react-redux-firebase"
 
 const sortMonster = (a, b) => {
   if (a.props.targetMonster < b.props.targetMonster) {

@@ -29,14 +29,14 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards, type, user, currentPage }) => {
+const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
   const classes = useStyles()
   const currentTime = moment()
 
   const fetchCards = () => {
+    let array = []
 
     if (requested && cards) {
-      console.log("test", (currentPage - 1) * cardsPerPage)
       for (
         let i = 0;
         i <= 8;
@@ -111,7 +111,7 @@ export default compose(
     return [
       {
         collection: "cards",
-        orderBy: ["target_monster"],
+        orderBy: ["timestamp", "desc"],
         startAt: checkPage(),
         limit: 10,
       },

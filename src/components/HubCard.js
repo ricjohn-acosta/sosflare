@@ -116,7 +116,7 @@ const HubCard = ({
 
   return (
     <Grid item className={classes.card} xs={12} sm={12} md={4}>
-      <Card className={classes.cardWrapper}>
+      <Card className={classes.cardWrapper} >
         <CardContent className={classes[monsterType]}>
           <Grid container direction="row">
             <Grid item sm={3}>
