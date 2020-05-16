@@ -103,9 +103,9 @@ export function loadNextPage(lastItem) {
   }
 }
 
-export function loadPrevPage(firstItem) {
+export function savePrevPageRef(lastItem) {
   return dispatch => {
-    dispatch({ type: actions.PREV_PAGE, payload: firstItem })
+    dispatch({ type: actions.PREV_PAGE_REF, payload: lastItem })
   }
 }
 

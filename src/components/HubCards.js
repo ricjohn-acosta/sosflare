@@ -29,29 +29,19 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
+const HubCards = ({ requested, cards, type, user, currentPage }) => {
   const classes = useStyles()
   const currentTime = moment()
 
   const fetchCards = () => {
-    let array = []
-    let cardsPerPage = 9
-    // Page 1: i=0, i<=8
-    // Page 2: i=9, i<=17
-    // Page 3: i=18, i<=26...
-    // startAt=0
+
     if (requested && cards) {
-      // let i = 'currentPage * cardsPerPage; i <= 'currentPage * cardsPerPage - 1; i++
       console.log("test", (currentPage - 1) * cardsPerPage)
       for (
-        // let i = (currentPage - 1) * cardsPerPage;
-        // i <= currentPage * cardsPerPage - 1;
-        // i++
         let i = 0;
         i <= 8;
-        i++ // let i = 0; i <= 9; i++
+        i++ 
       ) {
-        // for(let i = 9; i <=17; i++){
         if (cards[i]) {
           array.push(
             <HubCard
@@ -110,7 +100,7 @@ const mapStateToProps = ({ firestore, cards }) => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect(props => {
-    const test = () => {
+    const checkPage = () => {
       if (props.currentPage === 1) {
         return null
       } else {
@@ -118,20 +108,12 @@ export default compose(
       }
     }
 
-    const test1 = () => {
-      if(props.requested && props.cards) {
-        return props.cards[8]
-      }
-    }
     return [
       {
         collection: "cards",
         orderBy: ["target_monster"],
-        // startAt: props.lastVisible,
-        startAt: test(),
-        // startAfter: test1(),
+        startAt: checkPage(),
         limit: 10,
-        // limit: 10 * props.currentPage,
       },
 
     ]

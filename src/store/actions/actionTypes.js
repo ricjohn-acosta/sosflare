@@ -11,7 +11,7 @@ export const FIND_USER = "FIND_USER"
 // PAGINATION ACTIONS
 export const CHANGE_PAGE = "CHANGE_PAGE"
 export const NEXT_PAGE = "NEXT_PAGE"
-export const PREV_PAGE = "PREV_PAGE"
+export const PREV_PAGE_REF = "PREV_PAGE_REF"
 
 // AUTH ACTIONS
 export const AUTH_START = "AUTH_START";

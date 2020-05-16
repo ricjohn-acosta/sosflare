@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { changePage, loadPrevPage, loadNextPage } from "../store/actions/cards"
+import { changePage, savePrevPageRef, loadNextPage } from "../store/actions/cards"
 import { Typography, Button } from "@material-ui/core"
 import ArrowRightRoundedIcon from "@material-ui/icons/ArrowRightRounded"
 import ArrowLeftRoundedIcon from "@material-ui/icons/ArrowLeftRounded"
@@ -18,11 +18,12 @@ const HubCardsPagination = ({
   cards,
   changePage,
   loadNextPage,
-  loadPrevPage,
-  prevPageItem,
-  test,
+  currPage,
+  savePrevPageRef,
+  lastMonRef
 }) => {
   const classes = useStyles()
+  // make this global state
   const [currentPage, setCurrentPage] = React.useState(1)
   let [lastMonsterRef, setRef] = React.useState([])
 
@@ -32,10 +33,12 @@ const HubCardsPagination = ({
     loadNextPage(getLastItem())
     // loadNextPage(getLastItem().charAt(0))
     if (lastMonsterRef.indexOf(getLastItem()) === -1) {
-      setRef([...lastMonsterRef, getLastItem()])
+      // setRef([...lastMonsterRef, getLastItem()])
+      savePrevPageRef(getLastItem())
     }
     // loadPrevPage(prevPageItem)
     changePage(Number(event.currentTarget.value))
+    sendToTop()
   }
 
   const handlePrevPage = event => {
@@ -43,9 +46,10 @@ const HubCardsPagination = ({
     setCurrentPage(--event.currentTarget.value)
     // loadNextPage(test)
     // loadPrevPage(getFirstItem())
-    console.log("Current page: ", currentPage)
-    loadNextPage(lastMonsterRef[currentPage - 3])
+    console.log("Current page: ", currPage)
+    loadNextPage(lastMonRef[currPage - 3])
     changePage(Number(event.currentTarget.value))
+    sendToTop()
   }
 
   const checkPageCount = () => {
@@ -69,30 +73,34 @@ const HubCardsPagination = ({
     }
   }
 
-  const testfunc = () => {
+  const checkNextPage = () => {
     if (requested && cards) {
       return cards.length === 10 ? true : false
     }
   }
 
-  // Take into account item count per page; so if cards.length is divisible by 9, disable next page button
+  const sendToTop = () => {
+    document.body.scrollTop = 0 // For Safari
+    document.documentElement.scrollTop = 0 // For Chrome, Firefox, IE and Opera
+  }
+
   return (
     <>
       {console.log(lastMonsterRef)}
-      {currentPage !== 1 ? (
+      {currPage !== 1 ? (
         <IconButton
           className={classes.iconButtons}
-          value={currentPage}
+          value={currPage}
           onClick={handlePrevPage}
         >
           <ArrowLeftRoundedIcon />
         </IconButton>
       ) : null}
-      <Typography> Page {currentPage}</Typography>
-      {testfunc() ? (
+      <Typography> Page {currPage}</Typography>
+      {checkNextPage() ? (
         <IconButton
           className={classes.iconButtons}
-          value={currentPage}
+          value={currPage}
           onClick={handleNextPage}
         >
           <ArrowRightRoundedIcon />
@@ -105,8 +113,8 @@ const HubCardsPagination = ({
 const mapStateToProps = ({ firestore, cards }) => {
   return {
     cards: firestore.ordered.cards,
-    prevPageItem: cards.lastItem,
-    test: cards.firstItem,
+    currPage: cards.currentPage,
+    lastMonRef: cards.prevPageRef,
     requested: firestore.status.requested,
   }
 }
@@ -115,7 +123,7 @@ const mapDispatchToProps = dispatch => {
   return {
     changePage: currentPage => dispatch(changePage(currentPage)),
     loadNextPage: lastItem => dispatch(loadNextPage(lastItem)),
-    loadPrevPage: firstItem => dispatch(loadPrevPage(firstItem)),
+    savePrevPageRef: lastItem => dispatch(savePrevPageRef(lastItem)),
   }
 }
 

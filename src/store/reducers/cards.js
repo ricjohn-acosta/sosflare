@@ -7,7 +7,7 @@ const initialState = {
   find: null,
   currentPage: 1,
   lastItem: null,
-  firstItem: null,
+  prevPageRef: [],
 }
 
 // HELPER FUNCTIONS
@@ -65,10 +65,10 @@ const loadNextPage = (state, payload) => {
     lastItem: payload,
   }
 }
-const loadPrevPage = (state, payload) => {
+const savePrevPageRef = (state, payload) => {
   return {
     ...state,
-    firstItem: payload,
+    prevPageRef: [...state.prevPageRef, payload],
   }
 }
 
@@ -98,8 +98,8 @@ export default (state = initialState, { type, payload }) => {
     case actions.NEXT_PAGE:
       return loadNextPage(state, payload)
       
-    case actions.PREV_PAGE:
-      return loadPrevPage(state, payload)
+    case actions.PREV_PAGE_REF:
+      return savePrevPageRef(state, payload)
 
     default:
       return state
