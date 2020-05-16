@@ -130,7 +130,7 @@ export default compose(
         // startAt: props.lastVisible,
         startAt: test(),
         // startAfter: test1(),
-        limit: 9,
+        limit: 10,
         // limit: 10 * props.currentPage,
       },
 

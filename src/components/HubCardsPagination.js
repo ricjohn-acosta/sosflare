@@ -69,21 +69,27 @@ const HubCardsPagination = ({
     }
   }
 
+  const testfunc = () => {
+    if (requested && cards) {
+      return cards.length === 10 ? true : false
+    }
+  }
+
   // Take into account item count per page; so if cards.length is divisible by 9, disable next page button
   return (
     <>
       {console.log(lastMonsterRef)}
-      {/* {currentPage !== 1 ? ( */}
-      <IconButton
-        className={classes.iconButtons}
-        value={currentPage}
-        onClick={handlePrevPage}
-      >
-        <ArrowLeftRoundedIcon />
-      </IconButton>
-      {/* // ) : null} */}
+      {currentPage !== 1 ? (
+        <IconButton
+          className={classes.iconButtons}
+          value={currentPage}
+          onClick={handlePrevPage}
+        >
+          <ArrowLeftRoundedIcon />
+        </IconButton>
+      ) : null}
       <Typography> Page {currentPage}</Typography>
-      {currentPage ? (
+      {testfunc() ? (
         <IconButton
           className={classes.iconButtons}
           value={currentPage}
