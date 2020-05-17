@@ -1,7 +1,7 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
-import logOut from "../store/actions/auth"
+import { logOut } from "../store/actions/auth"
 import { connect } from "react-redux"
 import { AppBar } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"

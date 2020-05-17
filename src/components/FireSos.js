@@ -160,6 +160,15 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
     setLoading(true)
   }
 
+  const handleWhitespace = () => {
+    if (!username.replace(/\s/g, "").length || !sessionId.replace(/\s/g, "").length) {
+      console.log(
+        "string only contains whitespace (ie. spaces, tabs or line breaks)"
+      )
+      return true
+    }
+  }
+
   const handleSubmit = e => {
     e.preventDefault()
     handleLoading()
@@ -405,7 +414,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
               {/**
                * FIRE SOS BUTTON
                */}
-              {autoCompleteError ||
+              {handleWhitespace() || autoCompleteError ||
               !username ||
               !platform ||
               !sessionId ||
@@ -427,7 +436,8 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
               ) : (
                 <>
                   <Button type="submit" fullWidth>
-                    FIRE SOS &nbsp; {loading && !userTaken ? <CircularProgress /> : null}
+                    FIRE SOS &nbsp;{" "}
+                    {loading && !userTaken ? <CircularProgress /> : null}
                   </Button>
                 </>
               )}
