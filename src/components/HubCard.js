@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "gatsby"
 import * as clipboard from "clipboard-polyfill/dist/clipboard-polyfill.promise"
 import { connect } from "react-redux"
 import { compose } from "redux"
@@ -20,6 +21,7 @@ import { ListItemIcon } from "@material-ui/core"
 import FlareIcon from "@material-ui/icons/Flare"
 import AccessAlarmIcon from "@material-ui/icons/AccessAlarm"
 import Tooltip from "@material-ui/core/Tooltip"
+import { green } from "@material-ui/core/colors"
 
 const useStyles = makeStyles(theme => ({
   cardWrapper: {
@@ -79,19 +81,26 @@ const useStyles = makeStyles(theme => ({
   ArchTempered: {
     backgroundColor: "#FF9900",
   },
+  editBtn: {
+    backgroundColor: "#33FF66",
+    color: "black",
+    "&:hover": {
+      backgroundColor: "#99FF66",
+    },
+  },
 }))
 
 const HubCard = ({
+  id,
   username,
   sessionId,
   targetMonster,
   rank,
   platform,
-  assets,
-  requested,
   monsterImage,
   monsterType,
   startTime,
+  userCreated,
 }) => {
   const classes = useStyles()
   const [tooltipState, setTooltipState] = React.useState(false)
@@ -107,7 +116,7 @@ const HubCard = ({
 
   return (
     <Grid item className={classes.card} xs={12} sm={12} md={4}>
-      <Card className={classes.cardWrapper}>
+      <Card className={classes.cardWrapper} >
         <CardContent className={classes[monsterType]}>
           <Grid container direction="row">
             <Grid item sm={3}>
@@ -123,11 +132,7 @@ const HubCard = ({
             </Grid>
           </Grid>
         </CardContent>
-        <Tooltip
-          title="copied session id!"
-          placement="top-mid"
-          open={tooltipState}
-        >
+        <Tooltip title="copied session id!" placement="top" open={tooltipState}>
           <CardActionArea
             onClick={() => {
               clipboard.writeText(sessionId)
@@ -146,8 +151,12 @@ const HubCard = ({
               <Typography gutterBottom variant="h5" component="h2">
                 Target: {targetMonster}
               </Typography>
-              <Typography variant="body2" color="textPrimary">
-                <List dense disableGutters>
+              <Typography
+                component={"span"}
+                variant="body2"
+                color="textPrimary"
+              >
+                <List dense>
                   <ListItem className={classes.listItem}>
                     <ListItemIcon className={classes.icons}>
                       <VpnKeyIcon />
@@ -155,7 +164,7 @@ const HubCard = ({
                     Session ID:&nbsp;
                     <Typography
                       id="sessionId"
-                      variant="body3"
+                      variant="body2"
                       color="textSecondary"
                     >
                       {sessionId}
@@ -166,7 +175,7 @@ const HubCard = ({
                       <FlareIcon />
                     </ListItemIcon>
                     Flare by :&nbsp;
-                    <Typography variant="body3" color="textSecondary">
+                    <Typography variant="body2" color="textSecondary">
                       {username}
                     </Typography>
                   </ListItem>
@@ -176,7 +185,7 @@ const HubCard = ({
                       <AccessAlarmIcon />
                     </ListItemIcon>
                     In session :&nbsp;
-                    <Typography variant="body3" color="textSecondary">
+                    <Typography variant="body2" color="textSecondary">
                       {startTime}
                     </Typography>
                   </ListItem>
@@ -186,11 +195,27 @@ const HubCard = ({
           </CardActionArea>
         </Tooltip>
         <CardContent>
-          <Button>See details</Button>
+          {/** Link button to /{sessionId} */}
+          <Button component={Link} to={`/hub/${sessionId}`} state={{username:"test"}}>See details</Button>
+          &nbsp;
+          {userCreated === id ? (
+            <Button className={classes.editBtn} variant="contained">
+              Edit
+            </Button>
+          ) : null}
         </CardContent>
       </Card>
+      {console.log(Date.now())}
     </Grid>
   )
 }
 
-export default HubCard
+const mapStateToProps = ({ firebase }) => {
+  return {
+    // userCreated: firebase.profile.id,
+    userCreated: firebase.auth.uid,
+
+  }
+}
+
+export default connect(mapStateToProps)(HubCard)

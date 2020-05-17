@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
 import HubCard from "./HubCard"
-import HubCardSorter from "./HubCardSorter"
+import HubCardsSorter from "./HubCardsSorter"
 import moment from "moment"
 import Grid from "@material-ui/core/Grid"
 import { Paper } from "@material-ui/core"
@@ -29,34 +29,57 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const HubCards = ({ requested, cards, type, user }) => {
+const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
   const classes = useStyles()
   const currentTime = moment()
+
+  const fetchCards = () => {
+    let array = []
+
+    if (requested && cards) {
+      for (
+        let i = 0;
+        i <= 8;
+        i++ 
+      ) {
+        if (cards[i]) {
+          array.push(
+            <HubCard
+              id={cards[i].id}
+              username={cards[i].username}
+              description={cards[i].description}
+              monsterType={cards[i].monster_type}
+              platform={cards[i].platform}
+              rank={cards[i].rank}
+              sessionId={cards[i].session_id}
+              targetMonster={cards[i].target_monster}
+              monsterImage={require(`../images/monsters/${cards[i].target_monster}.png`)}
+              startTime={currentTime.from(cards[i].date_created, true)}
+              timestamp={cards[i].date_created}
+              dateCreated={cards[i].dateCreated}
+            />
+          )
+        }
+      }
+    }
+    return array
+  }
+
+  const displayCards = () => {
+    if (requested && cards) {
+      return (
+        <HubCardsSorter sortBy={type} find={user}>
+          {fetchCards()}
+        </HubCardsSorter>
+      )
+    }
+  }
 
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
         <Grid container direction="row" spacing={4}>
-          <HubCardSorter sortBy={type} find={user}>
-            {requested && cards
-              ? Object.values(cards).map(card => {
-                  return (
-                    <HubCard
-                      username={card.username}
-                      description={card.description}
-                      monsterType={card.monster_type}
-                      platform={card.platform}
-                      rank={card.rank}
-                      sessionId={card.session_id}
-                      targetMonster={card.target_monster}
-                      monsterImage={require(`../images/monsters/${card.target_monster}.png`)}
-                      startTime={currentTime.from(card.date_created, true)}
-                      timestamp={card.date_created}
-                    />
-                  )
-                })
-              : null}
-          </HubCardSorter>
+          {displayCards()}
         </Grid>
       </Paper>
     </>
@@ -65,20 +88,34 @@ const HubCards = ({ requested, cards, type, user }) => {
 
 const mapStateToProps = ({ firestore, cards }) => {
   return {
-    cards: firestore.data.cards,
+    cards: firestore.ordered.cards,
     requested: firestore.status.requested,
     type: cards.sortBy,
     user: cards.find,
+    lastVisible: cards.lastItem,
+    currentPage: cards.currentPage,
   }
 }
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => [
-    {
-      collection: "cards",
-      limit: 9,
-      orderBy: ["date_created", "desc"],
-    },
-  ])
+  firestoreConnect(props => {
+    const checkPage = () => {
+      if (props.currentPage === 1) {
+        return null
+      } else {
+        return props.lastVisible
+      }
+    }
+
+    return [
+      {
+        collection: "cards",
+        orderBy: ["timestamp", "desc"],
+        startAt: checkPage(),
+        limit: 10,
+      },
+
+    ]
+  })
 )(HubCards)

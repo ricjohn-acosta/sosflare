@@ -12,7 +12,7 @@ const sortMonster = (a, b) => {
 
 const sortNewest = (a, b) => {
   if (a.props.timestamp > b.props.timestamp) {
-    return 1
+    return -1
   }
   return 0
 }
@@ -24,9 +24,9 @@ const sortOldest = (a, b) => {
   return 0
 }
 
-const HubCardSorter = ({ children, sortBy, find }) => {
+const HubCardsSorter = ({ children, sortBy, find }) => {
   const user = React.Children.toArray(children).find(
-    object => object.props.username === find
+    card => card.props.username === find
   )
   if (find) {
     if (user) {
@@ -34,15 +34,17 @@ const HubCardSorter = ({ children, sortBy, find }) => {
     } else {
       return children
     }
-  } else if (sortBy === "monster") {
+  } else if (sortBy === "monster" || null) {
     return React.Children.toArray(children).sort(sortMonster)
-  } else if (sortBy === "newest") {
-    return React.Children.toArray(children).sort(sortNewest)
-  } else if (sortBy === "oldest") {
+  } else if (sortBy === "newest" || null) {
+    const testArray = React.Children.toArray(children).sort(sortNewest)
+    console.log(testArray)
+    return testArray
+  } else if (sortBy === "oldest" || null) {
     return React.Children.toArray(children).sort(sortOldest)
   } else {
     return children
   }
 }
 
-export default HubCardSorter
+export default HubCardsSorter
