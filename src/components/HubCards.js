@@ -112,7 +112,7 @@ export default compose(
       {
         collection: "cards",
         orderBy: ["timestamp", "desc"],
-        startAt: checkPage(),
+        startAfter: checkPage(),
         limit: 10,
       },
 
