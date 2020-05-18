@@ -97,8 +97,8 @@ const Header = ({ siteTitle, uid, logout }) => {
             </IconButton>
           }
         >
-          You are currently on a temporary account. Click here to change your
-          email, password and username.
+          You are currently on a temporary account. Click here to upgrade your account by changing your
+          email, password, username and be able to edit your flare.
         </Alert>
       ) : null}
     </header>

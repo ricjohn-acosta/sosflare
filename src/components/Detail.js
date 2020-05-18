@@ -1,4 +1,5 @@
 import React from "react"
+import { Link } from "gatsby"
 import { lrhrMonsters, mrMonsters } from "../utils/FireSos.js"
 import { editCard } from "../store/actions/cards"
 import Grid from "@material-ui/core/Grid"
@@ -19,7 +20,7 @@ import FormControl from "@material-ui/core/FormControl"
 import InputLabel from "@material-ui/core/InputLabel"
 import MenuItem from "@material-ui/core/MenuItem"
 import Select from "@material-ui/core/Select"
-import { Link } from "gatsby"
+import { Paper } from "@material-ui/core"
 
 const useStyles = makeStyles(theme => ({
   rootWrapper: {
@@ -69,6 +70,16 @@ const useStyles = makeStyles(theme => ({
   autocomplete: {
     width: "15vw",
     margin: "0px",
+  },
+  //   leftContainer: {
+  //   },
+  rightContainer: {
+    [theme.breakpoints.up("sm")]: {
+      paddingRight: "5vw",
+    },
+  },
+  paper: {
+    padding: "20px",
   },
 }))
 
@@ -164,284 +175,288 @@ const Detail = ({ user, userDetails, editCard }) => {
 
   return (
     <div className={classes.rootWrapper}>
-      <Grid container direction="column">
-        <Grid item xs={12} sm={12}>
-          <Typography variant="h3">
-            Session details (
-            <Typography
-              className={classes.profileData}
-              variant="h3"
-              component={"span"}
-            >
-              {profileData.session_id}
+      <Paper className={classes.paper}>
+        <Grid container direction="column">
+          <Grid item xs={12} sm={12}>
+            <Typography variant="h3">
+              Session details (id:{" "}
+              <Typography
+                className={classes.profileData}
+                variant="h3"
+                component={"span"}
+              >
+                {profileData.session_id}
+              </Typography>
+              ) {isEditing ? null : isLoggedIn()}
             </Typography>
-            ) {isEditing ? null : isLoggedIn()}
-          </Typography>
-          <hr />
-        </Grid>
-        <Grid
-          className={classes.descriptionBody}
-          item
-          container
-          direction="row"
-          sm={12}
-        >
-          <Grid item sm={6}>
-            {/**
-             * SESSION LEADER
-             */}
-            <div>
-              <div className={classes.subtitles}>
-                <Icon className={classes.icons}>
-                  <img
-                    className={classes.icons}
-                    src={require(`../images/king.png`)}
-                  ></img>
-                </Icon>
+            <hr />
+          </Grid>
+          <Grid
+            className={classes.descriptionBody}
+            item
+            container
+            direction="row"
+            sm={12}
+          >
+            <Grid item sm={5}>
+              {/**
+               * SESSION LEADER
+               */}
+              <div>
+                <div className={classes.subtitles}>
+                  <Icon className={classes.icons}>
+                    <img
+                      className={classes.icons}
+                      src={require(`../images/king.png`)}
+                    ></img>
+                  </Icon>
 
-                <Typography variant="h4" component={"span"}>
-                  &nbsp; Session Leader
-                  <br />
+                  <Typography variant="h4" component={"span"}>
+                    &nbsp; Session Leader
+                    <br />
+                  </Typography>
+                </div>
+                <br />
+                <hr className={classes.profileDataDividers} />
+                <Typography variant="h6">
+                  &nbsp;{" "}
+                  <Typography
+                    className={classes.profileData}
+                    variant="h6"
+                    component="span"
+                  >
+                    {profileData.username}
+                  </Typography>
                 </Typography>
               </div>
               <br />
-              <hr className={classes.profileDataDividers} />
-              <Typography variant="h6">
-                &nbsp;{" "}
-                <Typography
-                  className={classes.profileData}
-                  variant="h6"
-                  component="span"
-                >
-                  {profileData.username}
-                </Typography>
-              </Typography>
-            </div>
-            <br />
 
-            {/**
-             * DESCRIPTION
-             */}
+              {/**
+               * DESCRIPTION
+               */}
 
-            <div>
-              <div className={classes.subtitles}>
-                <Icon className={classes.icons}>
-                  <img
-                    className={classes.icons}
-                    src={require(`../images/quest.png`)}
-                  ></img>
-                </Icon>
-                <Typography Typography variant="h4">
-                  &nbsp; Description <br />
+              <div>
+                <div className={classes.subtitles}>
+                  <Icon className={classes.icons}>
+                    <img
+                      className={classes.icons}
+                      src={require(`../images/quest.png`)}
+                    ></img>
+                  </Icon>
+                  <Typography Typography variant="h4">
+                    &nbsp; Description <br />
+                  </Typography>
+                </div>
+                <hr className={classes.profileDataDividers} />
+                <Typography variant="h6">
+                  &nbsp;{" "}
+                  <Typography
+                    className={classes.profileData}
+                    variant="h6"
+                    component="span"
+                  >
+                    {isEditing ? (
+                      <TextField
+                        placeholder={profileData.description}
+                        onChange={handleDescription}
+                      />
+                    ) : (
+                      profileData.description
+                    )}
+                  </Typography>
                 </Typography>
               </div>
-              <hr className={classes.profileDataDividers} />
-              <Typography variant="h6">
-                &nbsp;{" "}
-                <Typography
-                  className={classes.profileData}
-                  variant="h6"
-                  component="span"
-                >
+              <br />
+
+              {/**
+               * TARGET MONSTER
+               */}
+              <div>
+                <div className={classes.subtitles}>
+                  <Icon className={classes.icons}>
+                    <img
+                      className={classes.icons}
+                      src={require(`../images/sword.png`)}
+                    ></img>
+                  </Icon>
+
+                  <Typography variant="h4" component={"span"}>
+                    &nbsp; Target Monster
+                    <br />
+                  </Typography>
+                </div>
+                <br />
+                <hr className={classes.profileDataDividers} />
+                <Typography variant="h6">
                   {isEditing ? (
-                    <TextField
-                      placeholder={profileData.description}
-                      onChange={handleDescription}
-                    />
+                    <>
+                      <FormControl
+                        className={classes.autocomplete}
+                        variant="filled"
+                        size="small"
+                      >
+                        <InputLabel>Monster type</InputLabel>
+                        <Select
+                          value={monsterType}
+                          onChange={handleMonsterType}
+                        >
+                          <MenuItem value={"Normal"}>Normal</MenuItem>
+                          <MenuItem value={"Tempered"}>Tempered</MenuItem>
+                          <MenuItem value={"Arch Tempered"}>
+                            Arch Tempered
+                          </MenuItem>
+                        </Select>
+                        <br />
+                      </FormControl>
+                      <Autocomplete
+                        className={classes.autocomplete}
+                        // disabled={!rank || !monsterType ? true : false}
+                        options={mrMonsters}
+                        getOptionLabel={option => option.monster}
+                        renderInput={params => {
+                          return (
+                            <TextField
+                              onSelect={handleTargetMonster}
+                              {...params}
+                              value={targetMonster}
+                              label="Choose monster.."
+                              placeholder={profileData.target_monster}
+                              variant="filled"
+                              error={
+                                false
+                                // checkAutocompleteInput(params.inputProps.value)
+                                //   ? false
+                                //   : true
+                              }
+                            />
+                          )
+                        }}
+                      />
+                    </>
                   ) : (
-                    profileData.description
+                    <Typography
+                      className={classes.profileData}
+                      variant="h6"
+                      component="span"
+                    >
+                      &nbsp;&nbsp;{profileData.monster_type}{" "}
+                      {profileData.target_monster}
+                    </Typography>
                   )}
                 </Typography>
-              </Typography>
-            </div>
-            <br />
-
-            {/**
-             * TARGET MONSTER
-             */}
-            <div>
-              <div className={classes.subtitles}>
-                <Icon className={classes.icons}>
-                  <img
-                    className={classes.icons}
-                    src={require(`../images/sword.png`)}
-                  ></img>
-                </Icon>
-
-                <Typography variant="h4" component={"span"}>
-                  &nbsp; Target Monster
-                  <br />
-                </Typography>
               </div>
               <br />
-              <hr className={classes.profileDataDividers} />
-              <Typography variant="h6">
-                {isEditing ? (
-                  <>
+
+              {/**
+               * QUEST TYPE
+               */}
+
+              <div>
+                <div className={classes.subtitles}>
+                  <Icon className={classes.icons}>
+                    <img
+                      className={classes.icons}
+                      src={require(`../images/star.png`)}
+                    ></img>
+                  </Icon>
+                  <Typography variant="h4">
+                    &nbsp; Quest rank <br />
+                  </Typography>
+                </div>
+                <hr className={classes.profileDataDividers} />
+                <Typography variant="h6">
+                  {isEditing ? (
                     <FormControl
                       className={classes.autocomplete}
                       variant="filled"
                       size="small"
                     >
-                      <InputLabel>Monster type</InputLabel>
-                      <Select value={monsterType} onChange={handleMonsterType}>
-                        <MenuItem value={"Normal"}>Normal</MenuItem>
-                        <MenuItem value={"Tempered"}>Tempered</MenuItem>
-                        <MenuItem value={"Arch Tempered"}>
-                          Arch Tempered
-                        </MenuItem>
+                      <InputLabel>Rank</InputLabel>
+                      <Select value={rank} onChange={handleRank}>
+                        <MenuItem value={"LR"}>Low Rank</MenuItem>
+                        <MenuItem value={"HR"}>High Rank</MenuItem>
+                        <MenuItem value={"MR"}>Master Rank</MenuItem>
                       </Select>
                       <br />
                     </FormControl>
-                    <Autocomplete
-                      className={classes.autocomplete}
-                      // disabled={!rank || !monsterType ? true : false}
-                      options={mrMonsters}
-                      getOptionLabel={option => option.monster}
-                      renderInput={params => {
-                        return (
-                          <TextField
-                            onSelect={handleTargetMonster}
-                            {...params}
-                            value={targetMonster}
-                            label="Choose monster.."
-                            placeholder={profileData.target_monster}
-                            variant="filled"
-                            error={
-                              false
-                              // checkAutocompleteInput(params.inputProps.value)
-                              //   ? false
-                              //   : true
-                            }
-                          />
-                        )
-                      }}
-                    />
-                  </>
-                ) : (
+                  ) : (
+                    <Typography
+                      className={classes.profileData}
+                      variant="h6"
+                      component="span"
+                    >
+                      &nbsp; {convertToFullWord(profileData.rank)}
+                    </Typography>
+                  )}
+                </Typography>
+              </div>
+              <br />
+
+              {/**
+               * TIME COMMENCED
+               */}
+
+              <div>
+                <div className={classes.subtitles}>
+                  <Icon className={classes.icons}>
+                    <img
+                      className={classes.icons}
+                      src={require(`../images/time.png`)}
+                    ></img>
+                  </Icon>
+                  <Typography variant="h4">
+                    &nbsp; Time commenced <br />
+                  </Typography>
+                </div>
+                <hr style={{ width: "20vw" }} />
+                <Typography variant="h6">
+                  &nbsp;{" "}
                   <Typography
                     className={classes.profileData}
                     variant="h6"
                     component="span"
                   >
-                    &nbsp;&nbsp;{profileData.monster_type}{" "}
-                    {profileData.target_monster}
+                    {profileData.date_created}
                   </Typography>
-                )}
-              </Typography>
-            </div>
-            <br />
-
-            {/**
-             * QUEST TYPE
-             */}
-
-            <div>
-              <div className={classes.subtitles}>
-                <Icon className={classes.icons}>
-                  <img
-                    className={classes.icons}
-                    src={require(`../images/star.png`)}
-                  ></img>
-                </Icon>
-                <Typography variant="h4">
-                  &nbsp; Quest rank <br />
                 </Typography>
               </div>
-              <hr className={classes.profileDataDividers} />
-              <Typography variant="h6">
-                {isEditing ? (
-                  <FormControl
-                    className={classes.autocomplete}
-                    variant="filled"
-                    size="small"
-                  >
-                    <InputLabel>Rank</InputLabel>
-                    <Select value={rank} onChange={handleRank}>
-                      <MenuItem value={"LR"}>Low Rank</MenuItem>
-                      <MenuItem value={"HR"}>High Rank</MenuItem>
-                      <MenuItem value={"MR"}>Master Rank</MenuItem>
-                    </Select>
-                    <br />
-                  </FormControl>
-                ) : (
-                  <Typography
-                    className={classes.profileData}
-                    variant="h6"
-                    component="span"
-                  >
-                    &nbsp; {convertToFullWord(profileData.rank)}
-                  </Typography>
-                )}
-              </Typography>
-            </div>
-            <br />
-
+              <br />
+            </Grid>
             {/**
-             * TIME COMMENCED
+             * IMAGE
              */}
-
-            <div>
-              <div className={classes.subtitles}>
-                <Icon className={classes.icons}>
-                  <img
-                    className={classes.icons}
-                    src={require(`../images/time.png`)}
-                  ></img>
-                </Icon>
-                <Typography variant="h4">
-                  &nbsp; Time commenced <br />
-                </Typography>
-              </div>
-              <hr style={{ width: "20vw" }} />
-              <Typography variant="h6">
-                &nbsp;{" "}
-                <Typography
-                  className={classes.profileData}
-                  variant="h6"
-                  component="span"
-                >
-                  {profileData.date_created}
-                </Typography>
-              </Typography>
-            </div>
-            <br/>
-          </Grid>
-
-          {/**
-           * IMAGE
-           */}
-
-          <Grid item sm={6}>
-            <Typography variant="h4">Monster weakness</Typography>
-            {profileData.target_monster === "Shara Ishvalda" ? (
-              <Carousel autoPlay={false} indicators={true}>
-                {specialMonster.map(image => (
-                  <MonsterWeaknesses image={image} />
-                ))}
-              </Carousel>
-            ) : (
-              <img
-                className={classes.image}
-                src={require(`../images/monsterWeaknesses/${profileData.target_monster}.jpg`)}
-              ></img>
-            )}
-          </Grid>
-
-          {isEditing ? (
-            <Button className={classes.editBtn} onClick={handleSave}>
-              SAVE{" "}
+            <Grid className={classes.rightContainer} item sm={7}>
+              <Typography variant="h4">Monster weakness</Typography>
+              {profileData.target_monster === "Shara Ishvalda" ? (
+                <Carousel autoPlay={false} indicators={true}>
+                  {specialMonster.map(image => (
+                    <MonsterWeaknesses image={image} />
+                  ))}
+                </Carousel>
+              ) : (
+                <img
+                  className={classes.image}
+                  src={require(`../images/monsterWeaknesses/${profileData.target_monster}.jpg`)}
+                ></img>
+              )}
+            </Grid>
+            <Button
+              component={Link}
+              className={classes.editBtn}
+              onClick={handleSave}
+              to={"/hub"}
+            >
+              BACK TO HUB{" "}
             </Button>
-          ) : null}
-          &nbsp;
-          <Button component={Link} className={classes.editBtn} onClick={handleSave} to={"/hub"}>
-            BACK{" "}
-          </Button>
+            &nbsp;
+            {isEditing ? (
+              <Button className={classes.editBtn} onClick={handleSave}>
+                SAVE{" "}
+              </Button>
+            ) : null}
+          </Grid>
         </Grid>
-      </Grid>
-      {console.log(targetMonster)}
-      {console.log(monsterType)}
-      {console.log(rank)}
+      </Paper>
     </div>
   )
 }
