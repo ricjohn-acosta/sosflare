@@ -15,7 +15,7 @@ export function addCard(
     dispatch({ type: actions.ADD_CARD_START })
     const firebase = getFirebase()
     const firestore = getFirebase().firestore()
-    const date_created = moment().format()
+    const date_created = moment().format("LLLL")
     const timestamp = new Date()
     const id = Date.now()
     const userId = getState().firebase.auth.uid

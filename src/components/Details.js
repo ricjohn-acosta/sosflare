@@ -1,9 +1,12 @@
 import React from "react"
 import DetailsNotFound from "./DetailsNotFound"
-import { Redirect } from "@reach/router"
+import Detail from "./Detail"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
+import Typography from "@material-ui/core/Typography"
+
+
 
 const Details = ({ location, sessionId, cards, requested }) => {
   const getUserDetails = () => {
@@ -13,12 +16,8 @@ const Details = ({ location, sessionId, cards, requested }) => {
   }
 
   if (getUserDetails()) {
-    return (
-      <div>
-        {console.log(location)}
-        test {sessionId}
-      </div>
-    )
+    console.log(cards)
+    return <Detail userDetails={cards}/>
   } else {
     return <DetailsNotFound />
   }
