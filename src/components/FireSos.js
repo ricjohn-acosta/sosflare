@@ -182,15 +182,6 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
       description
     )
   }
-  // const hasUserFiredSos = () => {
-  //   if (auth && cards) {
-  //     if (cards.hasOwnProperty(auth.uid)) {
-  //       return true
-  //     }
-  //   } else {
-  //     return false
-  //   }
-  // }
 
   const checkAutocompleteInput = monsterName => {
     if (monsterName === "") {

@@ -78,10 +78,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#FF9900",
   },
   editBtn: {
-    backgroundColor: "#33FF66",
-    color: "black",
+    backgroundColor: "#0033CC",
+    color: "white",
     "&:hover": {
-      backgroundColor: "#99FF66",
+      backgroundColor: "#0066CC",
     },
   },
 }))
@@ -112,7 +112,7 @@ const HubCard = ({
 
   return (
     <Grid item className={classes.card} xs={12} sm={12} md={4}>
-      <Card className={classes.cardWrapper} >
+      <Card className={classes.cardWrapper}>
         <CardContent className={classes[monsterType]}>
           <Grid container direction="row">
             <Grid item sm={3}>
@@ -192,13 +192,20 @@ const HubCard = ({
         </Tooltip>
         <CardContent>
           {/** Link button to /{sessionId} */}
-          <Button component={Link} to={`/hub/${sessionId}`} state={{username:"test"}}>See details</Button>
           &nbsp;
           {userCreated === id ? (
-            <Button className={classes.editBtn} variant="contained">
-              Edit
+            <Button
+              className={classes.editBtn}
+              component={Link}
+              to={`/hub/${sessionId}`}
+            >
+              Manage flare
             </Button>
-          ) : null}
+          ) : (
+            <Button component={Link} to={`/hub/${sessionId}`}>
+              See details
+            </Button>
+          )}
         </CardContent>
       </Card>
       {console.log(Date.now())}

@@ -8,7 +8,7 @@ import Typography from "@material-ui/core/Typography"
 
 
 
-const Details = ({ location, sessionId, cards, requested }) => {
+const Details = ({ cards, requested, user}) => {
   const getUserDetails = () => {
     if (cards && requested) {
       return cards.length === 0 ? false : true
@@ -17,16 +17,17 @@ const Details = ({ location, sessionId, cards, requested }) => {
 
   if (getUserDetails()) {
     console.log(cards)
-    return <Detail userDetails={cards}/>
+    return <Detail user={user} userDetails={cards}/>
   } else {
     return <DetailsNotFound />
   }
 }
 
-const mapStateToProps = ({ firestore }) => {
+const mapStateToProps = ({ firestore, firebase }) => {
   return {
     cards: firestore.ordered.currentCardDetail,
     requested: firestore.status.requested,
+    user: firebase.auth.uid
   }
 }
 

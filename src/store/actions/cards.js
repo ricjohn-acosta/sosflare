@@ -73,8 +73,30 @@ export function addCard(
             })
         } else {
           console.log("USERNAME TAKEN!")
-          dispatch({ type: actions.ADD_CARD_FAIL, payload: "Someone with that username has already fired an SOS!" })
+          dispatch({
+            type: actions.ADD_CARD_FAIL,
+            payload: "Someone with that username has already fired an SOS!",
+          })
         }
+      })
+  }
+}
+
+export function editCard(
+  id,
+  description,
+  target_monster,
+  monster_type,
+  rank
+) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firestore = getFirebase().firestore()
+    firestore
+      .collection("cards")
+      .doc(id)
+      .update({ description, target_monster, monster_type, rank })
+      .then(() => {
+        console.log("CARD UPDATED")
       })
   }
 }
@@ -108,4 +130,3 @@ export function savePrevPageRef(lastItem) {
     dispatch({ type: actions.PREV_PAGE_REF, payload: lastItem })
   }
 }
-
