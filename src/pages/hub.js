@@ -13,7 +13,7 @@ const hub = () => {
         {/* <Details path="details/:sessionId" /> */}
         {/* <HubContainer path="/" /> */}
         <HubContainer path="/" />
-        <Details path=":sessionId" />
+        <Details path=":username" />
       </Router>
     </Layout>
   )

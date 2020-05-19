@@ -71,8 +71,7 @@ const useStyles = makeStyles(theme => ({
     width: "15vw",
     margin: "0px",
   },
-  //   leftContainer: {
-  //   },
+  leftContainer: { paddingRight: "30px" },
   rightContainer: {
     [theme.breakpoints.up("sm")]: {
       paddingRight: "5vw",
@@ -83,21 +82,23 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Detail = ({ user, userDetails, editCard }) => {
+const Detail = ({ uid, userDetails, editCard }) => {
   const classes = useStyles()
+  const profileData = userDetails[0]
+
   const [isEditing, setEditing] = React.useState(false)
-  const [description, setDescription] = React.useState(
-    userDetails[0].description
-  )
+  const [sessionID, setSessionID] = React.useState("")
+  const [description, setDescription] = React.useState("")
   const [targetMonster, setTargetMonster] = React.useState(
-    userDetails[0].target_monster
+    // userDetails[0].target_monster
+    ""
   )
   const [monsterType, setMonsterType] = React.useState(
-    userDetails[0].monster_type
+    // userDetails[0].monster_type
+    ""
   )
-  const [rank, setRank] = React.useState(userDetails[0].rank)
-
-  const profileData = userDetails[0]
+  const [rank, setRank] = React.useState("")
+  const [autoCompleteError, setAutoCompleteState] = React.useState(false)
 
   const handleEditing = () => {
     setEditing(true)
@@ -105,17 +106,29 @@ const Detail = ({ user, userDetails, editCard }) => {
 
   const handleSave = () => {
     if (
-      description === profileData.description &&
-      targetMonster === profileData.target_monster &&
-      monsterType === profileData.monster_type &&
-      rank === profileData.rank
+      sessionID === "" &&
+      description === "" &&
+      targetMonster === "" &&
+      monsterType === "" &&
+      rank === ""
     ) {
       console.log("didnt update firestore")
       return setEditing(false)
     } else {
-      editCard(profileData.id, description, targetMonster, monsterType, rank)
+      editCard(
+        profileData.id,
+        checkIfEmpty("sessionID"),
+        checkIfEmpty("description"),
+        checkIfEmpty("targetMonster"),
+        checkIfEmpty("monsterType"),
+        checkIfEmpty("rank")
+      )
       setEditing(false)
     }
+  }
+  const handleSessionID = e => {
+    setSessionID(e.target.value)
+    console.log(description)
   }
 
   const handleDescription = e => {
@@ -135,8 +148,72 @@ const Detail = ({ user, userDetails, editCard }) => {
     setRank(event.target.value)
   }
 
+  const handleAutocompleteErrorTrue = () => {
+    setAutoCompleteState(true)
+  }
+
+  const handleAutocompleteErrorFalse = () => {
+    setAutoCompleteState(false)
+  }
+
+  const checkAutocompleteInput = monsterName => {
+    if (monsterName === "") {
+      handleAutocompleteErrorTrue()
+      return true
+    } else if (
+      !lrhrMonsters.find(({ monster }) => monster === monsterName) &&
+      !mrMonsters.find(({ monster }) => monster === monsterName)
+    ) {
+      handleAutocompleteErrorTrue()
+      return false
+    } else {
+      handleAutocompleteErrorFalse()
+      return (
+        lrhrMonsters.find(({ monster }) => monster === monsterName) ||
+        mrMonsters.find(({ monster }) => monster === monsterName)
+      )
+    }
+  }
+
+  const checkIfEmpty = field => {
+    switch (field) {
+      case "sessionID":
+        if (sessionID === "") {
+          return profileData.session_id
+        } else {
+          return sessionID
+        }
+      case "description":
+        if (description === "") {
+          return profileData.description
+        } else {
+          return description
+        }
+      case "targetMonster":
+        if (targetMonster === "" || autoCompleteError) {
+          return profileData.target_monster
+        } else {
+          return targetMonster
+        }
+      case "monsterType":
+        if (monsterType === "") {
+          return profileData.monster_type
+        } else {
+          return monsterType
+        }
+      case "rank":
+        if (rank === "") {
+          return profileData.rank
+        } else {
+          return rank
+        }
+      default:
+        throw new Error("No input found")
+    }
+  }
+
   const isLoggedIn = () => {
-    if (user === profileData.id) {
+    if (uid === profileData.id) {
       return (
         <Button className={classes.editBtn} onClick={handleEditing}>
           EDIT{" "}
@@ -172,21 +249,30 @@ const Detail = ({ user, userDetails, editCard }) => {
         return null
     }
   }
-
   return (
     <div className={classes.rootWrapper}>
+      {console.log(targetMonster)}
+      {console.log("AUTOCOMPLETE ERROR? ", autoCompleteError)}
       <Paper className={classes.paper}>
         <Grid container direction="column">
           <Grid item xs={12} sm={12}>
             <Typography variant="h3">
               Session details (id:{" "}
-              <Typography
-                className={classes.profileData}
-                variant="h3"
-                component={"span"}
-              >
-                {profileData.session_id}
-              </Typography>
+              {isEditing ? (
+                <TextField
+                  placeholder={profileData.session_id}
+                  onChange={handleSessionID}
+                  inputProps={{ maxLength: 12 }}
+                />
+              ) : (
+                <Typography
+                  className={classes.profileData}
+                  variant="h3"
+                  component={"span"}
+                >
+                  {profileData.session_id}
+                </Typography>
+              )}
               ) {isEditing ? null : isLoggedIn()}
             </Typography>
             <hr />
@@ -198,7 +284,7 @@ const Detail = ({ user, userDetails, editCard }) => {
             direction="row"
             sm={12}
           >
-            <Grid item sm={5}>
+            <Grid className={classes.leftContainer} item sm={5}>
               {/**
                * SESSION LEADER
                */}
@@ -323,10 +409,9 @@ const Detail = ({ user, userDetails, editCard }) => {
                               placeholder={profileData.target_monster}
                               variant="filled"
                               error={
-                                false
-                                // checkAutocompleteInput(params.inputProps.value)
-                                //   ? false
-                                //   : true
+                                checkAutocompleteInput(params.inputProps.value)
+                                  ? false
+                                  : true
                               }
                             />
                           )
@@ -440,17 +525,12 @@ const Detail = ({ user, userDetails, editCard }) => {
                 ></img>
               )}
             </Grid>
-            <Button
-              component={Link}
-              className={classes.editBtn}
-              onClick={handleSave}
-              to={"/hub"}
-            >
+            <Button component={Link} className={classes.editBtn} to={"/hub"}>
               BACK TO HUB{" "}
             </Button>
             &nbsp;
             {isEditing ? (
-              <Button className={classes.editBtn} onClick={handleSave}>
+              <Button className={classes.editBtn} onClick={handleSave} >
                 SAVE{" "}
               </Button>
             ) : null}
@@ -463,9 +543,9 @@ const Detail = ({ user, userDetails, editCard }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    editCard: (username, description, target_monster, monster_type, rank) =>
+    editCard: (username, sessionID, description, target_monster, monster_type, rank) =>
       dispatch(
-        editCard(username, description, target_monster, monster_type, rank)
+        editCard(username, sessionID, description, target_monster, monster_type, rank)
       ),
   }
 }

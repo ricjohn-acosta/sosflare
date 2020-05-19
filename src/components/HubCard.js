@@ -197,12 +197,12 @@ const HubCard = ({
             <Button
               className={classes.editBtn}
               component={Link}
-              to={`/hub/${sessionId}`}
+              to={`/hub/${username}`}
             >
               Manage flare
             </Button>
           ) : (
-            <Button component={Link} to={`/hub/${sessionId}`}>
+            <Button component={Link} to={`/hub/${username}`}>
               See details
             </Button>
           )}

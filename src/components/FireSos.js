@@ -201,6 +201,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
       )
     }
   }
+  
   const createMenuItems = () => {
     let array = [
       <MenuItem key="1" value={"Normal"}>

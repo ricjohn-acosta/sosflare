@@ -84,6 +84,7 @@ export function addCard(
 
 export function editCard(
   id,
+  session_id,
   description,
   target_monster,
   monster_type,
@@ -94,7 +95,7 @@ export function editCard(
     firestore
       .collection("cards")
       .doc(id)
-      .update({ description, target_monster, monster_type, rank })
+      .update({ session_id, description, target_monster, monster_type, rank, date_created: moment().format("LLLL") })
       .then(() => {
         console.log("CARD UPDATED")
       })
