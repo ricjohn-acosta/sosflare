@@ -1,4 +1,7 @@
 import React from "react"
+import ProfileManageAccount from "./ProfileManageAccount"
+import ProfileManageFlare from "./ProfileManageFlare"
+import ProfileThirdParty from "./ProfileThirdParty"
 import { makeStyles } from "@material-ui/core/styles"
 import { Paper } from "@material-ui/core"
 import Grid from "@material-ui/core/Grid"
@@ -9,6 +12,7 @@ import ListItem from "@material-ui/core/ListItem"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
 import MailIcon from "@material-ui/icons/Mail"
+import Divider from "@material-ui/core/Divider"
 
 const useStyles = makeStyles(theme => ({
   rootWrapper: {
@@ -19,14 +23,33 @@ const useStyles = makeStyles(theme => ({
   navbarBtn: {
     float: "left",
   },
-  leftGrid: {
-    // marginRight: "2.5vw",
+  leftGrid: {},
+  rightGrid: {
+    paddingTop: "2vh",
+    paddingLeft: "2vh",
   },
-  rightGrid: {},
 }))
 
 const Profile = () => {
   const classes = useStyles()
+  const [currentView, setCurrentView] = React.useState(<ProfileManageAccount />)
+
+  const handleView = view => {
+    switch (view) {
+      case "Manage account":
+        return setCurrentView(<ProfileManageAccount />)
+      case "Update Flare":
+        return setCurrentView(<ProfileManageFlare />)
+      case "Link third party apps":
+        return setCurrentView(<ProfileThirdParty />)
+      default:
+        return null
+    }
+  }
+
+  const test = test => {
+    console.log(test)
+  }
 
   return (
     <div className={classes.rootWrapper}>
@@ -42,7 +65,7 @@ const Profile = () => {
           <List>
             {["Manage account", "Update Flare", "Link third party apps"].map(
               (text, index) => (
-                <ListItem button key={text}>
+                <ListItem button value={"tests"} key={text} onClick={() => {handleView(text)}}>
                   <ListItemIcon>
                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                   </ListItemIcon>
@@ -50,6 +73,7 @@ const Profile = () => {
                 </ListItem>
               )
             )}
+            <Divider />
           </List>
         </Grid>
         <Grid
@@ -60,7 +84,7 @@ const Profile = () => {
           sm={9}
           component={Paper}
         >
-          Content
+          {currentView}
         </Grid>
       </Grid>
     </div>
