@@ -89,14 +89,8 @@ const Detail = ({ uid, userDetails, editCard }) => {
   const [isEditing, setEditing] = React.useState(false)
   const [sessionID, setSessionID] = React.useState("")
   const [description, setDescription] = React.useState("")
-  const [targetMonster, setTargetMonster] = React.useState(
-    // userDetails[0].target_monster
-    ""
-  )
-  const [monsterType, setMonsterType] = React.useState(
-    // userDetails[0].monster_type
-    ""
-  )
+  const [targetMonster, setTargetMonster] = React.useState("")
+  const [monsterType, setMonsterType] = React.useState("")
   const [rank, setRank] = React.useState("")
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
 
@@ -530,7 +524,7 @@ const Detail = ({ uid, userDetails, editCard }) => {
             </Button>
             &nbsp;
             {isEditing ? (
-              <Button className={classes.editBtn} onClick={handleSave} >
+              <Button className={classes.editBtn} onClick={handleSave}>
                 SAVE{" "}
               </Button>
             ) : null}
@@ -543,9 +537,23 @@ const Detail = ({ uid, userDetails, editCard }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    editCard: (username, sessionID, description, target_monster, monster_type, rank) =>
+    editCard: (
+      username,
+      sessionID,
+      description,
+      target_monster,
+      monster_type,
+      rank
+    ) =>
       dispatch(
-        editCard(username, sessionID, description, target_monster, monster_type, rank)
+        editCard(
+          username,
+          sessionID,
+          description,
+          target_monster,
+          monster_type,
+          rank
+        )
       ),
   }
 }
