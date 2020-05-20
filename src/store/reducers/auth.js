@@ -8,6 +8,10 @@ const initialState = {
     loading: false,
   },
   isPermanent: false,
+  user: {
+    username: null,
+    email: null,
+  },
 }
 
 // HELPER FUNCTIONS
@@ -30,8 +34,15 @@ const authFail = (state, payload) => {
   return { ...state, error: payload }
 }
 
-const convertToPerm = (state) => {
+const convertToPerm = state => {
   return { ...state, isPermanent: true }
+}
+
+const changeUsername = (state, payload) => {
+  return { ...state, user: { ...state.user, username: payload } }
+}
+const changeEmail = (state, payload) => {
+  return { ...state, user: { ...state.user, email: payload } }
 }
 
 // INITIAL STATE CHANGE MECHANISM
@@ -51,7 +62,13 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.CONVERT_TO_PERM:
       return convertToPerm(state)
-      
+
+    case actions.CHANGE_USERNAME:
+      return changeUsername(state, payload)
+
+    case actions.CHANGE_EMAIL:
+      return changeEmail(state, payload)
+
     default:
       return state
   }

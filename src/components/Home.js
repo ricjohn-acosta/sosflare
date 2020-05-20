@@ -16,6 +16,7 @@ import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
 import cards from "../store/reducers/cards"
 import { navigate } from "gatsby"
+import { reauthenticate } from "../store/actions/auth"
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -110,5 +111,7 @@ const mapStateToProps = ({ firestore, firebase }) => {
     uid: firebase.auth.uid,
   }
 }
+
+
 
 export default connect(mapStateToProps)(IndexPage)

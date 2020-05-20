@@ -48,6 +48,39 @@ export function upgradeProfile(username, email, password) {
   }
 }
 
+export function reauthenticate(password) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase()
+    const currentUser = firebase.auth().currentUser
+
+    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password)
+    currentUser.reauthenticateWithCredential(credential)
+    console.log("reauthenticated")
+  }
+}
+
+export function editProfile(type, input) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase()
+    const currentUser = firebase.auth().currentUser
+
+    switch (type) {
+      case "saveUsername":
+        dispatch({ type: actions.CHANGE_USERNAME, payload: input })
+        return currentUser.updateProfile({ displayName: input }).then(data => {
+          console.log("USERNAME UPDATED")
+        })
+      case "saveEmail":
+        dispatch({ type: actions.CHANGE_EMAIL, payload: input })
+        return currentUser.updateEmail(input).then(data => {
+          console.log("EMAIL UPDATED")
+        })
+      default:
+        return null
+    }
+  }
+}
+
 export function logIn(email, password) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.AUTH_START })
