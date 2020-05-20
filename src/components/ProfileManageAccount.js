@@ -2,6 +2,7 @@ import React from "react"
 import { editProfile } from "../store/actions/auth"
 import { connect } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
+import HubCard from "./HubCard"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import TextField from "@material-ui/core/TextField"
@@ -56,15 +57,15 @@ const ProfileManageAccount = ({
   }
 
   const hasAuthLoaded = () => {
-    if(!isAnon && !authHasLoaded) {
-        return true
+    if (!isAnon && !authHasLoaded) {
+      return true
     } else {
-        return false
+      return false
     }
   }
 
   const checkIfAnon = () => {
-    return isPermanent || hasAuthLoaded()  ? (
+    return isPermanent || hasAuthLoaded() ? (
       <Typography className={classes.permAccount} variant="h5">
         {" "}
         Permanent
@@ -86,83 +87,88 @@ const ProfileManageAccount = ({
           </Typography>
           <hr />
         </Grid>
-        <Grid container item xs={12} sm={12} direction="column">
-          <Typography
-            className={classes.accountTypeWrapper}
-            variant={"h5"}
-            component="div"
-          >
-            Account status:&nbsp;{checkIfAnon()}
-          </Typography>
-          <br />
-          {/**
-           * USERNAME FIELD
-           */}
-          <Grid container item direction="row">
-            <Grid item xs={3} sm={2} md={1}>
-              <Typography className={classes.fieldLabels}>
-                Username:{" "}
-              </Typography>
+        <Grid container direction="row">
+          <Grid container item xs={12} sm={6} direction="column">
+            <Typography
+              className={classes.accountTypeWrapper}
+              variant={"h5"}
+              component="div"
+            >
+              Account status:&nbsp;{checkIfAnon()}
+            </Typography>
+            <br />
+            {/**
+             * USERNAME FIELD
+             */}
+            <Grid container item direction="row">
+              <Grid item xs={3} sm={2} md={2}>
+                <Typography className={classes.fieldLabels}>
+                  Username:{" "}
+                </Typography>
+              </Grid>
+              <Grid item sm={3}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  onChange={e => {
+                    handleInput("username", e)
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid item sm={3}>
-              <TextField
-                variant="outlined"
-                size="small"
-                onChange={e => {
-                  handleInput("username", e)
-                }}
-              />
+            <br />
+            {/**
+             * EMAIL FIELD
+             */}
+            <Grid container item direction="row">
+              <Grid item xs={3} sm={2} md={2}>
+                <Typography className={classes.fieldLabels}>Email: </Typography>
+              </Grid>
+              <Grid item sm={3}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="email"
+                  onChange={e => {
+                    handleInput("email", e)
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <br />
+            {/**
+             * PASSWORD FIELD
+             */}
+            <Grid container item direction="row">
+              <Grid item xs={3} sm={2} md={2}>
+                <Typography className={classes.fieldLabels}>
+                  Password:{" "}
+                </Typography>
+              </Grid>
+              <Grid item sm={3}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="password"
+                  onChange={e => {
+                    handleInput("password", e)
+                  }}
+                />
+              </Grid>
+            </Grid>
+            <br />
+            <Grid
+              item
+              sm={1}
+              component={Button}
+              variant="contained"
+              type="submit"
+            >
+              SAVE
             </Grid>
           </Grid>
-          <br />
-          {/**
-           * EMAIL FIELD
-           */}
-          <Grid container item direction="row">
-            <Grid item xs={3} sm={2} md={1}>
-              <Typography className={classes.fieldLabels}>Email: </Typography>
-            </Grid>
-            <Grid item sm={3}>
-              <TextField
-                variant="outlined"
-                size="small"
-                type="email"
-                onChange={e => {
-                  handleInput("email", e)
-                }}
-              />
-            </Grid>
-          </Grid>
-          <br />
-          {/**
-           * PASSWORD FIELD
-           */}
-          <Grid container item direction="row">
-            <Grid item xs={3} sm={2} md={1}>
-              <Typography className={classes.fieldLabels}>
-                Password:{" "}
-              </Typography>
-            </Grid>
-            <Grid item sm={3}>
-              <TextField
-                variant="outlined"
-                size="small"
-                type="password"
-                onChange={e => {
-                  handleInput("password", e)
-                }}
-              />
-            </Grid>
-          </Grid>
-          <br />
-          <Grid
-            item
-            sm={1}
-            component={Button}
-            variant="contained"
-            type="submit"
-          >
-            SAVE
+          <Grid item xs={6}>
+            test
           </Grid>
         </Grid>
       </Grid>

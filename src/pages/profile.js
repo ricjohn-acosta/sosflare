@@ -5,21 +5,21 @@ import Layout from "../components/layout"
 import { connect } from "react-redux"
 import { Redirect } from "@reach/router"
 
-const profile = ({ notLoggedIn }) => {
-  if (!notLoggedIn) {
+const profile = ({ user }) => {
+  if (user) {
     return (
       <Layout>
         <Profile />
       </Layout>
     )
   } else {
-    return <Redirect from="/profile" to="/login" noThrow />
+    return <Layout><Login/></Layout>
   }
 }
 
 const mapStateToProps = ({ firebase }) => {
   return {
-    notLoggedIn: firebase.auth.isEmpty,
+    user: firebase.auth.uid,
   }
 }
 
