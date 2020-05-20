@@ -54,7 +54,7 @@ export function reauthenticate(password) {
     const currentUser = firebase.auth().currentUser
 
     const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password)
-    currentUser.reauthenticateWithCredential(credential)
+    currentUser.reauthenticateWithCredential(credential).then(() => {dispatch({ type: actions.AUTH_REAUTHENTICATED })}).catch(err => {{dispatch({ type: actions.AUTH_FAIL, payload: err.message })}})
     console.log("reauthenticated")
   }
 }
@@ -75,6 +75,7 @@ export function editProfile(type, input) {
         return currentUser.updateEmail(input).then(data => {
           console.log("EMAIL UPDATED")
         })
+        .catch(err => {dispatch({ type: actions.AUTH_FAIL, payload: err.message })})
       default:
         return null
     }

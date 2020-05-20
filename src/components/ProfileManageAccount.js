@@ -41,6 +41,8 @@ const ProfileManageAccount = ({
   editProfile,
   newUsername,
   newEmail,
+  authError,
+  reauthenticated,
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
@@ -76,16 +78,14 @@ const ProfileManageAccount = ({
         console.log("test")
         return setEditEmail(true)
       case "saveEmail":
-        setEditEmail(false)
-        
-        return setEmailModal(true)
+        return setEditEmail(false)
       default:
         return null
     }
   }
 
   const handleEmailModal = () => {
-    setEmailModal(false)
+    setEmailModal(true)
   }
 
   const handleSubmit = e => {
@@ -120,6 +120,20 @@ const ProfileManageAccount = ({
 
   const checkIfAnon = () => {
     return isPermanent || hasAuthLoaded() ? true : false
+  }
+
+  const loadModal = () => {
+    if (emailModal) {
+      return (
+        <ProfileChangePassword
+          email={true}
+          userEmail={email}
+          isOpen={emailModal}
+        />
+      )
+    } else {
+      return null
+    }
   }
 
   const testFn = () => {
@@ -199,12 +213,12 @@ const ProfileManageAccount = ({
               <Grid item xs={3} sm={2} md={2}>
                 <Typography className={classes.fieldLabels}>Email: </Typography>
               </Grid>
+
               <Grid item sm={5}>
                 {console.log("modal state profilemanageaccount ", emailModal)}
-                {checkIfAnon() && !editEmail ? (
+                {checkIfAnon() && !reauthenticated ? (
                   <>
-                <ProfileChangePassword email={"test"} test={emailModal} />
-
+                  {loadModal()}
                     <Typography className={classes.accountValues}>
                       {newEmail ? newEmail : user.email}
                       <IconButton
@@ -220,8 +234,11 @@ const ProfileManageAccount = ({
                 ) : (
                   <>
                     <span className={classes.fieldBtn}>
-                      <ProfileChangePassword email={"test"} test={emailModal} />
-
+                      {/* <ProfileChangePassword
+                        email={true}
+                        userEmail={email}
+                        isOpen={emailModal}
+                      /> */}
                       <TextField
                         variant="outlined"
                         size="small"
@@ -299,6 +316,8 @@ const mapStateToProps = ({ firebase, auth }) => {
   return {
     authHasLoaded: firebase.auth.isEmpty,
     isAnon: firebase.auth.isAnonymous,
+    authError: auth.error,
+    reauthenticated: auth.reauthenticated,
     isPermanent: auth.isPermanent,
     newUsername: auth.user.username,
     newEmail: auth.user.email,

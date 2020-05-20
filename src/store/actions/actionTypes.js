@@ -18,6 +18,7 @@ export const AUTH_START = "AUTH_START";
 export const AUTH_END = "AUTH_END";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAIL = "AUTH_FAIL";
+export const AUTH_REAUTHENTICATED = "AUTH_REAUTHENTICATED";
 export const CONVERT_TO_PERM = "CONVERT_TO_PERM"
 export const CHANGE_USERNAME = "CHANGE_USERNAME";
 export const CHANGE_EMAIL = "CHANGE_EMAIL";

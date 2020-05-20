@@ -1,6 +1,7 @@
 import React from "react"
 import { reauthenticate } from "../store/actions/auth"
 import { connect } from "react-redux"
+import { editProfile } from "../store/actions/auth"
 import Button from "@material-ui/core/Button"
 import TextField from "@material-ui/core/TextField"
 import Dialog from "@material-ui/core/Dialog"
@@ -9,21 +10,31 @@ import DialogContent from "@material-ui/core/DialogContent"
 import DialogContentText from "@material-ui/core/DialogContentText"
 import DialogTitle from "@material-ui/core/DialogTitle"
 
-const ProfileChangePassword = ({ email, test, reauthenticate }) => {
-  const [open, setOpen] = React.useState(test)
+const ProfileChangePassword = ({
+  email,
+  userEmail,
+  isOpen,
+  reauthenticate,
+  editProfile,
+  authError,
+}) => {
+  const [open, setOpen] = React.useState(isOpen)
   const [password, setPassword] = React.useState("")
 
   const handleInput = e => {
     setPassword(e.target.value)
     console.log(password)
-
   }
   const handleClickOpen = () => {
     setOpen(true)
   }
 
   const handleClose = () => {
-    setOpen(false)
+    if (!authError) {
+      setOpen(false)
+    } else {
+      setOpen(true)
+    }
   }
 
   const changeEmail = (
@@ -32,9 +43,11 @@ const ProfileChangePassword = ({ email, test, reauthenticate }) => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-        {console.log("modal state", open)}
+      {console.log("modal state", open)}
+      {console.log("user email, ", userEmail)}
+
       <DialogTitle id="form-dialog-title">
-        Confirm identity before updating password.
+        Confirm identity before updating email
       </DialogTitle>
       <DialogContent>
         <DialogContentText>Enter password</DialogContentText>
@@ -44,6 +57,7 @@ const ProfileChangePassword = ({ email, test, reauthenticate }) => {
           id="name"
           label="Password"
           type="password"
+          error={authError ? true : false}
           fullWidth
           onChange={handleInput}
         />
@@ -52,7 +66,13 @@ const ProfileChangePassword = ({ email, test, reauthenticate }) => {
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={() => {reauthenticate(password)}} color="primary">
+        <Button
+          onClick={() => {
+            reauthenticate(password)
+            editProfile("saveEmail", userEmail)
+          }}
+          color="primary"
+        >
           Ok
         </Button>
       </DialogActions>
@@ -97,10 +117,21 @@ const ProfileChangePassword = ({ email, test, reauthenticate }) => {
     )
   }
 }
-const mapDispatchToProps = dispatch => {
+
+const mapStateToProps = ({ auth }) => {
   return {
-    reauthenticate: password => dispatch(reauthenticate(password)),
+    authError: auth.error,
   }
 }
 
-export default connect(null, mapDispatchToProps)(ProfileChangePassword)
+const mapDispatchToProps = dispatch => {
+  return {
+    reauthenticate: password => dispatch(reauthenticate(password)),
+    editProfile: (type, input) => dispatch(editProfile(type, input)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfileChangePassword)

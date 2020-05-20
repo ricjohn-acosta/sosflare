@@ -11,6 +11,7 @@ const initialState = {
   user: {
     username: null,
     email: null,
+    reauthenticated: null,
   },
 }
 
@@ -32,6 +33,10 @@ const authSuccess = state => {
 
 const authFail = (state, payload) => {
   return { ...state, error: payload }
+}
+
+const reauthenticated = state => {
+  return { ...state, user: { ...state.user, reauthenticated: true } }
 }
 
 const convertToPerm = state => {
@@ -59,6 +64,9 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.AUTH_FAIL:
       return authFail(state, payload)
+
+    case actions.AUTH_REAUTHENTICATED:
+      return reauthenticated(state)
 
     case actions.CONVERT_TO_PERM:
       return convertToPerm(state)
