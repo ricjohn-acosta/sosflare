@@ -382,7 +382,7 @@ const Detail = ({ uid, userDetails, editCard }) => {
                         >
                           <MenuItem value={"Normal"}>Normal</MenuItem>
                           <MenuItem value={"Tempered"}>Tempered</MenuItem>
-                          <MenuItem value={"Arch Tempered"}>
+                          <MenuItem value={"ArchTempered"}>
                             Arch Tempered
                           </MenuItem>
                         </Select>

@@ -1,5 +1,6 @@
 import React from "react"
-import { editProfile } from "../store/actions/auth"
+import { upgradeProfile } from "../store/actions/auth"
+import ProfileChangePassword from "./ProfileChangePassword"
 import { connect } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 import HubCard from "./HubCard"
@@ -7,6 +8,9 @@ import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
+import IconButton from "@material-ui/core/IconButton"
+import EditIcon from "@material-ui/icons/Edit"
+import CheckIcon from "@material-ui/icons/Check"
 
 const useStyles = makeStyles(theme => ({
   accountTypeWrapper: { display: "flex" },
@@ -17,9 +21,13 @@ const useStyles = makeStyles(theme => ({
     color: "red",
   },
   fieldLabels: {
-    paddingTop: "5px",
+    paddingTop: "10px",
   },
-  usernameField: {
+  usernameField: {},
+  accountValues: {
+    color: "grey",
+  },
+  fieldBtn: {
     display: "flex",
   },
 }))
@@ -27,13 +35,16 @@ const useStyles = makeStyles(theme => ({
 const ProfileManageAccount = ({
   authHasLoaded,
   isAnon,
-  editProfile,
+  upgradeProfile,
   isPermanent,
+  user,
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
+  const [editUser, setEditUser] = React.useState(false)
+  const [editEmail, setEditEmail] = React.useState(false)
 
   const handleInput = (input, e) => {
     switch (input) {
@@ -48,12 +59,27 @@ const ProfileManageAccount = ({
     }
   }
 
+  const handleEditing = input => {
+    switch (input) {
+      case "username":
+        return setEditUser(true)
+      case "saveUsername":
+        return setEditUser(false)
+      case "email":
+        console.log("test")
+        return setEditEmail(true)
+      case "saveEmail":
+        return setEditEmail(false)
+      default:
+        return null
+    }
+  }
   const handleSubmit = e => {
     e.preventDefault()
     console.log(username)
     console.log(email)
     console.log(password)
-    editProfile(username, email, password)
+    upgradeProfile(username, email, password)
   }
 
   const hasAuthLoaded = () => {
@@ -64,8 +90,8 @@ const ProfileManageAccount = ({
     }
   }
 
-  const checkIfAnon = () => {
-    return isPermanent || hasAuthLoaded() ? (
+  const loadUserType = () => {
+    return checkIfAnon() ? (
       <Typography className={classes.permAccount} variant="h5">
         {" "}
         Permanent
@@ -76,6 +102,10 @@ const ProfileManageAccount = ({
         Temporary
       </Typography>
     )
+  }
+
+  const checkIfAnon = () => {
+    return isPermanent || hasAuthLoaded() ? true : false
   }
 
   return (
@@ -94,7 +124,7 @@ const ProfileManageAccount = ({
               variant={"h5"}
               component="div"
             >
-              Account status:&nbsp;{checkIfAnon()}
+              Account status:&nbsp;{loadUserType()}
             </Typography>
             <br />
             {/**
@@ -106,14 +136,41 @@ const ProfileManageAccount = ({
                   Username:{" "}
                 </Typography>
               </Grid>
-              <Grid item sm={3}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  onChange={e => {
-                    handleInput("username", e)
-                  }}
-                />
+              <Grid item sm={5}>
+                {checkIfAnon() && !editUser ? (
+                  <Typography className={classes.accountValues}>
+                    {user.displayName}
+                    &nbsp;
+                    <IconButton
+                      onClick={() => {
+                        handleEditing("username")
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Typography>
+                ) : (
+                  <span className={classes.fieldBtn}>
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      placeholder={user.displayName}
+                      onChange={e => {
+                        handleInput("username", e)
+                      }}
+                    />
+                    {editUser ? (
+                      <IconButton
+                        onClick={() => {
+                          handleEditing("saveUsername")
+                        }}
+                      >
+                        <CheckIcon />
+                      </IconButton>
+                    ) : null}
+                  </span>
+                )}
               </Grid>
             </Grid>
             <br />
@@ -124,15 +181,43 @@ const ProfileManageAccount = ({
               <Grid item xs={3} sm={2} md={2}>
                 <Typography className={classes.fieldLabels}>Email: </Typography>
               </Grid>
-              <Grid item sm={3}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  type="email"
-                  onChange={e => {
-                    handleInput("email", e)
-                  }}
-                />
+              <Grid item sm={5}>
+                {checkIfAnon() && !editEmail ? (
+                  <Typography className={classes.accountValues}>
+                    {user.email}
+                    <IconButton
+                      onClick={() => {
+                        handleEditing("email")
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Typography>
+                ) : (
+                  <>
+                    <span className={classes.fieldBtn}>
+                      <TextField
+                        variant="outlined"
+                        size="small"
+                        type="email"
+                        placeholder={user.email}
+                        fullWidth
+                        onChange={e => {
+                          handleInput("email", e)
+                        }}
+                      />
+                      {editEmail ? (
+                        <IconButton
+                          onClick={() => {
+                            handleEditing("saveEmail")
+                          }}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                      ) : null}
+                    </span>
+                  </>
+                )}
               </Grid>
             </Grid>
             <br />
@@ -145,27 +230,34 @@ const ProfileManageAccount = ({
                   Password:{" "}
                 </Typography>
               </Grid>
-              <Grid item sm={3}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  type="password"
-                  onChange={e => {
-                    handleInput("password", e)
-                  }}
-                />
+              <Grid item sm={5}>
+                {checkIfAnon() ? (
+                  <ProfileChangePassword />
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="password"
+                    fullWidth
+                    onChange={e => {
+                      handleInput("password", e)
+                    }}
+                  />
+                )}
               </Grid>
             </Grid>
             <br />
-            <Grid
-              item
-              sm={1}
-              component={Button}
-              variant="contained"
-              type="submit"
-            >
-              SAVE
-            </Grid>
+            {checkIfAnon() ? null : (
+              <Grid
+                item
+                sm={1}
+                component={Button}
+                variant="contained"
+                type="submit"
+              >
+                SAVE
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={6}>
             test
@@ -181,13 +273,14 @@ const mapStateToProps = ({ firebase, auth }) => {
     authHasLoaded: firebase.auth.isEmpty,
     isAnon: firebase.auth.isAnonymous,
     isPermanent: auth.isPermanent,
+    user: firebase.auth,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    editProfile: (username, email, password) =>
-      dispatch(editProfile(username, email, password)),
+    upgradeProfile: (username, email, password) =>
+      dispatch(upgradeProfile(username, email, password)),
   }
 }
 

@@ -31,18 +31,10 @@ export function signUp(email, username, password, sessionId, id) {
   }
 }
 
-export function editProfile(username, email, password) {
+export function upgradeProfile(username, email, password) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
     const currentUser = firebase.auth().currentUser
-
-    // const getCredential = async () => {
-    //   let credential = await firebase
-    //     .auth()
-    //     .EmailAuthProvider.credential(email, password)
-    //   return credential
-    // }
-
     let credential = firebase.auth.EmailAuthProvider.credential(email, password)
 
     currentUser.linkWithCredential(credential).then(() => {
