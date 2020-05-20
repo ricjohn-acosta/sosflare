@@ -41,7 +41,7 @@ export function createAnonAccount(id) {
       .then(res => {
         const currentUser = firebase.auth().currentUser
         console.log(currentUser)
-        currentUser.updateProfile({ displayName: id.toString() }).then(() => {
+        currentUser.updateProfile({ displayName: id}).then(() => {
           console.log("DISPLAY NAME SET")
         })
       })

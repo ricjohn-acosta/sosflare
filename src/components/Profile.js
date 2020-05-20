@@ -16,17 +16,21 @@ import Divider from "@material-ui/core/Divider"
 
 const useStyles = makeStyles(theme => ({
   rootWrapper: {
-    marginLeft: "5vw",
-    marginRight: "5vw",
-    height: "75vh",
+    [theme.breakpoints.up("sm")]: {
+      height: "50vh",
+    },
+    [theme.breakpoints.up("md")]: {
+      marginLeft: "5vw",
+      marginRight: "5vw",
+      height: "75vh",
+    },
   },
   navbarBtn: {
     float: "left",
   },
   leftGrid: {},
   rightGrid: {
-    paddingTop: "2vh",
-    paddingLeft: "2vh",
+    padding: "2vh",
   },
 }))
 
@@ -38,7 +42,7 @@ const Profile = () => {
     switch (view) {
       case "Manage account":
         return setCurrentView(<ProfileManageAccount />)
-      case "Update Flare":
+      case "View flare":
         return setCurrentView(<ProfileManageFlare />)
       case "Link third party apps":
         return setCurrentView(<ProfileThirdParty />)
@@ -59,13 +63,22 @@ const Profile = () => {
           item
           container
           direction="column"
-          sm={2}
+          xs={12}
+          sm={12}
+          md={2}
           component={Paper}
         >
           <List>
-            {["Manage account", "Update Flare", "Link third party apps"].map(
+            {["Manage account", "View flare", "Link third party apps"].map(
               (text, index) => (
-                <ListItem button value={"tests"} key={text} onClick={() => {handleView(text)}}>
+                <ListItem
+                  button
+                  value={"tests"}
+                  key={text}
+                  onClick={() => {
+                    handleView(text)
+                  }}
+                >
                   <ListItemIcon>
                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                   </ListItemIcon>
@@ -81,7 +94,9 @@ const Profile = () => {
           item
           container
           direction="column"
-          sm={9}
+          xs={12}
+          sm={12}
+          md={9}
           component={Paper}
         >
           {currentView}
