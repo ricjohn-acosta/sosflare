@@ -1,4 +1,5 @@
 import React from "react"
+import { editProfile } from "../store/actions/auth"
 import { connect } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
 import Grid from "@material-ui/core/Grid"
@@ -8,8 +9,11 @@ import Button from "@material-ui/core/Button"
 
 const useStyles = makeStyles(theme => ({
   accountTypeWrapper: { display: "flex" },
-  accountType: {
-    color: "grey",
+  permAccount: {
+    color: "green",
+  },
+  tempAccount: {
+    color: "red",
   },
   fieldLabels: {
     paddingTop: "5px",
@@ -19,7 +23,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const ProfileManageAccount = ({ authHasLoaded, isAnon }) => {
+const ProfileManageAccount = ({
+  authHasLoaded,
+  isAnon,
+  editProfile,
+  isPermanent,
+}) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [email, setEmail] = React.useState("")
@@ -43,25 +52,33 @@ const ProfileManageAccount = ({ authHasLoaded, isAnon }) => {
     console.log(username)
     console.log(email)
     console.log(password)
+    editProfile(username, email, password)
   }
+
+  const hasAuthLoaded = () => {
+    if(!isAnon && !authHasLoaded) {
+        return true
+    } else {
+        return false
+    }
+  }
+
   const checkIfAnon = () => {
-    return authHasLoaded && isAnon ? (
-      <Typography className={classes.accountType} variant="h5">
-        {" "}
-        Temporary
-      </Typography>
-    ) : (
-      <Typography className={classes.accountType} variant="h5">
+    return isPermanent || hasAuthLoaded()  ? (
+      <Typography className={classes.permAccount} variant="h5">
         {" "}
         Permanent
+      </Typography>
+    ) : (
+      <Typography className={classes.tempAccount} variant="h5">
+        {" "}
+        Temporary
       </Typography>
     )
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      {console.log(username)}
-      {console.log(email)}
       <Grid container direction="column">
         <Grid item xs={12} sm={12}>
           <Typography variant={"h4"}>
@@ -138,7 +155,13 @@ const ProfileManageAccount = ({ authHasLoaded, isAnon }) => {
             </Grid>
           </Grid>
           <br />
-          <Grid item sm={1} component={Button} variant="contained" type="submit">
+          <Grid
+            item
+            sm={1}
+            component={Button}
+            variant="contained"
+            type="submit"
+          >
             SAVE
           </Grid>
         </Grid>
@@ -147,11 +170,22 @@ const ProfileManageAccount = ({ authHasLoaded, isAnon }) => {
   )
 }
 
-const mapStateToProps = ({ firebase }) => {
+const mapStateToProps = ({ firebase, auth }) => {
   return {
-    authHasLoaded: firebase.auth,
+    authHasLoaded: firebase.auth.isEmpty,
     isAnon: firebase.auth.isAnonymous,
+    isPermanent: auth.isPermanent,
   }
 }
 
-export default connect(mapStateToProps)(ProfileManageAccount)
+const mapDispatchToProps = dispatch => {
+  return {
+    editProfile: (username, email, password) =>
+      dispatch(editProfile(username, email, password)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfileManageAccount)

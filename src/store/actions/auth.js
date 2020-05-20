@@ -31,23 +31,28 @@ export function signUp(email, username, password, sessionId, id) {
   }
 }
 
-export function createAnonAccount(id) {
+export function editProfile(username, email, password) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
+    const currentUser = firebase.auth().currentUser
 
-    firebase
-      .auth()
-      .signInAnonymously()
-      .then(res => {
-        const currentUser = firebase.auth().currentUser
-        console.log(currentUser)
-        currentUser.updateProfile({ displayName: id}).then(() => {
-          console.log("DISPLAY NAME SET")
-        })
+    // const getCredential = async () => {
+    //   let credential = await firebase
+    //     .auth()
+    //     .EmailAuthProvider.credential(email, password)
+    //   return credential
+    // }
+
+    let credential = firebase.auth.EmailAuthProvider.credential(email, password)
+
+    currentUser.linkWithCredential(credential).then(() => {
+      currentUser.updateProfile({ displayName: username }).then(data => {
+        console.log("Username updated")
       })
-      .catch(e => {
-        console.log(e.message)
-      })
+      signUp()
+      console.log("Account upgraded to permanent")
+      dispatch({ type: actions.CONVERT_TO_PERM })
+    })
   }
 }
 

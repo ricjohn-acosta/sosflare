@@ -7,6 +7,7 @@ const initialState = {
     error: null,
     loading: false,
   },
+  isPermanent: false,
 }
 
 // HELPER FUNCTIONS
@@ -29,6 +30,10 @@ const authFail = (state, payload) => {
   return { ...state, error: payload }
 }
 
+const convertToPerm = (state) => {
+  return { ...state, isPermanent: true }
+}
+
 // INITIAL STATE CHANGE MECHANISM
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -44,6 +49,9 @@ export default (state = initialState, { type, payload }) => {
     case actions.AUTH_FAIL:
       return authFail(state, payload)
 
+    case actions.CONVERT_TO_PERM:
+      return convertToPerm(state)
+      
     default:
       return state
   }
