@@ -1,5 +1,5 @@
 import React from "react"
-import { upgradeProfile, editProfile } from "../store/actions/auth"
+import { upgradeProfile, editProfile, editEmail } from "../store/actions/auth"
 import ProfileChangePassword from "./ProfileChangePassword"
 import { connect } from "react-redux"
 import { makeStyles } from "@material-ui/core/styles"
@@ -43,6 +43,9 @@ const ProfileManageAccount = ({
   newEmail,
   authError,
   reauthenticated,
+  handleEmailModal,
+  emailModalView,
+  currentUsername
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
@@ -50,7 +53,7 @@ const ProfileManageAccount = ({
   const [password, setPassword] = React.useState("")
   const [editUser, setEditUser] = React.useState(false)
   const [editEmail, setEditEmail] = React.useState(false)
-  const [emailModal, setEmailModal] = React.useState(false)
+  const [emailModal, setEmailModal] = React.useState(emailModalView)
 
   const handleInput = (input, e) => {
     switch (input) {
@@ -78,15 +81,16 @@ const ProfileManageAccount = ({
         console.log("test")
         return setEditEmail(true)
       case "saveEmail":
+        editProfile(input,email)
         return setEditEmail(false)
       default:
         return null
     }
   }
 
-  const handleEmailModal = () => {
-    setEmailModal(true)
-  }
+  // const handleEmailModal = () => {
+  //   setEmailModal(true)
+  // }
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -119,7 +123,7 @@ const ProfileManageAccount = ({
   }
 
   const checkIfAnon = () => {
-    return isPermanent || hasAuthLoaded() ? true : false
+    return isPermanent || !isAnon ? true : false
   }
 
   const loadModal = () => {
@@ -128,13 +132,92 @@ const ProfileManageAccount = ({
         <ProfileChangePassword
           email={true}
           userEmail={email}
-          isOpen={emailModal}
+          isOpen={emailModalView}
         />
       )
     } else {
       return null
     }
   }
+
+  const handleEmailField = () => {
+    if (checkIfAnon()) {
+      //if not reauthenticated show edit
+      //if reauthenticated show save
+      if (reauthenticated) {
+        return (
+          <Grid item sm={5}>
+          <span className={classes.fieldBtn}>
+              <TextField
+                variant="outlined"
+                size="small"
+                type="email"
+                placeholder={newEmail ? newEmail : user.email}
+                fullWidth
+                onChange={e => {
+                  handleInput("email", e)
+                }}
+              />
+              {editEmail ? (
+                <IconButton
+                  onClick={() => {
+                    handleEditing("saveEmail")
+                    // handleEmailModal()
+                  }}
+                >
+                  <CheckIcon />
+                </IconButton>
+              ) : null}
+            </span>
+          </Grid>
+        )
+      } else {
+        return (
+          <Grid item sm={5}>
+          <Typography className={classes.accountValues}>
+              {newEmail ? newEmail : user.email}
+              <IconButton
+                onClick={() => {
+                  handleEditing("email")
+                  handleEmailModal(true)
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Typography>
+          </Grid>
+        )
+      }
+    } else {
+      // return initial textfield
+      return <Grid item sm={5}>
+        <span className={classes.fieldBtn}>
+          <TextField
+            variant="outlined"
+            size="small"
+            type="email"
+            placeholder={newEmail ? newEmail : user.email}
+            fullWidth
+            onChange={e => {
+              handleInput("email", e)
+            }}
+          />
+          {editEmail ? (
+            <IconButton
+              onClick={() => {
+                handleEditing("saveEmail")
+                // handleEmailModal()
+              }}
+            >
+              <CheckIcon />
+            </IconButton>
+          ) : null}
+        </span>
+      </Grid>
+    }
+  }
+
+  handleEmailField()
 
   const testFn = () => {
     return true
@@ -169,8 +252,10 @@ const ProfileManageAccount = ({
                 </Typography>
               </Grid>
               <Grid item sm={5}>
-                {checkIfAnon() && !editUser ? (
+                {!editUser ? (
                   <Typography className={classes.accountValues}>
+                    {/* {newUsername ? newUsername : user.displayName} */}
+                    {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
                     {newUsername ? newUsername : user.displayName}
                     &nbsp;
                     <IconButton
@@ -213,18 +298,25 @@ const ProfileManageAccount = ({
               <Grid item xs={3} sm={2} md={2}>
                 <Typography className={classes.fieldLabels}>Email: </Typography>
               </Grid>
-
+              {emailModalView ? (
+                <ProfileChangePassword
+                  email={true}
+                  userEmail={email}
+                  isOpen={emailModalView}
+                />
+              ) : null}
               <Grid item sm={5}>
                 {console.log("modal state profilemanageaccount ", emailModal)}
-                {checkIfAnon() && !reauthenticated ? (
+                {console.log(checkIfAnon())}
+                {console.log(editEmail)}
+                {!isAnon && reauthenticated === null && !emailModalView || !editEmail? (
                   <>
-                  {loadModal()}
                     <Typography className={classes.accountValues}>
                       {newEmail ? newEmail : user.email}
                       <IconButton
                         onClick={() => {
                           handleEditing("email")
-                          handleEmailModal()
+                          handleEmailModal(true)
                         }}
                       >
                         <EditIcon />
@@ -253,7 +345,6 @@ const ProfileManageAccount = ({
                         <IconButton
                           onClick={() => {
                             handleEditing("saveEmail")
-                            // handleEmailModal()
                           }}
                         >
                           <CheckIcon />
@@ -312,16 +403,18 @@ const ProfileManageAccount = ({
   )
 }
 
-const mapStateToProps = ({ firebase, auth }) => {
+const mapStateToProps = ({ firebase, auth, cards }) => {
   return {
     authHasLoaded: firebase.auth.isEmpty,
     isAnon: firebase.auth.isAnonymous,
     authError: auth.error,
-    reauthenticated: auth.reauthenticated,
+    reauthenticated: auth.user.reauthenticated,
     isPermanent: auth.isPermanent,
     newUsername: auth.user.username,
+    currentUsername: cards.currentUsername,
     newEmail: auth.user.email,
     user: firebase.auth,
+    emailModalView: auth.emailModal,
   }
 }
 
@@ -331,6 +424,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(upgradeProfile(username, email, password)),
 
     editProfile: (type, input) => dispatch(editProfile(type, input)),
+    handleEmailModal: bool => dispatch(editEmail(bool)),
   }
 }
 

@@ -82,6 +82,12 @@ export function editProfile(type, input) {
   }
 }
 
+export function editEmail(bool) {
+  return dispatch => {
+    dispatch({ type: actions.HANDLE_EMAIL_MODAL, payload: bool })
+  }
+}
+
 export function logIn(email, password) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.AUTH_START })

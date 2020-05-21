@@ -8,6 +8,7 @@ const initialState = {
     loading: false,
   },
   isPermanent: false,
+  emailModal: false,
   user: {
     username: null,
     email: null,
@@ -50,6 +51,10 @@ const changeEmail = (state, payload) => {
   return { ...state, user: { ...state.user, email: payload } }
 }
 
+const handleEmailModal = (state, payload) => {
+  return { ...state, emailModal: payload }
+}
+
 // INITIAL STATE CHANGE MECHANISM
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -76,6 +81,9 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.CHANGE_EMAIL:
       return changeEmail(state, payload)
+
+    case actions.HANDLE_EMAIL_MODAL:
+      return handleEmailModal(state, payload)
 
     default:
       return state

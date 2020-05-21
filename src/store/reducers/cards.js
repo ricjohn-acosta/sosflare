@@ -8,6 +8,7 @@ const initialState = {
   currentPage: 1,
   lastItem: null,
   prevPageRef: [],
+  currentUsername: null,
 }
 
 // HELPER FUNCTIONS
@@ -18,10 +19,11 @@ const addCardStart = state => {
   }
 }
 
-const addCardSuccess = state => {
+const addCardSuccess = (state, payload) => {
   return {
     ...state,
     error: false,
+    currentUsername: payload
   }
 }
 
@@ -78,7 +80,7 @@ export default (state = initialState, { type, payload }) => {
       return addCardStart(state)
 
     case actions.ADD_CARD_SUCCESS:
-      return addCardSuccess(state)
+      return addCardSuccess(state, payload)
 
     case actions.ADD_CARD_FAIL:
       return addCardFail(state, payload)
@@ -97,7 +99,7 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.NEXT_PAGE:
       return loadNextPage(state, payload)
-      
+
     case actions.PREV_PAGE_REF:
       return savePrevPageRef(state, payload)
 

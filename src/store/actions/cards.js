@@ -49,7 +49,7 @@ export function addCard(
                 })
                 .then(() => {
                   console.log("CARD ADDED TO DB")
-                  dispatch({ type: actions.ADD_CARD_SUCCESS })
+                  dispatch({ type: actions.ADD_CARD_SUCCESS, payload: username })
                 })
                 .catch(err => {
                   console.log(err)
