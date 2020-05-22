@@ -31,18 +31,24 @@ export function signUp(email, username, password, sessionId, id) {
   }
 }
 
-export function upgradeProfile(username, email, password) {
+export function upgradeProfile(username, sessionId, email, password) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
+    const firestore = getFirebase().firestore()
     const currentUser = firebase.auth().currentUser
+    const uid = getState().firebase.auth.uid
     let credential = firebase.auth.EmailAuthProvider.credential(email, password)
 
     currentUser.linkWithCredential(credential).then(() => {
-      currentUser.updateProfile({ displayName: username }).then(data => {
-        console.log("Username updated")
-      })
-      signUp()
+      firestore
+        .collection("users")
+        .doc(uid)
+        .set({ user_name: username, flare: sessionId, id: uid })
+        .then(() => {
+          console.log("USER ADDED TO FIRESTORE")
+        })
       console.log("Account upgraded to permanent")
+      dispatch({ type: actions.CHANGE_EMAIL, payload: email })
       dispatch({ type: actions.CONVERT_TO_PERM })
     })
   }
@@ -53,12 +59,29 @@ export function reauthenticate(password) {
     const firebase = getFirebase()
     const currentUser = firebase.auth().currentUser
 
-    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password)
-    currentUser.reauthenticateWithCredential(credential).then(() => {dispatch({ type: actions.AUTH_REAUTHENTICATED })}).catch(err => {{dispatch({ type: actions.AUTH_FAIL, payload: err.message })}})
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    )
+    currentUser
+      .reauthenticateWithCredential(credential)
+      .then(() => {
+        dispatch({ type: actions.AUTH_REAUTHENTICATED })
+      })
+      .catch(err => {
+        {
+          dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+        }
+      })
     console.log("reauthenticated")
   }
 }
 
+export function resetReauth() {
+  return dispatch => {
+    dispatch({ type: actions.RESET_REAUTHENTICATED})
+  }
+}
 export function editProfile(type, input) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
@@ -72,10 +95,14 @@ export function editProfile(type, input) {
         })
       case "saveEmail":
         dispatch({ type: actions.CHANGE_EMAIL, payload: input })
-        return currentUser.updateEmail(input).then(data => {
-          console.log("EMAIL UPDATED")
-        })
-        .catch(err => {dispatch({ type: actions.AUTH_FAIL, payload: err.message })})
+        return currentUser
+          .updateEmail(input)
+          .then(data => {
+            console.log("EMAIL UPDATED")
+          })
+          .catch(err => {
+            dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+          })
       default:
         return null
     }

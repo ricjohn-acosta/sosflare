@@ -1,5 +1,5 @@
-import React from "react"
-import { reauthenticate, editEmail } from "../store/actions/auth"
+import React, { useEffect } from "react"
+import { reauthenticate, resetReauth, editEmail } from "../store/actions/auth"
 import { connect } from "react-redux"
 import { editProfile } from "../store/actions/auth"
 import Button from "@material-ui/core/Button"
@@ -18,9 +18,12 @@ const ProfileChangePassword = ({
   editProfile,
   authError,
   handleEmailModal,
-  emailModalView
+  emailModalView,
+  reauthenticated,
+  resetReauth,
 }) => {
   const [open, setOpen] = React.useState(isOpen)
+  const [openPassword, setOpenPassword] = React.useState(false)
   const [password, setPassword] = React.useState("")
 
   const handleInput = e => {
@@ -31,20 +34,38 @@ const ProfileChangePassword = ({
     setOpen(true)
   }
 
+  const handleOpenPassword = () => {
+    setOpenPassword(true)
+  }
+
+  const handleClosePassword = () => {
+    setOpenPassword(false)
+  }
+
   const handleClose = () => {
-    if (!authError) {
-      setOpen(false)
+    if (reauthenticated) {
+      handleEmailModal(false)
     } else {
-      setOpen(true)
+      handleEmailModal(true)
     }
   }
 
+  // Close modal when user is reauthenticated
+  useEffect(() => {
+    if (reauthenticated) {
+      handleEmailModal(false)
+    }
+  })
+
+  // Close
+  useEffect(() => {
+    if (reauthenticated) {
+      resetReauth()
+    }
+  }, [reauthenticated])
+
   const changeEmail = (
-    <Dialog
-      open={emailModalView}
-      // onClose={() => {handleEmailModal(false)}}
-      aria-labelledby="form-dialog-title"
-    >
+    <Dialog open={emailModalView} aria-labelledby="form-dialog-title">
       {console.log("modal state", open)}
       {console.log("user email, ", userEmail)}
 
@@ -65,13 +86,18 @@ const ProfileChangePassword = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => {handleEmailModal(false)}} color="primary">
+        <Button
+          onClick={() => {
+            handleEmailModal(false)
+          }}
+          color="primary"
+        >
           Cancel
         </Button>
         <Button
           onClick={() => {
             reauthenticate(password)
-            // editProfile("saveEmail", userEmail)
+            handleClose()
           }}
           color="primary"
         >
@@ -86,12 +112,12 @@ const ProfileChangePassword = ({
   } else {
     return (
       <div>
-        <Button variant="contained" size="large" onClick={handleClickOpen}>
+        <Button variant="contained" size="large" onClick={handleOpenPassword}>
           Change password
         </Button>
         <Dialog
-          open={open}
-          onClose={handleClose}
+          open={openPassword}
+          onClose={handleClosePassword}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Change password</DialogTitle>
@@ -107,10 +133,10 @@ const ProfileChangePassword = ({
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClosePassword} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClosePassword} color="primary">
               Update
             </Button>
           </DialogActions>
@@ -124,6 +150,7 @@ const mapStateToProps = ({ auth }) => {
   return {
     authError: auth.error,
     emailModalView: auth.emailModal,
+    reauthenticated: auth.user.reauthenticated,
   }
 }
 
@@ -132,6 +159,7 @@ const mapDispatchToProps = dispatch => {
     reauthenticate: password => dispatch(reauthenticate(password)),
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
+    resetReauth: () => dispatch(resetReauth()),
   }
 }
 

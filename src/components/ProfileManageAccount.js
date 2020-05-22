@@ -2,6 +2,8 @@ import React from "react"
 import { upgradeProfile, editProfile, editEmail } from "../store/actions/auth"
 import ProfileChangePassword from "./ProfileChangePassword"
 import { connect } from "react-redux"
+import { compose } from "redux"
+import { firestoreConnect } from "react-redux-firebase"
 import { makeStyles } from "@material-ui/core/styles"
 import HubCard from "./HubCard"
 import Grid from "@material-ui/core/Grid"
@@ -33,7 +35,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const ProfileManageAccount = ({
-  authHasLoaded,
   isAnon,
   upgradeProfile,
   isPermanent,
@@ -41,11 +42,11 @@ const ProfileManageAccount = ({
   editProfile,
   newUsername,
   newEmail,
-  authError,
   reauthenticated,
   handleEmailModal,
   emailModalView,
-  currentUsername
+  currentProfile,
+  loadCurrentProfile
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
@@ -97,15 +98,7 @@ const ProfileManageAccount = ({
     console.log(username)
     console.log(email)
     console.log(password)
-    upgradeProfile(username, email, password)
-  }
-
-  const hasAuthLoaded = () => {
-    if (!isAnon && !authHasLoaded) {
-      return true
-    } else {
-      return false
-    }
+    upgradeProfile(loadCurrentUsername(), loadProfileSessionId(), email, password)
   }
 
   const loadUserType = () => {
@@ -122,23 +115,23 @@ const ProfileManageAccount = ({
     )
   }
 
+  const loadCurrentUsername = () => {
+    if(loadCurrentProfile && currentProfile) {
+      return currentProfile[0].username
+    }
+  }
+
+  const loadProfileSessionId = () => {
+    if(loadCurrentProfile && currentProfile) {
+      return currentProfile[0].session_id
+    }
+  }
+
   const checkIfAnon = () => {
     return isPermanent || !isAnon ? true : false
   }
 
-  const loadModal = () => {
-    if (emailModal) {
-      return (
-        <ProfileChangePassword
-          email={true}
-          userEmail={email}
-          isOpen={emailModalView}
-        />
-      )
-    } else {
-      return null
-    }
-  }
+
 
   const handleEmailField = () => {
     if (checkIfAnon()) {
@@ -217,14 +210,9 @@ const ProfileManageAccount = ({
     }
   }
 
-  handleEmailField()
-
-  const testFn = () => {
-    return true
-  }
-
   return (
     <form onSubmit={handleSubmit}>
+      {console.log(currentProfile)}
       <Grid container direction="column">
         <Grid item xs={12} sm={12}>
           <Typography variant={"h4"}>
@@ -256,7 +244,7 @@ const ProfileManageAccount = ({
                   <Typography className={classes.accountValues}>
                     {/* {newUsername ? newUsername : user.displayName} */}
                     {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
-                    {newUsername ? newUsername : user.displayName}
+                    {newUsername ? newUsername : loadCurrentUsername()}
                     &nbsp;
                     <IconButton
                       onClick={() => {
@@ -272,7 +260,7 @@ const ProfileManageAccount = ({
                       variant="outlined"
                       size="small"
                       fullWidth
-                      placeholder={newUsername ? newUsername : user.displayName}
+                      placeholder={newUsername ? newUsername : loadCurrentUsername()}
                       onChange={e => {
                         handleInput("username", e)
                       }}
@@ -309,7 +297,8 @@ const ProfileManageAccount = ({
                 {console.log("modal state profilemanageaccount ", emailModal)}
                 {console.log(checkIfAnon())}
                 {console.log(editEmail)}
-                {!isAnon && reauthenticated === null && !emailModalView || !editEmail? (
+                {/* {!isAnon && reauthenticated === null && !emailModalView || !editEmail? ( */}
+                {checkIfAnon() && reauthenticated === null && !emailModalView || !editEmail ? (
                   <>
                     <Typography className={classes.accountValues}>
                       {newEmail ? newEmail : user.email}
@@ -386,6 +375,7 @@ const ProfileManageAccount = ({
               <Grid
                 item
                 sm={1}
+                size={"large"}
                 component={Button}
                 variant="contained"
                 type="submit"
@@ -403,7 +393,7 @@ const ProfileManageAccount = ({
   )
 }
 
-const mapStateToProps = ({ firebase, auth, cards }) => {
+const mapStateToProps = ({ firestore, firebase, auth}) => {
   return {
     authHasLoaded: firebase.auth.isEmpty,
     isAnon: firebase.auth.isAnonymous,
@@ -411,7 +401,8 @@ const mapStateToProps = ({ firebase, auth, cards }) => {
     reauthenticated: auth.user.reauthenticated,
     isPermanent: auth.isPermanent,
     newUsername: auth.user.username,
-    currentUsername: cards.currentUsername,
+    currentProfile: firestore.ordered.currentProfile,
+    loadCurrentProfile: firestore.status.requested,
     newEmail: auth.user.email,
     user: firebase.auth,
     emailModalView: auth.emailModal,
@@ -420,15 +411,23 @@ const mapStateToProps = ({ firebase, auth, cards }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    upgradeProfile: (username, email, password) =>
-      dispatch(upgradeProfile(username, email, password)),
+    upgradeProfile: (username, sessionId, email, password) =>
+      dispatch(upgradeProfile(username, sessionId, email, password)),
 
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  firestoreConnect(props => {
+    return [
+      {
+        collection: "cards",
+        where: ["id", "==", props.user.uid],
+        storeAs: "currentProfile",
+      },
+    ]
+  })
 )(ProfileManageAccount)

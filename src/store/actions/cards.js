@@ -59,11 +59,11 @@ export function addCard(
                   })
                 })
               dispatch({ type: actions.ADD_CARD_END })
-              // currentUser
-              //   .updateProfile({ displayName: id.toString() })
-              //   .then(data => {
-              //     console.log(data)
-              //   })
+              currentUser
+                .updateProfile({ displayName: id.toString() })
+                .then(data => {
+                  console.log(data)
+                })
             })
             .catch(e => {
               console.log(e.message)

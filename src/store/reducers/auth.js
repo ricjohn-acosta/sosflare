@@ -40,6 +40,10 @@ const reauthenticated = state => {
   return { ...state, user: { ...state.user, reauthenticated: true } }
 }
 
+const resetReauth = state => {
+  return { ...state, user: { ...state.user, reauthenticated: null } }
+}
+
 const convertToPerm = state => {
   return { ...state, isPermanent: true }
 }
@@ -72,6 +76,9 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.AUTH_REAUTHENTICATED:
       return reauthenticated(state)
+
+    case actions.RESET_REAUTHENTICATED:
+      return resetReauth(state)
 
     case actions.CONVERT_TO_PERM:
       return convertToPerm(state)
