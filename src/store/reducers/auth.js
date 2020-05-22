@@ -12,6 +12,7 @@ const initialState = {
   user: {
     username: null,
     email: null,
+    changedPassword: false,
     reauthenticated: null,
   },
 }
@@ -41,7 +42,7 @@ const reauthenticated = state => {
 }
 
 const resetReauth = state => {
-  return { ...state, user: { ...state.user, reauthenticated: null } }
+  return { ...state, user: { ...state.user, reauthenticated: null, changedPassword: false } }
 }
 
 const convertToPerm = state => {
@@ -53,6 +54,10 @@ const changeUsername = (state, payload) => {
 }
 const changeEmail = (state, payload) => {
   return { ...state, user: { ...state.user, email: payload } }
+}
+
+const changePassword = (state, payload) => {
+  return { ...state, user: { ...state.user, changedPassword: true } }
 }
 
 const handleEmailModal = (state, payload) => {
@@ -88,6 +93,9 @@ export default (state = initialState, { type, payload }) => {
 
     case actions.CHANGE_EMAIL:
       return changeEmail(state, payload)
+
+    case actions.CHANGE_PASSWORD:
+      return changePassword(state, payload)
 
     case actions.HANDLE_EMAIL_MODAL:
       return handleEmailModal(state, payload)

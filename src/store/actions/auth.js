@@ -70,7 +70,10 @@ export function reauthenticate(password) {
       })
       .catch(err => {
         {
-          dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+          dispatch({
+            type: actions.AUTH_FAIL,
+            payload: { error: err.message, source: "reauthentication" },
+          })
         }
       })
     console.log("reauthenticated")
@@ -79,7 +82,7 @@ export function reauthenticate(password) {
 
 export function resetReauth() {
   return dispatch => {
-    dispatch({ type: actions.RESET_REAUTHENTICATED})
+    dispatch({ type: actions.RESET_REAUTHENTICATED })
   }
 }
 export function editProfile(type, input) {
@@ -101,7 +104,22 @@ export function editProfile(type, input) {
             console.log("EMAIL UPDATED")
           })
           .catch(err => {
-            dispatch({ type: actions.AUTH_FAIL, payload: err.message })
+            dispatch({
+              type: actions.AUTH_FAIL,
+              payload: { error: err.message, source: "updateEmail" },
+            })
+          })
+      case "savePassword":
+        return currentUser
+          .updatePassword(input)
+          .then(data => {
+            dispatch({ type: actions.CHANGE_PASSWORD })
+          })
+          .catch(err => {
+            dispatch({
+              type: actions.AUTH_FAIL,
+              payload: { error: err.message, source: "updatePassword" },
+            })
           })
       default:
         return null

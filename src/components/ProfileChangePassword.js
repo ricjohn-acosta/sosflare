@@ -21,17 +21,16 @@ const ProfileChangePassword = ({
   emailModalView,
   reauthenticated,
   resetReauth,
+  changedPassword
 }) => {
   const [open, setOpen] = React.useState(isOpen)
   const [openPassword, setOpenPassword] = React.useState(false)
+  const [openNewPassword, setOpenNewPassword] = React.useState(false)
   const [password, setPassword] = React.useState("")
 
   const handleInput = e => {
     setPassword(e.target.value)
     console.log(password)
-  }
-  const handleClickOpen = () => {
-    setOpen(true)
   }
 
   const handleOpenPassword = () => {
@@ -40,6 +39,9 @@ const ProfileChangePassword = ({
 
   const handleClosePassword = () => {
     setOpenPassword(false)
+    if (reauthenticated) {
+      setOpenNewPassword(true)
+    }
   }
 
   const handleClose = () => {
@@ -54,15 +56,22 @@ const ProfileChangePassword = ({
   useEffect(() => {
     if (reauthenticated) {
       handleEmailModal(false)
+      handleClosePassword()
     }
   })
 
-  // Close
+  // Reset reauthenticated state when reauthenticated
   useEffect(() => {
     if (reauthenticated) {
       resetReauth()
     }
   }, [reauthenticated])
+
+  useEffect(() => {
+    if (changedPassword) {
+      setOpenNewPassword(false)
+    }
+  }, [changedPassword])
 
   const changeEmail = (
     <Dialog open={emailModalView} aria-labelledby="form-dialog-title">
@@ -80,7 +89,9 @@ const ProfileChangePassword = ({
           id="name"
           label="Password"
           type="password"
-          error={authError ? true : false}
+          error={
+            authError && authError.source === "updatePassword" ? true : false
+          }
           fullWidth
           onChange={handleInput}
         />
@@ -120,6 +131,42 @@ const ProfileChangePassword = ({
           onClose={handleClosePassword}
           aria-labelledby="form-dialog-title"
         >
+          <DialogTitle id="form-dialog-title">
+            Confirm identity before changing password
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>Enter password</DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Password"
+              type="password"
+              error={authError ? true : false}
+              fullWidth
+              onChange={handleInput}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClosePassword} color="primary">
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                reauthenticate(password)
+              }}
+              color="primary"
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openNewPassword}
+          onClose={handleClosePassword}
+          aria-labelledby="form-dialog-title"
+        >
           <DialogTitle id="form-dialog-title">Change password</DialogTitle>
           <DialogContent>
             <DialogContentText>Enter new password</DialogContentText>
@@ -129,14 +176,30 @@ const ProfileChangePassword = ({
               id="name"
               label="Password"
               type="password"
+              error={
+                authError && authError.source === "updatePassword"
+                  ? true
+                  : false
+              }
               fullWidth
+              onChange={handleInput}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClosePassword} color="primary">
+            <Button
+              onClick={() => {
+                setOpenNewPassword(false)
+              }}
+              color="primary"
+            >
               Cancel
             </Button>
-            <Button onClick={handleClosePassword} color="primary">
+            <Button
+              onClick={() => {
+                editProfile("savePassword", password)
+              }}
+              color="primary"
+            >
               Update
             </Button>
           </DialogActions>
@@ -151,6 +214,7 @@ const mapStateToProps = ({ auth }) => {
     authError: auth.error,
     emailModalView: auth.emailModal,
     reauthenticated: auth.user.reauthenticated,
+    changedPassword: auth.user.changedPassword
   }
 }
 
