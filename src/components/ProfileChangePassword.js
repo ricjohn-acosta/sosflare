@@ -61,11 +61,11 @@ const ProfileChangePassword = ({
   })
 
   // Reset reauthenticated state when reauthenticated
-  useEffect(() => {
-    if (reauthenticated) {
-      resetReauth()
-    }
-  }, [reauthenticated])
+  // useEffect(() => {
+  //   if (reauthenticated) {
+  //     resetReauth()
+  //   }
+  // }, [reauthenticated])
 
   useEffect(() => {
     if (changedPassword) {
