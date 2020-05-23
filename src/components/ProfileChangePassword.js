@@ -39,7 +39,7 @@ const ProfileChangePassword = ({
 
   const handleClosePassword = () => {
     setOpenPassword(false)
-    if (reauthenticated) {
+    if (reauthenticated === "password") {
       setOpenNewPassword(true)
     }
   }
@@ -107,7 +107,7 @@ const ProfileChangePassword = ({
         </Button>
         <Button
           onClick={() => {
-            reauthenticate(password)
+            reauthenticate(password, "email")
             handleClose()
           }}
           color="primary"
@@ -153,7 +153,7 @@ const ProfileChangePassword = ({
             </Button>
             <Button
               onClick={() => {
-                reauthenticate(password)
+                reauthenticate(password, "email")
               }}
               color="primary"
             >
@@ -220,7 +220,7 @@ const mapStateToProps = ({ auth }) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    reauthenticate: password => dispatch(reauthenticate(password)),
+    reauthenticate: (password, source) => dispatch(reauthenticate(password, source)),
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
     resetReauth: () => dispatch(resetReauth()),

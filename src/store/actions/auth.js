@@ -54,7 +54,7 @@ export function upgradeProfile(username, sessionId, email, password) {
   }
 }
 
-export function reauthenticate(password) {
+export function reauthenticate(password, source) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
     const currentUser = firebase.auth().currentUser
@@ -66,7 +66,7 @@ export function reauthenticate(password) {
     currentUser
       .reauthenticateWithCredential(credential)
       .then(() => {
-        dispatch({ type: actions.AUTH_REAUTHENTICATED })
+        dispatch({ type: actions.AUTH_REAUTHENTICATED, payload: source })
       })
       .catch(err => {
         {

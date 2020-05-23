@@ -37,8 +37,8 @@ const authFail = (state, payload) => {
   return { ...state, error: payload }
 }
 
-const reauthenticated = state => {
-  return { ...state, user: { ...state.user, reauthenticated: true } }
+const reauthenticated = (state, payload) => {
+  return { ...state, user: { ...state.user, reauthenticated: payload } }
 }
 
 const resetReauth = state => {
@@ -80,7 +80,7 @@ export default (state = initialState, { type, payload }) => {
       return authFail(state, payload)
 
     case actions.AUTH_REAUTHENTICATED:
-      return reauthenticated(state)
+      return reauthenticated(state, payload)
 
     case actions.RESET_REAUTHENTICATED:
       return resetReauth(state)

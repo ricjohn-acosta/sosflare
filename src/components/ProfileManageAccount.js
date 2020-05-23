@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import { upgradeProfile, editProfile, editEmail } from "../store/actions/auth"
+import { upgradeProfile, editProfile, editEmail, resetReauth } from "../store/actions/auth"
 import ProfileChangePassword from "./ProfileChangePassword"
 import { connect } from "react-redux"
 import { compose } from "redux"
@@ -47,6 +47,7 @@ const ProfileManageAccount = ({
   emailModalView,
   currentProfile,
   loadCurrentProfile,
+  resetReauth
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
@@ -251,9 +252,11 @@ const ProfileManageAccount = ({
     }
   }
 
-  // useEffect(() => {
-  //   handleEmailModal(false)
-  // }, [])
+  useEffect(() => {
+    if (newEmail) {
+      resetReauth()
+    }
+  }, [newEmail])
 
   const test = () => {
     if (checkIfAnon() && !reauthenticated) {
@@ -461,6 +464,7 @@ const mapDispatchToProps = dispatch => {
 
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
+    resetReauth: () => dispatch(resetReauth())
   }
 }
 
