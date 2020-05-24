@@ -3,7 +3,7 @@ import "firebase/auth"
 import "firebase/firestore"
 import "firebase/functions"
 
-const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG)
+const FIREBASE_CONFIG = process.env.FIREBASE_CONFIG
 let environment = FIREBASE_CONFIG.projectId
  
 if (environment === "sos-flare") {
