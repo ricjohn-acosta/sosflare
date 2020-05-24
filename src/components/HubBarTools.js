@@ -169,7 +169,6 @@ const HubBarTools = props => {
                 <Checkbox
                   checked={sortByNewest}
                   color="primary"
-                  // disabled={sortByMonster || sortByOldest ? true : false}
                   onChange={handleCheckboxNewest}
                 />
               }
@@ -182,7 +181,6 @@ const HubBarTools = props => {
                 <Checkbox
                   checked={sortByOldest}
                   color="primary"
-                  // disabled={sortByMonster || sortByNewest ? true : false}
                   onChange={handleCheckboxOldest}
                 />
               }

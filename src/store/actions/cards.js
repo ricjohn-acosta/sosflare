@@ -15,7 +15,7 @@ export function addCard(
     dispatch({ type: actions.ADD_CARD_START })
     const firebase = getFirebase()
     const firestore = getFirebase().firestore()
-    const date_created = moment().format()
+    const date_created = moment().format("LLLL")
     const timestamp = new Date()
     const id = Date.now()
     const userId = getState().firebase.auth.uid
@@ -26,9 +26,6 @@ export function addCard(
       .get()
       .then(data => {
         if (data.empty) {
-          // dispatch(
-          //   createAnonAccount(id)
-          // )
           firebase
             .auth()
             .signInAnonymously()
@@ -52,7 +49,7 @@ export function addCard(
                 })
                 .then(() => {
                   console.log("CARD ADDED TO DB")
-                  dispatch({ type: actions.ADD_CARD_SUCCESS })
+                  dispatch({ type: actions.ADD_CARD_SUCCESS, payload: username })
                 })
                 .catch(err => {
                   console.log(err)
@@ -62,19 +59,42 @@ export function addCard(
                   })
                 })
               dispatch({ type: actions.ADD_CARD_END })
-              currentUser
-                .updateProfile({ displayName: id.toString() })
-                .then(data => {
-                  console.log(data)
-                })
+              // currentUser
+              //   .updateProfile({ displayName: id.toString() })
+              //   .then(data => {
+              //     console.log(data)
+              //   })
             })
             .catch(e => {
               console.log(e.message)
             })
         } else {
           console.log("USERNAME TAKEN!")
-          dispatch({ type: actions.ADD_CARD_FAIL, payload: "Someone with that username has already fired an SOS!" })
+          dispatch({
+            type: actions.ADD_CARD_FAIL,
+            payload: "Someone with that username has already fired an SOS!",
+          })
         }
+      })
+  }
+}
+
+export function editCard(
+  id,
+  session_id,
+  description,
+  target_monster,
+  monster_type,
+  rank
+) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firestore = getFirebase().firestore()
+    firestore
+      .collection("cards")
+      .doc(id)
+      .update({ session_id, description, target_monster, monster_type, rank, date_created: moment().format("LLLL") })
+      .then(() => {
+        console.log("CARD UPDATED")
       })
   }
 }
@@ -108,4 +128,3 @@ export function savePrevPageRef(lastItem) {
     dispatch({ type: actions.PREV_PAGE_REF, payload: lastItem })
   }
 }
-

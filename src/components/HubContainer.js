@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
   paginationContainer: {
     float: "right",
-    display: "flex"
+    display: "flex",
   },
 })
 
@@ -46,8 +46,7 @@ const HubContainer = () => {
               </Typography>
             </div>
             <HubCards />
-            {/*Pagination component is here*/}
-            <br/>
+            <br />
             <div className={classes.paginationContainer}>
               <HubCardsPagination />
             </div>

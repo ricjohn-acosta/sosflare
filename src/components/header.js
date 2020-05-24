@@ -12,6 +12,7 @@ import ButtonGroup from "@material-ui/core/ButtonGroup"
 import Alert from "@material-ui/lab/Alert"
 import CloseIcon from "@material-ui/icons/Close"
 import IconButton from "@material-ui/core/IconButton"
+import Collapse from '@material-ui/core/Collapse';
 
 const useStyles = makeStyles({
   appBar: {
@@ -41,8 +42,9 @@ const useStyles = makeStyles({
   },
 })
 
-const Header = ({ siteTitle, uid, logout }) => {
+const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
   const classes = useStyles()
+  const [alertView, setAlertView] = React.useState(true)
 
   return (
     <header
@@ -87,19 +89,24 @@ const Header = ({ siteTitle, uid, logout }) => {
         </Grid>
       </AppBar>
 
-      {uid ? (
+      {uid && isAnon && !isPermanent ? (
+        <Collapse in={alertView}>
         <Alert
+          closeText="{true}"
           severity="error"
           variant="filled"
           action={
-            <IconButton aria-label="close" color="inherit" size="small">
+            <IconButton aria-label="close" color="inherit" size="small" onClick={() => {setAlertView(false)}}>
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
         >
-          You are currently on a temporary account. Click here to change your
-          email, password and username.
+          You are currently on a temporary account. Click{" "}
+          <a href="http://sos-flare.web.app/profile">here</a> to upgrade your
+          account by changing your email and password to be able to link third
+          party apps
         </Alert>
+        </Collapse>
       ) : null}
     </header>
   )
@@ -113,9 +120,11 @@ Header.defaultProps = {
   siteTitle: ``,
 }
 
-const mapStateToProps = ({ firebase }) => {
+const mapStateToProps = ({ firebase, auth }) => {
   return {
     uid: firebase.auth.uid,
+    isAnon: firebase.auth.isAnonymous,
+    isPermanent: auth.isPermanent,
   }
 }
 

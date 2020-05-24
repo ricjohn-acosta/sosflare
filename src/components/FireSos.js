@@ -132,12 +132,21 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
   }
 
   const handleTargetMonster = event => {
-    setTargetMonster(event.target.value)
+    if (checkAutocompleteInput(event.target.value)) {
+      console.log("test")
+      setTargetMonster(event.target.value)
+    } else {
+      handleAutocompleteErrorTrue()
+    }
     // setResetMonsters(false)
   }
 
   const handleDescription = event => {
     setDescription(event.target.value)
+  }
+
+  const handleAutoCompleteField = event => {
+    console.log(event.target.value)
   }
 
   const handleAutocompleteErrorTrue = () => {
@@ -161,7 +170,10 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
   }
 
   const handleWhitespace = () => {
-    if (!username.replace(/\s/g, "").length || !sessionId.replace(/\s/g, "").length) {
+    if (
+      !username.replace(/\s/g, "").length ||
+      !sessionId.replace(/\s/g, "").length
+    ) {
       console.log(
         "string only contains whitespace (ie. spaces, tabs or line breaks)"
       )
@@ -182,15 +194,6 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
       description
     )
   }
-  // const hasUserFiredSos = () => {
-  //   if (auth && cards) {
-  //     if (cards.hasOwnProperty(auth.uid)) {
-  //       return true
-  //     }
-  //   } else {
-  //     return false
-  //   }
-  // }
 
   const checkAutocompleteInput = monsterName => {
     if (monsterName === "") {
@@ -210,6 +213,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
       )
     }
   }
+
   const createMenuItems = () => {
     let array = [
       <MenuItem key="1" value={"Normal"}>
@@ -227,6 +231,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
 
   return (
     <>
+      {console.log(targetMonster)}
       <Button
         onClick={handleOpen}
         className={classes.fireSosBtn}
@@ -379,6 +384,8 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                       return (
                         <TextField
                           onSelect={handleTargetMonster}
+                          // onChange={() => {setTargetMonster("")}}
+                          autoComplete="false"
                           {...params}
                           label="Choose monster"
                           variant="filled"
@@ -414,7 +421,8 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
               {/**
                * FIRE SOS BUTTON
                */}
-              {handleWhitespace() || autoCompleteError ||
+              {handleWhitespace() ||
+              autoCompleteError ||
               !username ||
               !platform ||
               !sessionId ||

@@ -31,23 +31,108 @@ export function signUp(email, username, password, sessionId, id) {
   }
 }
 
-export function createAnonAccount(id) {
+export function upgradeProfile(username, sessionId, email, password) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
+    const firestore = getFirebase().firestore()
+    const currentUser = firebase.auth().currentUser
+    const uid = getState().firebase.auth.uid
+    let credential = firebase.auth.EmailAuthProvider.credential(email, password)
 
-    firebase
-      .auth()
-      .signInAnonymously()
-      .then(res => {
-        const currentUser = firebase.auth().currentUser
-        console.log(currentUser)
-        currentUser.updateProfile({ displayName: id.toString() }).then(() => {
-          console.log("DISPLAY NAME SET")
+    currentUser.linkWithCredential(credential).then(() => {
+      firestore
+        .collection("users")
+        .doc(uid)
+        .set({ user_name: username, flare: sessionId, id: uid })
+        .then(() => {
+          console.log("USER ADDED TO FIRESTORE")
+          dispatch({ type: actions.CHANGE_EMAIL, payload: email })
+          dispatch({ type: actions.CONVERT_TO_PERM })
         })
+      console.log("Account upgraded to permanent")
+    })
+  }
+}
+
+export function reauthenticate(password, source) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase()
+    const currentUser = firebase.auth().currentUser
+
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    )
+    currentUser
+      .reauthenticateWithCredential(credential)
+      .then(() => {
+        dispatch({ type: actions.AUTH_REAUTHENTICATED, payload: source })
       })
-      .catch(e => {
-        console.log(e.message)
+      .catch(err => {
+        {
+          dispatch({
+            type: actions.AUTH_FAIL,
+            payload: { error: err.message, source: "reauthentication" },
+          })
+        }
       })
+    console.log("reauthenticated")
+  }
+}
+
+export function resetReauth() {
+  return dispatch => {
+    dispatch({ type: actions.RESET_REAUTHENTICATED })
+  }
+}
+export function editProfile(type, input) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase()
+    const currentUser = firebase.auth().currentUser
+
+    switch (type) {
+      case "saveUsername":
+        dispatch({ type: actions.CHANGE_USERNAME, payload: input })
+        return currentUser.updateProfile({ displayName: input }).then(data => {
+          console.log("USERNAME UPDATED")
+          dispatch({ type: actions.CHANGE_USERNAME_SUCCESS })
+        })
+      case "saveEmail":
+        dispatch({ type: actions.CHANGE_EMAIL, payload: input })
+        return currentUser
+          .updateEmail(input)
+          .then(data => {
+            console.log("EMAIL UPDATED")
+            dispatch({ type: actions.CHANGE_EMAIL_SUCCESS })
+          })
+          .catch(err => {
+            dispatch({
+              type: actions.AUTH_FAIL,
+              payload: { error: err.message, source: "updateEmail" },
+            })
+          })
+      case "savePassword":
+        dispatch({ type: actions.CHANGE_PASSWORD })
+        return currentUser
+          .updatePassword(input)
+          .then(data => {
+            dispatch({ type: actions.CHANGE_PASSWORD_SUCCESS })
+          })
+          .catch(err => {
+            dispatch({
+              type: actions.AUTH_FAIL,
+              payload: { error: err.message, source: "updatePassword" },
+            })
+          })
+      default:
+        return null
+    }
+  }
+}
+
+export function editEmail(bool) {
+  return dispatch => {
+    dispatch({ type: actions.HANDLE_EMAIL_MODAL, payload: bool })
   }
 }
 

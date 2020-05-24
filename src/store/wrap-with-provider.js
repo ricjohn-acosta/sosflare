@@ -22,7 +22,10 @@ const rrfProps = {
 
 const THEME = createMuiTheme({
   typography: {
-    fontFamily: "'Roboto', sans-serif"
+    fontFamily: "'Roboto', sans-serif",
+  },
+  breakpoints: {
+    values: { xs: 0, sm: 600, md: 960, lg: 1770, xl: 1920 },
   },
 })
 
