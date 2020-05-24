@@ -69,10 +69,11 @@ const Profile = () => {
           component={Paper}
         >
           <List>
-            {["Manage account", "View flare", "Link third party apps"].map(
+            {["Manage account", "Link third party apps"].map(
               (text, index) => (
                 <ListItem
                   button
+                  disabled={text === "Link third party apps" ?  true : false}
                   value={"tests"}
                   key={text}
                   onClick={() => {

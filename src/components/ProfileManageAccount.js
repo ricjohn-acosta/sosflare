@@ -263,7 +263,7 @@ const ProfileManageAccount = ({
   }, [newEmail])
 
   const test = () => {
-    if (checkIfAnon() && !reauthenticated || reauthenticated === "password") {
+    if ((checkIfAnon() && !reauthenticated) || reauthenticated === "password") {
       // Return typography component
       return (
         <>
@@ -282,7 +282,7 @@ const ProfileManageAccount = ({
       )
       // Else return inputfield component
     } else {
-        return renderEmailField()
+      return renderEmailField()
     }
   }
   return (
@@ -291,7 +291,7 @@ const ProfileManageAccount = ({
       <Grid container direction="column">
         <Grid item xs={12} sm={12}>
           <Typography variant={"h4"}>
-            Change your account information
+            Manage account information and your flare
           </Typography>
           <hr />
         </Grid>
