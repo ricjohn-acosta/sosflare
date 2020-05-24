@@ -1,5 +1,6 @@
 import React from "react"
 import { Redirect } from "@reach/router"
+import { Helmet } from "react-helmet"
 import { Link } from "gatsby"
 import { connect } from "react-redux"
 import { compose } from "redux"
@@ -75,6 +76,9 @@ const IndexPage = ({ cards, uid }) => {
   } else {
     return (
       <Layout>
+        <Helmet>
+          <title>SOS Flare</title>
+        </Helmet>
         <div className={classes.wrapper}>
           <Box className={classes.title}>
             <h1>Hunt with friends!</h1>
