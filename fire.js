@@ -5,7 +5,7 @@ import "firebase/firestore"
 const environment = process.env.FIREBASE_CONFIG.projectId
 const firebaseConfig;
 
-if(projectId === "live-sos-flare") {
+if(environment === "live-sos-flare") {
    firebaseConfig = {
     apiKey: "AIzaSyAB1i-ulKCLaF_0niwmXw6ciypsPCsdCEw",
     authDomain: "sos-flare.firebaseapp.com",
