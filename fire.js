@@ -1,7 +1,7 @@
 import firebase, { functions } from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
-import "firebase/functions"
+import "firebase/firebase-functions"
 
 const FIREBASE_CONFIG = process.env.FIREBASE_CONFIG
 let environment = FIREBASE_CONFIG.projectId
