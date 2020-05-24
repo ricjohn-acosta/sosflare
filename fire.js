@@ -1,9 +1,11 @@
-import firebase from "firebase/app"
+import firebase, { functions } from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
+import "firebase/functions"
 
-const environment = process.env.GCLOUD_PROJECT
-
+const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG)
+let environment = FIREBASE_CONFIG.projectId
+ 
 if (environment === "sos-flare") {
   const firebaseConfig = {
     apiKey: "AIzaSyAB1i-ulKCLaF_0niwmXw6ciypsPCsdCEw",
