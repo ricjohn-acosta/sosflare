@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "sos-flare"
+    "default": "sos-flare",
+    "production": "live-sos-flare"
   }
 }
