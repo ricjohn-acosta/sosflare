@@ -95,6 +95,7 @@ export function editProfile(type, input) {
         dispatch({ type: actions.CHANGE_USERNAME, payload: input })
         return currentUser.updateProfile({ displayName: input }).then(data => {
           console.log("USERNAME UPDATED")
+          dispatch({ type: actions.CHANGE_USERNAME_SUCCESS })
         })
       case "saveEmail":
         dispatch({ type: actions.CHANGE_EMAIL, payload: input })
@@ -102,6 +103,7 @@ export function editProfile(type, input) {
           .updateEmail(input)
           .then(data => {
             console.log("EMAIL UPDATED")
+            dispatch({ type: actions.CHANGE_EMAIL_SUCCESS })
           })
           .catch(err => {
             dispatch({
@@ -110,10 +112,11 @@ export function editProfile(type, input) {
             })
           })
       case "savePassword":
+        dispatch({ type: actions.CHANGE_PASSWORD })
         return currentUser
           .updatePassword(input)
           .then(data => {
-            dispatch({ type: actions.CHANGE_PASSWORD })
+            dispatch({ type: actions.CHANGE_PASSWORD_SUCCESS })
           })
           .catch(err => {
             dispatch({

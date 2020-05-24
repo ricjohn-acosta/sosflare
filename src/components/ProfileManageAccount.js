@@ -6,6 +6,7 @@ import {
   resetReauth,
 } from "../store/actions/auth"
 import ProfileChangePassword from "./ProfileChangePassword"
+import ProfileSnackbars from "./ProfileSnackbars"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
@@ -46,6 +47,7 @@ const ProfileManageAccount = ({
   user,
   editProfile,
   newUsername,
+  changedUsername,
   newEmail,
   reauthenticated,
   handleEmailModal,
@@ -53,6 +55,9 @@ const ProfileManageAccount = ({
   currentProfile,
   loadCurrentProfile,
   resetReauth,
+  firebaseUsername,
+  changedEmail,
+  changedPassword
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
@@ -81,7 +86,10 @@ const ProfileManageAccount = ({
       case "saveUsername":
         // setEditUser(false)
         // return editProfile(input, username)
-        if (!username === "") {
+        if (username === "") {
+          console.log("empty field")
+          setEditUser(false)
+        } else {
           editProfile(input, username)
         }
         return setEditUser(false)
@@ -177,85 +185,6 @@ const ProfileManageAccount = ({
     return isPermanent || !isAnon ? true : false
   }
 
-  const handleEmailField = () => {
-    if (checkIfAnon()) {
-      //if not reauthenticated show edit
-      //if reauthenticated show save
-      if (reauthenticated) {
-        return (
-          <Grid item sm={5}>
-            <span className={classes.fieldBtn}>
-              <TextField
-                variant="outlined"
-                size="small"
-                type="email"
-                placeholder={newEmail ? newEmail : user.email}
-                fullWidth
-                onChange={e => {
-                  handleInput("email", e)
-                }}
-              />
-              {editEmail ? (
-                <IconButton
-                  onClick={() => {
-                    handleEditing("saveEmail")
-                    // handleEmailModal()
-                  }}
-                >
-                  <CheckIcon />
-                </IconButton>
-              ) : null}
-            </span>
-          </Grid>
-        )
-      } else {
-        return (
-          <Grid item sm={5}>
-            <Typography className={classes.accountValues}>
-              {newEmail ? newEmail : user.email}
-              <IconButton
-                onClick={() => {
-                  handleEditing("email")
-                  handleEmailModal(true)
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-            </Typography>
-          </Grid>
-        )
-      }
-    } else {
-      // return initial textfield
-      return (
-        <Grid item sm={5}>
-          <span className={classes.fieldBtn}>
-            <TextField
-              variant="outlined"
-              size="small"
-              type="email"
-              placeholder={newEmail ? newEmail : user.email}
-              fullWidth
-              onChange={e => {
-                handleInput("email", e)
-              }}
-            />
-            {editEmail ? (
-              <IconButton
-                onClick={() => {
-                  handleEditing("saveEmail")
-                  // handleEmailModal()
-                }}
-              >
-                <CheckIcon />
-              </IconButton>
-            ) : null}
-          </span>
-        </Grid>
-      )
-    }
-  }
-
   useEffect(() => {
     if (newEmail) {
       resetReauth()
@@ -319,7 +248,7 @@ const ProfileManageAccount = ({
                   <Typography className={classes.accountValues}>
                     {/* {newUsername ? newUsername : user.displayName} */}
                     {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
-                    {newUsername ? newUsername : loadCurrentUsername()}
+                    {newUsername ? newUsername : firebaseUsername}
                     &nbsp;
                     <IconButton
                       onClick={() => {
@@ -335,9 +264,7 @@ const ProfileManageAccount = ({
                       variant="outlined"
                       size="small"
                       fullWidth
-                      placeholder={
-                        newUsername ? newUsername : loadCurrentUsername()
-                      }
+                      placeholder={newUsername ? newUsername : firebaseUsername}
                       onChange={e => {
                         handleInput("username", e)
                       }}
@@ -443,6 +370,12 @@ const ProfileManageAccount = ({
           </Grid>
         </Grid>
       </Grid>
+      <ProfileSnackbars
+        hasUpgraded={isPermanent}
+        hasChangedUsername={changedUsername}
+        hasChangedEmail={changedEmail}
+        hasChangedPassword={changedPassword}
+      />
     </form>
   )
 }
@@ -455,6 +388,10 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     reauthenticated: auth.user.reauthenticated,
     isPermanent: auth.isPermanent,
     newUsername: auth.user.username,
+    firebaseUsername: firebase.auth.displayName,
+    changedUsername: auth.user.changedUsername,
+    changedEmail: auth.user.changedEmail,
+    changedPassword: auth.user.password,
     currentProfile: firestore.ordered.currentProfile,
     loadCurrentProfile: firestore.status.requested,
     newEmail: auth.user.email,

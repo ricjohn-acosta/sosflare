@@ -11,7 +11,10 @@ const initialState = {
   emailModal: false,
   user: {
     username: null,
+    changedUsername: false,
     email: null,
+    changedEmail: false,
+    password: false,
     changedPassword: false,
     reauthenticated: null,
   },
@@ -42,7 +45,10 @@ const reauthenticated = (state, payload) => {
 }
 
 const resetReauth = state => {
-  return { ...state, user: { ...state.user, reauthenticated: null, changedPassword: false } }
+  return {
+    ...state,
+    user: { ...state.user, reauthenticated: null, changedPassword: false },
+  }
 }
 
 const convertToPerm = state => {
@@ -50,14 +56,33 @@ const convertToPerm = state => {
 }
 
 const changeUsername = (state, payload) => {
-  return { ...state, user: { ...state.user, username: payload } }
+  return {
+    ...state,
+    user: { ...state.user, username: payload, changedUsername: true },
+  }
 }
+
+const changeUsernameSuccess = state => {
+  return { ...state, user: { ...state.user, changedUsername: false } }
+}
+
 const changeEmail = (state, payload) => {
-  return { ...state, user: { ...state.user, email: payload } }
+  return {
+    ...state,
+    user: { ...state.user, email: payload, changedEmail: true },
+  }
+}
+
+const changeEmailSuccess = state => {
+  return { ...state, user: { ...state.user, changedEmail: false } }
 }
 
 const changePassword = (state, payload) => {
-  return { ...state, user: { ...state.user, changedPassword: true } }
+  return { ...state, user: { ...state.user, changedPassword: true, password: true } }
+}
+
+const changePasswordSuccess = (state) => {
+  return { ...state, user: { ...state.user, password: false } }
 }
 
 const handleEmailModal = (state, payload) => {
@@ -91,11 +116,20 @@ export default (state = initialState, { type, payload }) => {
     case actions.CHANGE_USERNAME:
       return changeUsername(state, payload)
 
+    case actions.CHANGE_USERNAME_SUCCESS:
+      return changeUsernameSuccess(state)
+
     case actions.CHANGE_EMAIL:
       return changeEmail(state, payload)
 
+    case actions.CHANGE_EMAIL_SUCCESS:
+      return changeEmailSuccess(state)
+
     case actions.CHANGE_PASSWORD:
       return changePassword(state, payload)
+
+    case actions.CHANGE_PASSWORD_SUCCESS:
+      return changePasswordSuccess(state)
 
     case actions.HANDLE_EMAIL_MODAL:
       return handleEmailModal(state, payload)
