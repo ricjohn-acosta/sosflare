@@ -2,8 +2,7 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG)
-const environment = FIREBASE_CONFIG.projectId
+const environment = process.env.GCLOUD_PROJECT
 let firebaseConfig;
 
 if(environment === "sos-flare") {
