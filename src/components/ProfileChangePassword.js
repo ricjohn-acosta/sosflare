@@ -39,9 +39,6 @@ const ProfileChangePassword = ({
 
   const handleClosePassword = () => {
     setOpenPassword(false)
-    if (reauthenticated === "password") {
-      setOpenNewPassword(true)
-    }
   }
 
   const handleClose = () => {
@@ -70,8 +67,16 @@ const ProfileChangePassword = ({
   useEffect(() => {
     if (changedPassword) {
       setOpenNewPassword(false)
+      resetReauth()
     }
   }, [changedPassword])
+
+  useEffect(() => {
+    if (reauthenticated === "password") {
+      setOpenNewPassword(true)
+      resetReauth()
+    }
+  }, [reauthenticated])
 
   const changeEmail = (
     <Dialog open={emailModalView} aria-labelledby="form-dialog-title">
@@ -153,7 +158,7 @@ const ProfileChangePassword = ({
             </Button>
             <Button
               onClick={() => {
-                reauthenticate(password, "email")
+                reauthenticate(password, "password")
               }}
               color="primary"
             >
@@ -161,7 +166,9 @@ const ProfileChangePassword = ({
             </Button>
           </DialogActions>
         </Dialog>
-
+        {/**
+         * CHANGE PASSWORD DIALOGUE BOX
+         */}
         <Dialog
           open={openNewPassword}
           onClose={handleClosePassword}

@@ -1,5 +1,10 @@
 import React, { useEffect } from "react"
-import { upgradeProfile, editProfile, editEmail, resetReauth } from "../store/actions/auth"
+import {
+  upgradeProfile,
+  editProfile,
+  editEmail,
+  resetReauth,
+} from "../store/actions/auth"
 import ProfileChangePassword from "./ProfileChangePassword"
 import { connect } from "react-redux"
 import { compose } from "redux"
@@ -47,7 +52,7 @@ const ProfileManageAccount = ({
   emailModalView,
   currentProfile,
   loadCurrentProfile,
-  resetReauth
+  resetReauth,
 }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
@@ -135,37 +140,36 @@ const ProfileManageAccount = ({
   }
 
   const renderEmailField = () => {
-      return (
-        <>
-          <span className={classes.fieldBtn}>
-            {/* <ProfileChangePassword
+    return (
+      <>
+        <span className={classes.fieldBtn}>
+          {/* <ProfileChangePassword
               email={true}
               userEmail={email}
               isOpen={emailModal}
             /> */}
-            <TextField
-              variant="outlined"
-              size="small"
-              type="email"
-              placeholder={newEmail ? newEmail : user.email}
-              fullWidth
-              onChange={e => {
-                handleInput("email", e)
+          <TextField
+            variant="outlined"
+            size="small"
+            type="email"
+            placeholder={newEmail ? newEmail : user.email}
+            fullWidth
+            onChange={e => {
+              handleInput("email", e)
+            }}
+          />
+          {editEmail ? (
+            <IconButton
+              onClick={() => {
+                handleEditing("saveEmail")
               }}
-            />
-            {editEmail ? (
-              <IconButton
-                onClick={() => {
-                  handleEditing("saveEmail")
-                }}
-              >
-                <CheckIcon />
-              </IconButton>
-            ) : null}
-          </span>
-        </>
-      )
-    
+            >
+              <CheckIcon />
+            </IconButton>
+          ) : null}
+        </span>
+      </>
+    )
   }
 
   // if true, account is permanent, if false account is temporary
@@ -259,7 +263,8 @@ const ProfileManageAccount = ({
   }, [newEmail])
 
   const test = () => {
-    if (checkIfAnon() && !reauthenticated) {
+    if (checkIfAnon() && !reauthenticated || reauthenticated === "password") {
+      // Return typography component
       return (
         <>
           <Typography className={classes.accountValues}>
@@ -275,8 +280,9 @@ const ProfileManageAccount = ({
           </Typography>
         </>
       )
+      // Else return inputfield component
     } else {
-      return renderEmailField()
+        return renderEmailField()
     }
   }
   return (
@@ -464,7 +470,7 @@ const mapDispatchToProps = dispatch => {
 
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
-    resetReauth: () => dispatch(resetReauth())
+    resetReauth: () => dispatch(resetReauth()),
   }
 }
 
