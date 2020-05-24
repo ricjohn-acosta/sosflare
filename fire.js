@@ -2,10 +2,11 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-const environment = process.env.FIREBASE_CONFIG.projectId
-const firebaseConfig;
+const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG)
+const environment = FIREBASE_CONFIG.projectId
+let firebaseConfig;
 
-if(environment === "live-sos-flare") {
+if(environment === "sos-flare") {
    firebaseConfig = {
     apiKey: "AIzaSyAB1i-ulKCLaF_0niwmXw6ciypsPCsdCEw",
     authDomain: "sos-flare.firebaseapp.com",
