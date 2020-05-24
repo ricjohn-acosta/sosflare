@@ -43,6 +43,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
         i++ 
       ) {
         if (cards[i]) {
+          console.log(cards[i].date_created)
           array.push(
             <HubCard
               id={cards[i].id}
@@ -56,6 +57,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
               monsterImage={require(`../images/monsters/${cards[i].target_monster}.png`)}
               startTime={currentTime.from(cards[i].date_created, true)}
               timestamp={cards[i].date_created}
+              unixTime={cards[i].unix_time}
               dateCreated={cards[i].dateCreated}
             />
           )
@@ -111,7 +113,7 @@ export default compose(
     return [
       {
         collection: "cards",
-        orderBy: ["timestamp", "desc"],
+        orderBy: ["unix_time", "desc"],
         startAfter: checkPage(),
         limit: 10,
       },

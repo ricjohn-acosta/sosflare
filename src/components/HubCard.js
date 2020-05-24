@@ -208,7 +208,6 @@ const HubCard = ({
           )}
         </CardContent>
       </Card>
-      {console.log(Date.now())}
     </Grid>
   )
 }

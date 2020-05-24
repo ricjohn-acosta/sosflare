@@ -17,7 +17,7 @@ export function addCard(
     const firestore = getFirebase().firestore()
     const date_created = moment().format("LLLL")
     const timestamp = new Date()
-    const id = Date.now()
+    const unixTime = Date.now()
     const userId = getState().firebase.auth.uid
 
     firestore
@@ -46,6 +46,7 @@ export function addCard(
                   description,
                   date_created: date_created,
                   timestamp,
+                  unix_time: unixTime
                 })
                 .then(() => {
                   console.log("CARD ADDED TO DB")

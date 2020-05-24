@@ -248,7 +248,7 @@ const ProfileManageAccount = ({
                   <Typography className={classes.accountValues}>
                     {/* {newUsername ? newUsername : user.displayName} */}
                     {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
-                    {newUsername ? newUsername : firebaseUsername}
+                    {newUsername ? newUsername : loadCurrentUsername()}
                     &nbsp;
                     <IconButton
                       onClick={() => {
