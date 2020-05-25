@@ -163,7 +163,7 @@ const ProfileManageAccount = ({
     }
   }
 
-  const renderEmailField = () => {
+  const renderEmailTextField = () => {
     return (
       <>
         <span className={classes.fieldBtn}>
@@ -177,6 +177,8 @@ const ProfileManageAccount = ({
             size="small"
             type="email"
             placeholder={newEmail ? newEmail : user.email}
+            error={changedEmailError ? true : false}
+            helperText={changedEmailError ? "Invalid email" : false}
             fullWidth
             onChange={e => {
               handleInput("email", e)
@@ -233,7 +235,7 @@ const ProfileManageAccount = ({
       )
       // Else return inputfield component
     } else {
-      return renderEmailField()
+      return renderEmailTextField()
     }
   }
   return (
@@ -464,7 +466,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     changedUsername: auth.user.changedUsername,
     changedEmail: auth.user.changedEmail,
     changedEmailError: auth.user.changedEmailError,
-    changedPassword: auth.user.password,
+    changedPassword: auth.user.changedPassword,
     changedUsernameError: auth.user.changedUsernameError,
     currentProfile: firestore.ordered.currentProfile,
     loadCurrentProfile: firestore.status.requested,

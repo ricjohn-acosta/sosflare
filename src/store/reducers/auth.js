@@ -54,6 +54,7 @@ const authFail = (state, payload) => {
     user: {
       ...state.user,
       changedUsernameError: payload.error,
+      changedEmailError: payload.error
     },
     reauthenticateAccount: {
       error: payload.error,
