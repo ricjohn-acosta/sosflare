@@ -1,6 +1,6 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
-import React from "react"
+import React, {useEffect} from "react"
 import { logOut } from "../store/actions/auth"
 import { connect } from "react-redux"
 import { AppBar } from "@material-ui/core"
@@ -45,6 +45,18 @@ const useStyles = makeStyles({
 const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
   const classes = useStyles()
   const [alertView, setAlertView] = React.useState(true)
+  const [logoutState, setLogout] = React.useState(false)
+
+  const handleLogout = () => {
+    setLogout(true)
+  }
+
+  useEffect(() => {
+    if (logoutState) {
+      logout()
+      setLogout(true)
+    }
+  }, [logoutState])
 
   return (
     <header
@@ -77,10 +89,13 @@ const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
               {!uid || (
                 <Button
                   color="inherit"
-                  onClick={() => {
-                    window.location.reload(true)
-                    logout()
-                  }}
+                  component="a"
+                  href="/"
+                  onClick={handleLogout}
+                  // onClick={() => {
+                  //   window.location.reload(true)
+                  //   logout()
+                  // }}
                 >
                   Logout
                 </Button>

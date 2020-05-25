@@ -21,7 +21,7 @@ const ProfileSnackbars = ({
         setOpen(true)
       }, 1000)
     }
-  }, [hasChangedUsername])
+  })
 
   useEffect(() => {
     if (hasChangedEmail) {
@@ -30,7 +30,7 @@ const ProfileSnackbars = ({
         setOpen(true)
       }, 1000)
     }
-  }, [hasChangedEmail])
+  })
 
   useEffect(() => {
     if (hasChangedPassword) {

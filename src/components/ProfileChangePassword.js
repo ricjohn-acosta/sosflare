@@ -56,7 +56,7 @@ const ProfileChangePassword = ({
       handleEmailModal(false)
     }
 
-    if(reauthenticated ==="password") {
+    if (reauthenticated === "password") {
       handleClosePassword()
     }
   })
@@ -78,6 +78,7 @@ const ProfileChangePassword = ({
   useEffect(() => {
     if (reauthenticated === "password") {
       setOpenNewPassword(true)
+      setPassword("")
       resetReauth()
     }
   }, [reauthenticated])
@@ -214,6 +215,11 @@ const ProfileChangePassword = ({
                   ? true
                   : false
               }
+              helperText={
+                authError && authError.source === "updatePassword"
+                  ? "Invalid password"
+                  : false
+              }
               fullWidth
               onChange={handleInput}
             />
@@ -227,6 +233,7 @@ const ProfileChangePassword = ({
             >
               Cancel
             </Button>
+            {console.log("savePassword ", password)}
             <Button
               onClick={() => {
                 editProfile("savePassword", password)

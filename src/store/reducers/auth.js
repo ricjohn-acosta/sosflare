@@ -54,7 +54,7 @@ const authFail = (state, payload) => {
     user: {
       ...state.user,
       changedUsernameError: payload.error,
-      changedEmailError: payload.error
+      changedEmailError: payload.error,
     },
     reauthenticateAccount: {
       error: payload.error,
@@ -146,12 +146,16 @@ const changeEmailSuccess = state => {
 const changePassword = (state, payload) => {
   return {
     ...state,
-    user: { ...state.user, changedPassword: true, password: true },
+    user: { ...state.user, password: true },
   }
 }
 
 const changePasswordSuccess = state => {
-  return { ...state, user: { ...state.user, password: false } }
+  return {
+    ...state,
+    error: null,
+    user: { ...state.user, password: false, changedPassword: true },
+  }
 }
 
 const handleEmailModal = (state, payload) => {

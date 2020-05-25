@@ -70,7 +70,8 @@ const ProfileManageAccount = ({
   changedPassword,
   upgradeError,
   changedUsernameError,
-  changedEmailError
+  changedEmailError,
+  authError,
 }) => {
   const classes = useStyles()
   const currentTime = moment()
@@ -98,7 +99,6 @@ const ProfileManageAccount = ({
       case "username":
         return setEditUser(true)
       case "saveUsername":
-
         if (username === "") {
           return setEditUser(false)
         } else {
@@ -107,7 +107,6 @@ const ProfileManageAccount = ({
       case "email":
         return setEditEmail(true)
       case "saveEmail":
-        
         // editProfile(input, email)
         // return setEditEmail(false)
         if (email === "") {
@@ -210,13 +209,18 @@ const ProfileManageAccount = ({
   }, [changedEmail])
 
   useEffect(() => {
-    if (!changedUsernameError) {
+    if (!changedUsername) {
       setEditUser(false)
     }
-  }, [changedUsernameError])
+  }, [changedUsername])
 
   const test = () => {
-    if ((checkIfAnon() && !reauthenticated) || reauthenticated === "password" || !editEmail) {
+    console.log("EDIT USER STATE", editUser)
+    if (
+      (checkIfAnon() && !reauthenticated) ||
+      reauthenticated === "password" ||
+      !editEmail
+    ) {
       // Return typography component
       return (
         <>
@@ -298,9 +302,19 @@ const ProfileManageAccount = ({
                       placeholder={
                         newUsername ? newUsername : loadCurrentUsername()
                       }
-                      error={changedUsernameError ? true : false}
+                      error={
+                        changedUsernameError
+                          ? authError.source === "updatePassword"
+                            ? false
+                            : true
+                          : false
+                      }
                       helperText={
-                        changedUsernameError ? "Username taken" : false
+                        changedUsernameError
+                          ? authError.source === "updatePassword"
+                            ? false
+                            : "Username taken"
+                          : false
                       }
                       onChange={e => {
                         handleInput("username", e)
