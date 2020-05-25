@@ -15,6 +15,7 @@ const initialState = {
     changedUsernameError: false,
     email: null,
     changedEmail: false,
+    changedEmailError: false,
     password: false,
     changedPassword: false,
     reauthenticated: null,
@@ -50,6 +51,10 @@ const authFail = (state, payload) => {
   return {
     ...state,
     error: payload,
+    user: {
+      ...state.user,
+      changedUsernameError: payload.error,
+    },
     reauthenticateAccount: {
       error: payload.error,
       loading: false,
@@ -76,8 +81,12 @@ const resetReauth = state => {
   }
 }
 
-const convertToPerm = state => {
-  return { ...state, isPermanent: true }
+const convertToPerm = (state, payload) => {
+  return {
+    ...state,
+    isPermanent: true,
+    user: { ...state.user, email: payload },
+  }
 }
 
 const convertToPermStart = state => {
@@ -102,11 +111,21 @@ const changeUsername = (state, payload) => {
 }
 
 const changeUsernameSuccess = state => {
-  return { ...state, user: { ...state.user, changedUsername: false, changedUsernameError: false} }
+  return {
+    ...state,
+    user: {
+      ...state.user,
+      changedUsername: false,
+      changedUsernameError: false,
+    },
+  }
 }
 
 const changeUsernameFail = state => {
-  return { ...state, user: { ...state.user, changedUsername: false, changedUsernameError: true} }
+  return {
+    ...state,
+    user: { ...state.user, changedUsername: false, changedUsernameError: true },
+  }
 }
 
 const changeEmail = (state, payload) => {
@@ -117,7 +136,10 @@ const changeEmail = (state, payload) => {
 }
 
 const changeEmailSuccess = state => {
-  return { ...state, user: { ...state.user, changedEmail: false } }
+  return {
+    ...state,
+    user: { ...state.user, changedEmail: false, changedEmailError: false },
+  }
 }
 
 const changePassword = (state, payload) => {
@@ -160,7 +182,7 @@ export default (state = initialState, { type, payload }) => {
       return resetReauth(state)
 
     case actions.CONVERT_TO_PERM:
-      return convertToPerm(state)
+      return convertToPerm(state, payload)
 
     case actions.CONVERT_TO_PERM_START:
       return convertToPermStart(state)

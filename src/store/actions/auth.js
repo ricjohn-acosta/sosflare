@@ -49,8 +49,8 @@ export function upgradeProfile(username, sessionId, email, password) {
           .set({ user_name: username, flare: sessionId, id: uid })
           .then(() => {
             console.log("USER ADDED TO FIRESTORE")
-            dispatch({ type: actions.CHANGE_EMAIL, payload: email })
-            dispatch({ type: actions.CONVERT_TO_PERM })
+            // dispatch({ type: actions.CHANGE_EMAIL, payload: email })
+            dispatch({ type: actions.CONVERT_TO_PERM, payload: email })
           })
         console.log("Account upgraded to permanent")
       })
@@ -136,11 +136,11 @@ export function editProfile(type, input) {
           })
 
       case "saveEmail":
-        dispatch({ type: actions.CHANGE_EMAIL, payload: input })
         return currentUser
           .updateEmail(input)
           .then(data => {
             console.log("EMAIL UPDATED")
+            dispatch({ type: actions.CHANGE_EMAIL, payload: input })
             dispatch({ type: actions.CHANGE_EMAIL_SUCCESS })
           })
           .catch(err => {

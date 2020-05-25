@@ -52,8 +52,11 @@ const ProfileChangePassword = ({
 
   // Close modal when user is reauthenticated
   useEffect(() => {
-    if (reauthenticated) {
+    if (reauthenticated === "email") {
       handleEmailModal(false)
+    }
+
+    if(reauthenticated ==="password") {
       handleClosePassword()
     }
   })
@@ -138,6 +141,7 @@ const ProfileChangePassword = ({
   } else {
     return (
       <div>
+        {console.log("CHANGE PASSWORD STATE, ", openPassword)}
         <Button variant="contained" size="large" onClick={handleOpenPassword}>
           Change password
         </Button>

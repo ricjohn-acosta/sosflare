@@ -12,7 +12,7 @@ import ButtonGroup from "@material-ui/core/ButtonGroup"
 import Alert from "@material-ui/lab/Alert"
 import CloseIcon from "@material-ui/icons/Close"
 import IconButton from "@material-ui/core/IconButton"
-import Collapse from '@material-ui/core/Collapse';
+import Collapse from "@material-ui/core/Collapse"
 
 const useStyles = makeStyles({
   appBar: {
@@ -75,7 +75,13 @@ const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
                 </Button>
               )}
               {!uid || (
-                <Button color="inherit" onClick={logout}>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    window.location.reload(true)
+                    logout()
+                  }}
+                >
                   Logout
                 </Button>
               )}
@@ -91,21 +97,28 @@ const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
 
       {uid && isAnon && !isPermanent ? (
         <Collapse in={alertView}>
-        <Alert
-          closeText="{true}"
-          severity="error"
-          variant="filled"
-          action={
-            <IconButton aria-label="close" color="inherit" size="small" onClick={() => {setAlertView(false)}}>
-              <CloseIcon fontSize="inherit" />
-            </IconButton>
-          }
-        >
-          You are currently on a temporary account. Click{" "}
-          <a href="http://sos-flare.web.app/profile">here</a> to upgrade your
-          account by changing your email and password to be able to link third
-          party apps
-        </Alert>
+          <Alert
+            closeText="{true}"
+            severity="error"
+            variant="filled"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setAlertView(false)
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            You are currently on a temporary account. Click{" "}
+            <a href="http://sos-flare.web.app/profile">here</a> to upgrade your
+            account by changing your email and password to be able to link third
+            party apps
+          </Alert>
         </Collapse>
       ) : null}
     </header>

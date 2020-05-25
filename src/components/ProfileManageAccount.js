@@ -70,6 +70,7 @@ const ProfileManageAccount = ({
   changedPassword,
   upgradeError,
   changedUsernameError,
+  changedEmailError
 }) => {
   const classes = useStyles()
   const currentTime = moment()
@@ -97,30 +98,23 @@ const ProfileManageAccount = ({
       case "username":
         return setEditUser(true)
       case "saveUsername":
-        // if (username === "") {
-        //   console.log("empty field")
-        //   setEditUser(false)
-        // } else {
-        //   editProfile(input, username)
-        // }
-        // return setEditUser(false)
 
         if (username === "") {
           return setEditUser(false)
         } else {
           editProfile(input, username)
-          // if (!changedUsernameError) {
-          //   return setEditUser(false)
-          // } else {
-          //   return setEditUser(true)
-          // }
         }
       case "email":
-        console.log("test")
         return setEditEmail(true)
       case "saveEmail":
-        editProfile(input, email)
-        return setEditEmail(false)
+        
+        // editProfile(input, email)
+        // return setEditEmail(false)
+        if (email === "") {
+          return setEditEmail(false)
+        } else {
+          editProfile(input, email)
+        }
       default:
         return null
     }
@@ -208,10 +202,10 @@ const ProfileManageAccount = ({
   }
 
   useEffect(() => {
-    if (newEmail) {
+    if (!changedEmail) {
       resetReauth()
     }
-  }, [newEmail])
+  }, [changedEmail])
 
   useEffect(() => {
     if (!changedUsernameError) {
@@ -220,7 +214,7 @@ const ProfileManageAccount = ({
   }, [changedUsernameError])
 
   const test = () => {
-    if ((checkIfAnon() && !reauthenticated) || reauthenticated === "password") {
+    if ((checkIfAnon() && !reauthenticated) || reauthenticated === "password" || !editEmail) {
       // Return typography component
       return (
         <>
@@ -469,6 +463,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     firebaseUsername: firebase.auth.displayName,
     changedUsername: auth.user.changedUsername,
     changedEmail: auth.user.changedEmail,
+    changedEmailError: auth.user.changedEmailError,
     changedPassword: auth.user.password,
     changedUsernameError: auth.user.changedUsernameError,
     currentProfile: firestore.ordered.currentProfile,
