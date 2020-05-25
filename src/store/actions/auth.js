@@ -39,22 +39,29 @@ export function upgradeProfile(username, sessionId, email, password) {
     const uid = getState().firebase.auth.uid
     let credential = firebase.auth.EmailAuthProvider.credential(email, password)
 
-    currentUser.linkWithCredential(credential).then(() => {
-      firestore
-        .collection("users")
-        .doc(uid)
-        .set({ user_name: username, flare: sessionId, id: uid })
-        .then(() => {
-          console.log("USER ADDED TO FIRESTORE")
-          dispatch({ type: actions.CHANGE_EMAIL, payload: email })
-          dispatch({ type: actions.CONVERT_TO_PERM })
-        })
-      console.log("Account upgraded to permanent")
-    })
+    dispatch({ type: actions.CONVERT_TO_PERM_START })
+    currentUser
+      .linkWithCredential(credential)
+      .then(() => {
+        firestore
+          .collection("users")
+          .doc(uid)
+          .set({ user_name: username, flare: sessionId, id: uid })
+          .then(() => {
+            console.log("USER ADDED TO FIRESTORE")
+            dispatch({ type: actions.CHANGE_EMAIL, payload: email })
+            dispatch({ type: actions.CONVERT_TO_PERM })
+          })
+        console.log("Account upgraded to permanent")
+      })
+      .catch(err => {
+        console.log(err)
+        dispatch({ type: actions.CONVERT_TO_PERM_FAIL, payload: err })
+      })
   }
 }
 
-export function reauthenticate(password, source) {
+export function reauthenticate(password, invokedAt) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
     const currentUser = firebase.auth().currentUser
@@ -63,16 +70,22 @@ export function reauthenticate(password, source) {
       currentUser.email,
       password
     )
+
+    dispatch({ type: actions.AUTH_REAUTHENTICATED_START })
     currentUser
       .reauthenticateWithCredential(credential)
       .then(() => {
-        dispatch({ type: actions.AUTH_REAUTHENTICATED, payload: source })
+        dispatch({ type: actions.AUTH_REAUTHENTICATED, payload: invokedAt })
       })
       .catch(err => {
         {
           dispatch({
             type: actions.AUTH_FAIL,
-            payload: { error: err.message, source: "reauthentication" },
+            payload: {
+              error: err.message,
+              source: "reauthentication",
+              from: invokedAt,
+            },
           })
         }
       })
@@ -88,15 +101,40 @@ export function resetReauth() {
 export function editProfile(type, input) {
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase()
+    const firestore = getFirebase().firestore()
     const currentUser = firebase.auth().currentUser
+    const uid = getState().firebase.auth.uid
 
+    console.log(uid)
     switch (type) {
       case "saveUsername":
-        dispatch({ type: actions.CHANGE_USERNAME, payload: input })
-        return currentUser.updateProfile({ displayName: input }).then(data => {
-          console.log("USERNAME UPDATED")
-          dispatch({ type: actions.CHANGE_USERNAME_SUCCESS })
-        })
+        return firestore
+          .collection("users")
+          .where("user_name", "==", input)
+          .get()
+          .then(data => {
+            if (data.empty) {
+              dispatch({ type: actions.CHANGE_USERNAME, payload: input })
+              return firestore
+                .collection("cards")
+                .doc(uid)
+                .update({ username: input })
+                .then(() => {
+                  firestore
+                    .collection("users")
+                    .doc(uid)
+                    .update({ user_name: input })
+                    .then(() => {
+                      console.log("USERNAME UPDATED")
+                      dispatch({ type: actions.CHANGE_USERNAME_SUCCESS})
+
+                    })
+                })
+            } else {
+              dispatch({ type: actions.CHANGE_USERNAME_FAIL })
+            }
+          })
+
       case "saveEmail":
         dispatch({ type: actions.CHANGE_EMAIL, payload: input })
         return currentUser

@@ -21,7 +21,8 @@ const ProfileChangePassword = ({
   emailModalView,
   reauthenticated,
   resetReauth,
-  changedPassword
+  changedPassword,
+  reauthenticateError,
 }) => {
   const [open, setOpen] = React.useState(isOpen)
   const [openPassword, setOpenPassword] = React.useState(false)
@@ -95,7 +96,16 @@ const ProfileChangePassword = ({
           label="Password"
           type="password"
           error={
-            authError && authError.source === "updatePassword" ? true : false
+            reauthenticateError.error
+              ? reauthenticateError.from === "email"
+                ? true
+                : false
+              : false
+          }
+          helperText={
+            reauthenticateError.error && reauthenticateError.from === "email"
+              ? "Invalid password"
+              : null
           }
           fullWidth
           onChange={handleInput}
@@ -147,7 +157,19 @@ const ProfileChangePassword = ({
               id="name"
               label="Password"
               type="password"
-              error={authError ? true : false}
+              error={
+                reauthenticateError.error
+                  ? reauthenticateError.from === "password"
+                    ? true
+                    : false
+                  : false
+              }
+              helperText={
+                reauthenticateError.error &&
+                reauthenticateError.from === "password"
+                  ? "Invalid password"
+                  : null
+              }
               fullWidth
               onChange={handleInput}
             />
@@ -221,13 +243,15 @@ const mapStateToProps = ({ auth }) => {
     authError: auth.error,
     emailModalView: auth.emailModal,
     reauthenticated: auth.user.reauthenticated,
-    changedPassword: auth.user.changedPassword
+    changedPassword: auth.user.changedPassword,
+    reauthenticateError: auth.reauthenticateAccount,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    reauthenticate: (password, source) => dispatch(reauthenticate(password, source)),
+    reauthenticate: (password, source) =>
+      dispatch(reauthenticate(password, source)),
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
     resetReauth: () => dispatch(resetReauth()),

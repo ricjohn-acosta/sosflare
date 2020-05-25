@@ -19,7 +19,7 @@ import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import EditIcon from "@material-ui/icons/Edit"
 import CheckIcon from "@material-ui/icons/Check"
-import HubCard from "./HubCard"
+import CloseIcon from "@material-ui/icons/Close"
 
 const useStyles = makeStyles(theme => ({
   accountTypeWrapper: { display: "flex" },
@@ -68,6 +68,8 @@ const ProfileManageAccount = ({
   firebaseUsername,
   changedEmail,
   changedPassword,
+  upgradeError,
+  changedUsernameError,
 }) => {
   const classes = useStyles()
   const currentTime = moment()
@@ -95,15 +97,24 @@ const ProfileManageAccount = ({
       case "username":
         return setEditUser(true)
       case "saveUsername":
-        // setEditUser(false)
-        // return editProfile(input, username)
+        // if (username === "") {
+        //   console.log("empty field")
+        //   setEditUser(false)
+        // } else {
+        //   editProfile(input, username)
+        // }
+        // return setEditUser(false)
+
         if (username === "") {
-          console.log("empty field")
-          setEditUser(false)
+          return setEditUser(false)
         } else {
           editProfile(input, username)
+          // if (!changedUsernameError) {
+          //   return setEditUser(false)
+          // } else {
+          //   return setEditUser(true)
+          // }
         }
-        return setEditUser(false)
       case "email":
         console.log("test")
         return setEditEmail(true)
@@ -158,28 +169,6 @@ const ProfileManageAccount = ({
     }
   }
 
-  const loadCard = () => {
-    if (loadCurrentProfile && currentProfile) {
-      return (
-        <HubCard
-          id={currentProfile[0].id}
-          username={currentProfile[0].username}
-          description={currentProfile[0].description}
-          monsterType={currentProfile[0].monster_type}
-          platform={currentProfile[0].platform}
-          rank={currentProfile[0].rank}
-          sessionId={currentProfile[0].session_id}
-          targetMonster={currentProfile[0].target_monster}
-          monsterImage={require(`../images/monsters/${currentProfile[0].target_monster}.png`)}
-          startTime={currentTime.from(currentProfile[0].date_created, true)}
-          timestamp={currentProfile[0].date_created}
-          unixTime={currentProfile[0].unix_time}
-          dateCreated={currentProfile[0].dateCreated}
-        />
-      )
-    }
-  }
-
   const renderEmailField = () => {
     return (
       <>
@@ -223,6 +212,12 @@ const ProfileManageAccount = ({
       resetReauth()
     }
   }, [newEmail])
+
+  useEffect(() => {
+    if (!changedUsernameError) {
+      setEditUser(false)
+    }
+  }, [changedUsernameError])
 
   const test = () => {
     if ((checkIfAnon() && !reauthenticated) || reauthenticated === "password") {
@@ -284,7 +279,7 @@ const ProfileManageAccount = ({
                 </Typography>
               </Grid>
               <Grid item sm={6}>
-                {!editUser ? (
+                {!editUser && !changedUsername ? (
                   <Typography className={classes.accountValues}>
                     {/* {newUsername ? newUsername : user.displayName} */}
                     {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
@@ -304,19 +299,34 @@ const ProfileManageAccount = ({
                       variant="outlined"
                       size="small"
                       fullWidth
-                      placeholder={newUsername ? newUsername : firebaseUsername}
+                      placeholder={
+                        newUsername ? newUsername : loadCurrentUsername()
+                      }
+                      error={changedUsernameError ? true : false}
+                      helperText={
+                        changedUsernameError ? "Username taken" : false
+                      }
                       onChange={e => {
                         handleInput("username", e)
                       }}
                     />
                     {editUser ? (
-                      <IconButton
-                        onClick={() => {
-                          handleEditing("saveUsername")
-                        }}
-                      >
-                        <CheckIcon />
-                      </IconButton>
+                      <>
+                        <IconButton
+                          onClick={() => {
+                            handleEditing("saveUsername")
+                          }}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                        <IconButton>
+                          <CloseIcon
+                            onClick={() => {
+                              setEditUser(false)
+                            }}
+                          />
+                        </IconButton>
+                      </>
                     ) : null}
                   </span>
                 )}
@@ -353,6 +363,20 @@ const ProfileManageAccount = ({
                         size="small"
                         type="email"
                         placeholder={newEmail ? newEmail : user.email}
+                        error={
+                          upgradeError
+                            ? upgradeError.code === "auth/invalid-email"
+                              ? true
+                              : false
+                            : null
+                        }
+                        helperText={
+                          upgradeError
+                            ? upgradeError.code === "auth/invalid-email"
+                              ? "Invalid email"
+                              : null
+                            : null
+                        }
                         fullWidth
                         onChange={e => {
                           handleInput("email", e)
@@ -383,6 +407,20 @@ const ProfileManageAccount = ({
                     variant="outlined"
                     size="small"
                     type="password"
+                    error={
+                      upgradeError
+                        ? upgradeError.code === "auth/weak-password"
+                          ? true
+                          : false
+                        : null
+                    }
+                    helperText={
+                      upgradeError
+                        ? upgradeError.code === "auth/weak-password"
+                          ? "Weak password"
+                          : null
+                        : null
+                    }
                     fullWidth
                     onChange={e => {
                       handleInput("password", e)
@@ -409,7 +447,6 @@ const ProfileManageAccount = ({
         </Grid>
       </Grid>
 
-
       <ProfileSnackbars
         hasUpgraded={isPermanent}
         hasChangedUsername={changedUsername}
@@ -425,6 +462,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     authHasLoaded: firebase.auth.isEmpty,
     isAnon: firebase.auth.isAnonymous,
     authError: auth.error,
+    upgradeError: auth.upgradeAccount.error,
     reauthenticated: auth.user.reauthenticated,
     isPermanent: auth.isPermanent,
     newUsername: auth.user.username,
@@ -432,6 +470,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     changedUsername: auth.user.changedUsername,
     changedEmail: auth.user.changedEmail,
     changedPassword: auth.user.password,
+    changedUsernameError: auth.user.changedUsernameError,
     currentProfile: firestore.ordered.currentProfile,
     loadCurrentProfile: firestore.status.requested,
     newEmail: auth.user.email,
