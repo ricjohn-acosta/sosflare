@@ -69,7 +69,7 @@ const HubCardsPagination = ({
 
   const getLastItem = () => {
     if (requested && cards) {
-      return cards[8].timestamp
+      return cards[8].unix_time
     }
   }
 

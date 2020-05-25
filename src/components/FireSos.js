@@ -94,9 +94,12 @@ const useStyles = makeStyles(theme => ({
     left: "10px",
     padding: "5px",
   },
+  circularProgress: {
+    marginLeft: "45%",
+  }
 }))
 
-const FireSos = ({ addCard, cardLoading, userTaken }) => {
+const FireSos = ({ addCard, isLoading, userTaken }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -292,12 +295,12 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                   <FormControl className={classes.formControl} variant="filled">
                     <TextField
                       className={classes.usernameField}
-                      label="Username"
+                      label="Hunter name"
                       placeholder="Username"
                       variant="filled"
                       size="small"
                       onChange={handleUsername}
-                      inputProps={{ maxLength: 12 }}
+                      inputProps={{ maxLength: 16 }}
                       error={userTaken ? true : false}
                       helperText={userTaken ? userTaken : null}
                     />
@@ -329,7 +332,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                     variant="filled"
                     fullWidth
                     onChange={handleSessionId}
-                    inputProps={{ maxLength: 30 }}
+                    inputProps={{ maxLength: 12 }}
                   />
                 </Grid>
                 <hr />
@@ -413,7 +416,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                     fullWidth
                     multiline
                     rows={10}
-                    inputProps={{ maxLength: 350 }}
+                    inputProps={{ maxLength: 250 }}
                   />
                 </Grid>
                 <Grid item sm={12} />
@@ -443,10 +446,16 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                 </Tooltip>
               ) : (
                 <>
-                  <Button type="submit" fullWidth>
-                    FIRE SOS &nbsp;{" "}
-                    {loading && !userTaken ? <CircularProgress /> : null}
-                  </Button>
+                  {isLoading ? (
+                    <CircularProgress className={classes.circularProgress}/>
+                  ) : (
+                    <>
+                      <Button type="submit" fullWidth>
+                        FIRE SOS &nbsp;{" "}
+                      </Button>
+                    </>
+                  )}
+
                 </>
               )}
             </form>
@@ -463,6 +472,7 @@ const mapStateToProps = ({ firestore, firebase, cards }) => {
     cards: firestore.data,
     uid: firebase.auth.uid,
     userTaken: cards.error,
+    isLoading: cards.loading,
   }
 }
 

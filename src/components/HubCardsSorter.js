@@ -25,9 +25,17 @@ const sortOldest = (a, b) => {
 }
 
 const HubCardsSorter = ({ children, sortBy, find }) => {
+  const toUpperCase = (username) => {
+    if(username !== null) {
+      return username.toUpperCase()
+    }
+  }
+
   const user = React.Children.toArray(children).find(
-    card => card.props.username === find
+    card => toUpperCase(card.props.username) === toUpperCase(find)
   )
+
+
   if (find) {
     if (user) {
       return user

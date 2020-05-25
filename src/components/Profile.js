@@ -17,7 +17,7 @@ import Divider from "@material-ui/core/Divider"
 const useStyles = makeStyles(theme => ({
   rootWrapper: {
     [theme.breakpoints.up("sm")]: {
-      height: "50vh",
+      height: "100vh",
     },
     [theme.breakpoints.up("md")]: {
       marginLeft: "5vw",
@@ -42,7 +42,7 @@ const Profile = () => {
     switch (view) {
       case "Manage account":
         return setCurrentView(<ProfileManageAccount />)
-      case "View flare":
+      case "Your flare":
         return setCurrentView(<ProfileManageFlare />)
       case "Link third party apps":
         return setCurrentView(<ProfileThirdParty />)
@@ -69,7 +69,7 @@ const Profile = () => {
           component={Paper}
         >
           <List>
-            {["Manage account", "Link third party apps"].map(
+            {["Manage account", "Your flare", "Link third party apps"].map(
               (text, index) => (
                 <ListItem
                   button

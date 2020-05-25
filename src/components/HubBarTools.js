@@ -115,7 +115,7 @@ const HubBarTools = props => {
          * HEADER
          */}
         <div>
-          <Typography variant="h6">Search tools</Typography>
+          <Typography variant="h6">Search current page</Typography>
         </div>
         <hr />
         {/**

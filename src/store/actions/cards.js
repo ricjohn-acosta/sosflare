@@ -21,8 +21,8 @@ export function addCard(
     const userId = getState().firebase.auth.uid
 
     firestore
-      .collection("cards")
-      .where("username", "==", username)
+      .collection("users")
+      .where("user_name", "==", username)
       .get()
       .then(data => {
         if (data.empty) {
@@ -90,10 +90,11 @@ export function editCard(
 ) {
   return (dispatch, getState, { getFirebase }) => {
     const firestore = getFirebase().firestore()
+    const unixTime = Date.now()
     firestore
       .collection("cards")
       .doc(id)
-      .update({ session_id, description, target_monster, monster_type, rank, date_created: moment().format("LLLL") })
+      .update({ session_id, description, target_monster, monster_type, rank, date_created: moment().format("LLLL"), unix_time: unixTime})
       .then(() => {
         console.log("CARD UPDATED")
       })

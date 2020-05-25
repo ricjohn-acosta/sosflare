@@ -5,13 +5,13 @@ import {
   editEmail,
   resetReauth,
 } from "../store/actions/auth"
+import moment from "moment"
 import ProfileChangePassword from "./ProfileChangePassword"
 import ProfileSnackbars from "./ProfileSnackbars"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
 import { makeStyles } from "@material-ui/core/styles"
-import HubCard from "./HubCard"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import TextField from "@material-ui/core/TextField"
@@ -19,6 +19,7 @@ import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import EditIcon from "@material-ui/icons/Edit"
 import CheckIcon from "@material-ui/icons/Check"
+import HubCard from "./HubCard"
 
 const useStyles = makeStyles(theme => ({
   accountTypeWrapper: { display: "flex" },
@@ -37,6 +38,15 @@ const useStyles = makeStyles(theme => ({
   },
   fieldBtn: {
     display: "flex",
+  },
+  form: {
+    minHeight: "100%",
+  },
+  leftContainer: {
+    height: "100%",
+  },
+  rightContainer: {
+    padding: "0px",
   },
 }))
 
@@ -57,9 +67,10 @@ const ProfileManageAccount = ({
   resetReauth,
   firebaseUsername,
   changedEmail,
-  changedPassword
+  changedPassword,
 }) => {
   const classes = useStyles()
+  const currentTime = moment()
   const [username, setUsername] = React.useState("")
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
@@ -147,6 +158,28 @@ const ProfileManageAccount = ({
     }
   }
 
+  const loadCard = () => {
+    if (loadCurrentProfile && currentProfile) {
+      return (
+        <HubCard
+          id={currentProfile[0].id}
+          username={currentProfile[0].username}
+          description={currentProfile[0].description}
+          monsterType={currentProfile[0].monster_type}
+          platform={currentProfile[0].platform}
+          rank={currentProfile[0].rank}
+          sessionId={currentProfile[0].session_id}
+          targetMonster={currentProfile[0].target_monster}
+          monsterImage={require(`../images/monsters/${currentProfile[0].target_monster}.png`)}
+          startTime={currentTime.from(currentProfile[0].date_created, true)}
+          timestamp={currentProfile[0].date_created}
+          unixTime={currentProfile[0].unix_time}
+          dateCreated={currentProfile[0].dateCreated}
+        />
+      )
+    }
+  }
+
   const renderEmailField = () => {
     return (
       <>
@@ -215,7 +248,7 @@ const ProfileManageAccount = ({
     }
   }
   return (
-    <form onSubmit={handleSubmit}>
+    <form className={classes.form} onSubmit={handleSubmit}>
       {console.log(currentProfile)}
       <Grid container direction="column">
         <Grid item xs={12} sm={12}>
@@ -224,8 +257,15 @@ const ProfileManageAccount = ({
           </Typography>
           <hr />
         </Grid>
-        <Grid container direction="row">
-          <Grid container item xs={12} sm={6} direction="column">
+        <Grid item xs={12} sm={12} container direction="row">
+          <Grid
+            className={classes.leftContainer}
+            container
+            item
+            xs={12}
+            sm={6}
+            direction="column"
+          >
             <Typography
               className={classes.accountTypeWrapper}
               variant={"h5"}
@@ -238,12 +278,12 @@ const ProfileManageAccount = ({
              * USERNAME FIELD
              */}
             <Grid container item direction="row">
-              <Grid item xs={3} sm={2} md={2}>
+              <Grid item xs={3} sm={6} md={2}>
                 <Typography className={classes.fieldLabels}>
                   Username:{" "}
                 </Typography>
               </Grid>
-              <Grid item sm={5}>
+              <Grid item sm={6}>
                 {!editUser ? (
                   <Typography className={classes.accountValues}>
                     {/* {newUsername ? newUsername : user.displayName} */}
@@ -287,7 +327,7 @@ const ProfileManageAccount = ({
              * EMAIL FIELD
              */}
             <Grid container item direction="row">
-              <Grid item xs={3} sm={2} md={2}>
+              <Grid item xs={3} sm={6} md={2}>
                 <Typography className={classes.fieldLabels}>Email: </Typography>
               </Grid>
               {emailModalView ? (
@@ -297,7 +337,7 @@ const ProfileManageAccount = ({
                   isOpen={emailModalView}
                 />
               ) : null}
-              <Grid item sm={5}>
+              <Grid item sm={6}>
                 {console.log(checkIfAnon())}
                 {console.log(editEmail)}
                 {/* {checkIfAnon() &&
@@ -330,12 +370,12 @@ const ProfileManageAccount = ({
              * PASSWORD FIELD
              */}
             <Grid container item direction="row">
-              <Grid item xs={3} sm={2} md={2}>
+              <Grid item xs={3} sm={6} md={2}>
                 <Typography className={classes.fieldLabels}>
                   Password:{" "}
                 </Typography>
               </Grid>
-              <Grid item sm={5}>
+              <Grid item sm={6}>
                 {checkIfAnon() ? (
                   <ProfileChangePassword />
                 ) : (
@@ -355,21 +395,21 @@ const ProfileManageAccount = ({
             {checkIfAnon() ? null : (
               <Grid
                 item
-                sm={1}
+                sm={6}
+                xs={12}
                 size={"large"}
                 component={Button}
                 variant="contained"
                 type="submit"
               >
-                SAVE
+                Upgrade
               </Grid>
             )}
           </Grid>
-          <Grid item xs={6}>
-            test
-          </Grid>
         </Grid>
       </Grid>
+
+
       <ProfileSnackbars
         hasUpgraded={isPermanent}
         hasChangedUsername={changedUsername}
