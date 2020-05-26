@@ -132,7 +132,7 @@ const ProfileManageAccount = ({
     )
   }
 
-  const handleEmailError = () => {
+  const handleAccountUpgradeEmailError = () => {
     if (upgradeError) {
       if (upgradeError.code === "auth/invalid-email") {
         return "Invalid email"
@@ -182,7 +182,7 @@ const ProfileManageAccount = ({
             type="email"
             placeholder={newEmail ? newEmail : user.email}
             error={changedEmailError ? true : false}
-            helperText={changedEmailError ? "Invalid email" : false}
+            helperText={changedEmailError ? changedEmailError : false}
             fullWidth
             onChange={e => {
               handleInput("email", e)
@@ -210,23 +210,6 @@ const ProfileManageAccount = ({
       </>
     )
   }
-
-  // if true, account is permanent, if false account is temporary
-  const checkIfAnon = () => {
-    return isPermanent || !isAnon ? true : false
-  }
-
-  useEffect(() => {
-    if (!changedEmail) {
-      resetReauth()
-    }
-  }, [changedEmail])
-
-  useEffect(() => {
-    if (!changedUsername) {
-      setEditUser(false)
-    }
-  }, [changedUsername])
 
   const renderEmailTypography = () => {
     console.log("EDIT USER STATE", editUser)
@@ -256,6 +239,25 @@ const ProfileManageAccount = ({
       return renderEmailTextField()
     }
   }
+
+  // if true, account is permanent, if false account is temporary
+  const checkIfAnon = () => {
+    return isPermanent || !isAnon ? true : false
+  }
+
+  // useEffect hooks to reset email and username modal views
+  useEffect(() => {
+    if (!changedEmail) {
+      resetReauth()
+    }
+  }, [changedEmail])
+
+  useEffect(() => {
+    if (!changedUsername) {
+      setEditUser(false)
+    }
+  }, [changedUsername])
+
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
       {console.log(currentProfile)}
@@ -382,9 +384,11 @@ const ProfileManageAccount = ({
                         size="small"
                         type="email"
                         placeholder={newEmail ? newEmail : user.email}
-                        error={handleEmailError() ? true : false}
+                        error={handleAccountUpgradeEmailError() ? true : false}
                         helperText={
-                          handleEmailError() ? handleEmailError() : false
+                          handleAccountUpgradeEmailError()
+                            ? handleAccountUpgradeEmailError()
+                            : false
                         }
                         fullWidth
                         onChange={e => {
