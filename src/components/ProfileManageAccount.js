@@ -301,6 +301,7 @@ const ProfileManageAccount = ({
                     {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
                     {newUsername ? newUsername : loadCurrentUsername()}
                     &nbsp;
+                    {checkIfAnon() ? 
                     <IconButton
                       onClick={() => {
                         handleEditing("username")
@@ -308,6 +309,7 @@ const ProfileManageAccount = ({
                     >
                       <EditIcon />
                     </IconButton>
+                     : null}
                   </Typography>
                 ) : (
                   <span className={classes.fieldBtn}>

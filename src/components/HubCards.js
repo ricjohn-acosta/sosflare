@@ -84,6 +84,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
           {displayCards()}
         </Grid>
       </Paper>
+      {console.log("TODAYS DATE IN UNIX TIME ",  Math.floor(Date.now() / 1000) - Math.floor(1590330899238 / 1000))}
     </>
   )
 }

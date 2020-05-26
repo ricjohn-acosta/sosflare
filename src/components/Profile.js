@@ -1,4 +1,7 @@
 import React from "react"
+import { connect } from "react-redux"
+import { compose } from "redux"
+import { firestoreConnect } from "react-redux-firebase"
 import ProfileManageAccount from "./ProfileManageAccount"
 import ProfileManageFlare from "./ProfileManageFlare"
 import ProfileThirdParty from "./ProfileThirdParty"
@@ -13,6 +16,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
 import MailIcon from "@material-ui/icons/Mail"
 import Divider from "@material-ui/core/Divider"
+import { Redirect } from "@reach/router"
 
 const useStyles = makeStyles(theme => ({
   rootWrapper: {
@@ -34,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Profile = () => {
+const Profile = ({ currentProfile }) => {
   const classes = useStyles()
   const [currentView, setCurrentView] = React.useState(<ProfileManageAccount />)
 
@@ -55,56 +59,80 @@ const Profile = () => {
     console.log(test)
   }
 
-  return (
-    <div className={classes.rootWrapper}>
-      <Grid className={classes.rootWrapper} container direction="row">
-        <Grid
-          className={classes.leftGrid}
-          item
-          container
-          direction="column"
-          xs={12}
-          sm={12}
-          md={2}
-          component={Paper}
-        >
-          <List>
-            {["Manage account", "Your flare", "Link third party apps"].map(
-              (text, index) => (
-                <ListItem
-                  button
-                  disabled={text === "Link third party apps" ?  true : false}
-                  value={"tests"}
-                  key={text}
-                  onClick={() => {
-                    handleView(text)
-                  }}
-                >
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              )
-            )}
-            <Divider />
-          </List>
+  return currentProfile ? (
+    currentProfile.length !== 0 ? (
+      <div className={classes.rootWrapper}>
+        <Grid className={classes.rootWrapper} container direction="row">
+          <Grid
+            className={classes.leftGrid}
+            item
+            container
+            direction="column"
+            xs={12}
+            sm={12}
+            md={2}
+            component={Paper}
+          >
+            <List>
+              {["Manage account", "Your flare", "Link third party apps"].map(
+                (text, index) => (
+                  <ListItem
+                    button
+                    disabled={text === "Link third party apps" ? true : false}
+                    value={"tests"}
+                    key={text}
+                    onClick={() => {
+                      handleView(text)
+                    }}
+                  >
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                )
+              )}
+              <Divider />
+            </List>
+          </Grid>
+          <Grid
+            className={classes.rightGrid}
+            item
+            container
+            direction="column"
+            xs={12}
+            sm={12}
+            md={9}
+            component={Paper}
+          >
+            {currentView}
+          </Grid>
         </Grid>
-        <Grid
-          className={classes.rightGrid}
-          item
-          container
-          direction="column"
-          xs={12}
-          sm={12}
-          md={9}
-          component={Paper}
-        >
-          {currentView}
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    ) : (
+      <Redirect from="/profile" to="/firesos" noThrow />
+    )
+  ) : (
+    "LOADING"
   )
 }
 
-export default Profile
+const mapStateToProps = ({ firestore, firebase, auth }) => {
+  return {
+    user: firebase.auth,
+    currentProfile: firestore.ordered.currentProfile,
+  }
+}
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect(props => {
+    return [
+      {
+        collection: "cards",
+        where: ["id", "==", props.user.uid],
+        storeAs: "currentProfile",
+      },
+    ]
+  })
+)(Profile)
