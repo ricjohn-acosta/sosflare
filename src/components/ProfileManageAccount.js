@@ -119,10 +119,6 @@ const ProfileManageAccount = ({
     }
   }
 
-  // const handleEmailModal = () => {
-  //   setEmailModal(true)
-  // }
-
   const handleSubmit = e => {
     e.preventDefault()
     console.log(username)
@@ -180,11 +176,6 @@ const ProfileManageAccount = ({
     return (
       <>
         <span className={classes.fieldBtn}>
-          {/* <ProfileChangePassword
-              email={true}
-              userEmail={email}
-              isOpen={emailModal}
-            /> */}
           <TextField
             variant="outlined"
             size="small"
@@ -198,13 +189,22 @@ const ProfileManageAccount = ({
             }}
           />
           {editEmail ? (
-            <IconButton
-              onClick={() => {
-                handleEditing("saveEmail")
-              }}
-            >
-              <CheckIcon />
-            </IconButton>
+            <>
+              <IconButton
+                onClick={() => {
+                  handleEditing("saveEmail")
+                }}
+              >
+                <CheckIcon />
+              </IconButton>
+              <IconButton>
+                <CloseIcon
+                  onClick={() => {
+                    setEditEmail(false)
+                  }}
+                />
+              </IconButton>
+            </>
           ) : null}
         </span>
       </>
