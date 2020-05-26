@@ -46,11 +46,14 @@ export function addCard(
                   description,
                   date_created: date_created,
                   timestamp,
-                  unix_time: unixTime
+                  unix_time: unixTime,
                 })
                 .then(() => {
                   console.log("CARD ADDED TO DB")
-                  dispatch({ type: actions.ADD_CARD_SUCCESS, payload: username })
+                  dispatch({
+                    type: actions.ADD_CARD_SUCCESS,
+                    payload: username,
+                  })
                 })
                 .catch(err => {
                   console.log(err)
@@ -60,15 +63,13 @@ export function addCard(
                   })
                 })
               dispatch({ type: actions.ADD_CARD_END })
-              // currentUser
-              //   .updateProfile({ displayName: id.toString() })
-              //   .then(data => {
-              //     console.log(data)
-              //   })
             })
             .catch(e => {
               console.log(e.message)
             })
+        } else if (userId) {
+          // if user is authenticated, match userId with a user document, get its username field and then make a new card
+          return "test"
         } else {
           console.log("USERNAME TAKEN!")
           dispatch({
@@ -94,7 +95,15 @@ export function editCard(
     firestore
       .collection("cards")
       .doc(id)
-      .update({ session_id, description, target_monster, monster_type, rank, date_created: moment().format("LLLL"), unix_time: unixTime})
+      .update({
+        session_id,
+        description,
+        target_monster,
+        monster_type,
+        rank,
+        date_created: moment().format("LLLL"),
+        unix_time: unixTime,
+      })
       .then(() => {
         console.log("CARD UPDATED")
       })
