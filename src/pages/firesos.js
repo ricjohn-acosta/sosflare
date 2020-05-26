@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import { lrhrMonsters, mrMonsters } from "../utils/FireSos.js"
 import { addCard } from "../store/actions/cards"
 import { signInAnonymously } from "../store/actions/auth"
@@ -181,7 +181,7 @@ const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
 
   const handleWhitespace = () => {
     if (
-    //   !username.replace(/\s/g, "").length ||
+      !username.replace(/\s/g, "").length ||
       !sessionId.replace(/\s/g, "").length
     ) {
       console.log(
@@ -244,9 +244,17 @@ const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
     return isPermanent || !isAnon ? true : false
   }
 
+  useEffect(() => {
+    if (checkIfAnon()) {
+      console.log("effecting")
+      setUsername("placeholder")
+    }
+  }, [platform])
+
   return (
     <Layout>
       <div>
+          {console.log(username, checkIfAnon())}
         <Typography className={classes.announcement} variant="h4">
           Your SOS flare has expired. Please fire a new flare.
         </Typography>
@@ -406,7 +414,7 @@ const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
              */}
             {handleWhitespace() ||
             autoCompleteError ||
-            // !username ||
+            !username ||
             !platform ||
             !sessionId ||
             !rank ||
@@ -466,7 +474,7 @@ const mapDispatchToProps = dispatch => {
       monsterType,
       targetMonster,
       description,
-      checkIfAnon,
+      checkIfAnon
     ) =>
       dispatch(
         addCard(
@@ -477,7 +485,7 @@ const mapDispatchToProps = dispatch => {
           monsterType,
           targetMonster,
           description,
-          checkIfAnon
+          checkIfAnon,
         )
       ),
 

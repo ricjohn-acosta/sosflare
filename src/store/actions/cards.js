@@ -10,7 +10,8 @@ export function addCard(
   monsterType,
   targetMonster,
   description,
-  checkIfAnon
+  checkIfAnon,
+  source
 ) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
@@ -50,7 +51,7 @@ export function addCard(
       .where("user_name", "==", username)
       .get()
       .then(data => {
-        if (data.empty && !checkIfAnon) {
+        if (data.empty && source === "home") {
           firebase
             .auth()
             .signInAnonymously()
@@ -147,23 +148,6 @@ export function addCard(
               })
           } else {
             console.log("ADD CARD IF USER IS UPGRADED AND NO CARD")
-            const getUsername = async () => {
-              let username = await firestore
-                .collection("users")
-                .where("id", "==", userId)
-                .get()
-                .then(function (querySnapshot) {
-                  let username
-                  querySnapshot.forEach(function (doc) {
-                    // doc.data() is never undefined for query doc snapshots
-                    username = doc.data().user_name
-                  })
-                  console.log(username)
-                })
-            }
-
-            getUsername()
-
             firestore
               .collection("users")
               .where("id", "==", userId)

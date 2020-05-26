@@ -194,7 +194,9 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
       rank,
       monsterType,
       targetMonster,
-      description
+      description,
+      null,
+      "home"
     )
   }
 
@@ -484,7 +486,9 @@ const mapDispatchToProps = dispatch => {
       rank,
       monsterType,
       targetMonster,
-      description
+      description,
+      checkIfAnon,
+      source
     ) =>
       dispatch(
         addCard(
@@ -494,7 +498,9 @@ const mapDispatchToProps = dispatch => {
           rank,
           monsterType,
           targetMonster,
-          description
+          description,
+          checkIfAnon,
+          source
         )
       ),
 
