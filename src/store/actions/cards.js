@@ -9,7 +9,8 @@ export function addCard(
   rank,
   monsterType,
   targetMonster,
-  description
+  description,
+  checkIfAnon
 ) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
@@ -20,12 +21,36 @@ export function addCard(
     const unixTime = Date.now()
     const userId = getState().firebase.auth.uid
 
+    const checkIfCardExists = async () => {
+      let doc = await firestore
+        .collection("cards")
+        .where("id", "==", userId)
+        .get()
+        .then(data => {
+          return data
+        })
+      return doc
+    }
+
+    // const getUsername = async () => {
+    //   let username = await firestore
+    //     .collection("users")
+    //     .where("id", "==", userId)
+    //     .get("user_name")
+    //     .then(data => {
+    //       return data
+    //     })
+    //   return username
+    // }
+
+    // console.log(getUsername())
+    // console.log(checkIfCardExists())
     firestore
       .collection("users")
       .where("user_name", "==", username)
       .get()
       .then(data => {
-        if (data.empty) {
+        if (data.empty && !checkIfAnon) {
           firebase
             .auth()
             .signInAnonymously()
@@ -69,7 +94,158 @@ export function addCard(
             })
         } else if (userId) {
           // if user is authenticated, match userId with a user document, get its username field and then make a new card
-          return "test"
+          if (!checkIfAnon) {
+            console.log("ADD CARD IF USER IS ANON AND NO CARD")
+            firestore
+              .collection("users")
+              .where("user_name", "==", userId)
+              .get()
+              .then(data => {
+                const currentUser = firebase.auth().currentUser
+                if (data.empty) {
+                  firestore
+                    .collection("cards")
+                    .doc(userId)
+                    .set({
+                      id: userId,
+                      username: username,
+                      platform,
+                      session_id: sessionId,
+                      rank,
+                      monster_type: monsterType,
+                      target_monster: targetMonster,
+                      description,
+                      date_created: date_created,
+                      timestamp,
+                      unix_time: unixTime,
+                    })
+                    .then(() => {
+                      console.log("CARD ADDED TO DB")
+                      dispatch({
+                        type: actions.ADD_CARD_SUCCESS,
+                        payload: username,
+                      })
+                    })
+                    .catch(err => {
+                      console.log(err)
+                      dispatch({
+                        type: actions.ADD_CARD_FAIL,
+                        payload: err.message,
+                      })
+                    })
+                  dispatch({ type: actions.ADD_CARD_END })
+                } else {
+                  dispatch({
+                    type: actions.ADD_CARD_FAIL,
+                    payload:
+                      "Someone with that username has already fired an SOS!",
+                  })
+                }
+              })
+              .catch(e => {
+                console.log(e.message)
+              })
+          } else {
+            console.log("ADD CARD IF USER IS UPGRADED AND NO CARD")
+            const getUsername = async () => {
+              let username = await firestore
+                .collection("users")
+                .where("id", "==", userId)
+                .get()
+                .then(function (querySnapshot) {
+                  let username
+                  querySnapshot.forEach(function (doc) {
+                    // doc.data() is never undefined for query doc snapshots
+                    username = doc.data().user_name
+                  })
+                  console.log(username)
+                })
+            }
+
+            getUsername()
+
+            firestore
+              .collection("users")
+              .where("id", "==", userId)
+              .get()
+              .then(function (querySnapshot) {
+                let existingUsername
+                querySnapshot.forEach(function (doc) {
+                  // doc.data() is never undefined for query doc snapshots
+                  existingUsername = doc.data().user_name
+                })
+                const currentUser = firebase.auth().currentUser
+                console.log(existingUsername)
+                firestore
+                  .collection("cards")
+                  .doc(userId)
+                  .set({
+                    id: userId,
+                    username: existingUsername,
+                    platform,
+                    session_id: sessionId,
+                    rank,
+                    monster_type: monsterType,
+                    target_monster: targetMonster,
+                    description,
+                    date_created: date_created,
+                    timestamp,
+                    unix_time: unixTime,
+                  })
+                  .then(() => {
+                    console.log("CARD ADDED TO DB")
+                    dispatch({
+                      type: actions.ADD_CARD_SUCCESS,
+                      payload: username,
+                    })
+                  })
+                  .catch(err => {
+                    console.log(err)
+                    dispatch({
+                      type: actions.ADD_CARD_FAIL,
+                      payload: err.message,
+                    })
+                  })
+                dispatch({ type: actions.ADD_CARD_END })
+              })
+              // .then(data => {
+              //   const currentUser = firebase.auth().currentUser
+              //   firestore
+              //     .collection("cards")
+              //     .doc(userId)
+              //     .set({
+              //       id: userId,
+              //       username: data.user_name,
+              //       platform,
+              //       session_id: sessionId,
+              //       rank,
+              //       monster_type: monsterType,
+              //       target_monster: targetMonster,
+              //       description,
+              //       date_created: date_created,
+              //       timestamp,
+              //       unix_time: unixTime,
+              //     })
+              //     .then(() => {
+              //       console.log("CARD ADDED TO DB")
+              //       dispatch({
+              //         type: actions.ADD_CARD_SUCCESS,
+              //         payload: username,
+              //       })
+              //     })
+              //     .catch(err => {
+              //       console.log(err)
+              //       dispatch({
+              //         type: actions.ADD_CARD_FAIL,
+              //         payload: err.message,
+              //       })
+              //     })
+              //   dispatch({ type: actions.ADD_CARD_END })
+              // })
+              .catch(e => {
+                console.log(e.message)
+              })
+          }
         } else {
           console.log("USERNAME TAKEN!")
           dispatch({

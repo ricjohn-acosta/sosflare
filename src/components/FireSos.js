@@ -96,7 +96,7 @@ const useStyles = makeStyles(theme => ({
   },
   circularProgress: {
     marginLeft: "45%",
-  }
+  },
 }))
 
 const FireSos = ({ addCard, isLoading, userTaken }) => {
@@ -447,7 +447,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
               ) : (
                 <>
                   {isLoading ? (
-                    <CircularProgress className={classes.circularProgress}/>
+                    <CircularProgress className={classes.circularProgress} />
                   ) : (
                     <>
                       <Button type="submit" fullWidth>
@@ -455,7 +455,6 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
                       </Button>
                     </>
                   )}
-
                 </>
               )}
             </form>

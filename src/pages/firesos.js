@@ -102,11 +102,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "45%",
   },
   announcement: {
-      marginLeft: "10vw"
-  }
+    marginLeft: "10vw",
+  },
 }))
 
-const FireSos = ({ addCard, isLoading, userTaken }) => {
+const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -181,7 +181,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
 
   const handleWhitespace = () => {
     if (
-      !username.replace(/\s/g, "").length ||
+    //   !username.replace(/\s/g, "").length ||
       !sessionId.replace(/\s/g, "").length
     ) {
       console.log(
@@ -201,7 +201,8 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
       rank,
       monsterType,
       targetMonster,
-      description
+      description,
+      checkIfAnon()
     )
   }
 
@@ -239,6 +240,10 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
     return array
   }
 
+  const checkIfAnon = () => {
+    return isPermanent || !isAnon ? true : false
+  }
+
   return (
     <Layout>
       <div>
@@ -256,6 +261,32 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
               spacing={5}
             >
               <Grid item sm={12}>
+                {/*
+            USERNAME FIELD
+            */}
+                {!checkIfAnon() ? (
+                  <>
+                    <FormControl
+                      className={classes.formControl}
+                      variant="filled"
+                    >
+                      <TextField
+                        className={classes.usernameField}
+                        label="Hunter name"
+                        placeholder="Username"
+                        variant="filled"
+                        size="small"
+                        onChange={handleUsername}
+                        inputProps={{ maxLength: 16 }}
+                        error={userTaken ? true : false}
+                        helperText={userTaken ? userTaken : null}
+                      />
+                      <br />
+                    </FormControl>
+                    &nbsp;
+                  </>
+                ) : null}
+
                 {/*
             PLATFORM FIELD
             */}
@@ -375,7 +406,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
              */}
             {handleWhitespace() ||
             autoCompleteError ||
-            !username ||
+            // !username ||
             !platform ||
             !sessionId ||
             !rank ||
@@ -414,12 +445,14 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, firebase, cards }) => {
+const mapStateToProps = ({ firestore, firebase, cards, auth }) => {
   return {
     cards: firestore.data,
     uid: firebase.auth.uid,
     userTaken: cards.error,
     isLoading: cards.loading,
+    isPermanent: auth.isPermanent,
+    isAnon: firebase.auth.isAnonymous,
   }
 }
 
@@ -432,7 +465,8 @@ const mapDispatchToProps = dispatch => {
       rank,
       monsterType,
       targetMonster,
-      description
+      description,
+      checkIfAnon,
     ) =>
       dispatch(
         addCard(
@@ -442,7 +476,8 @@ const mapDispatchToProps = dispatch => {
           rank,
           monsterType,
           targetMonster,
-          description
+          description,
+          checkIfAnon
         )
       ),
 
