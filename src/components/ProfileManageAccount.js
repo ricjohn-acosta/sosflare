@@ -136,6 +136,20 @@ const ProfileManageAccount = ({
     )
   }
 
+  const handleEmailError = () => {
+    if (upgradeError) {
+      if (upgradeError.code === "auth/invalid-email") {
+        return "Invalid email"
+      }
+      if (upgradeError.code === "auth/email-already-in-use") {
+        return "Email already in use"
+      }
+      return false
+    } else {
+      return null
+    }
+  }
+
   const loadUserType = () => {
     return checkIfAnon() ? (
       <Typography className={classes.permAccount} variant="h5">
@@ -214,7 +228,7 @@ const ProfileManageAccount = ({
     }
   }, [changedUsername])
 
-  const test = () => {
+  const renderEmailTypography = () => {
     console.log("EDIT USER STATE", editUser)
     if (
       (checkIfAnon() && !reauthenticated) ||
@@ -360,11 +374,6 @@ const ProfileManageAccount = ({
               <Grid item sm={6}>
                 {console.log(checkIfAnon())}
                 {console.log(editEmail)}
-                {/* {checkIfAnon() &&
-                reauthenticated === null &&
-                !emailModalView &&
-                !editEmail ? ( */}
-
                 {!checkIfAnon() ? (
                   <>
                     <span className={classes.fieldBtn}>
@@ -373,19 +382,9 @@ const ProfileManageAccount = ({
                         size="small"
                         type="email"
                         placeholder={newEmail ? newEmail : user.email}
-                        error={
-                          upgradeError
-                            ? upgradeError.code === "auth/invalid-email"
-                              ? true
-                              : false
-                            : null
-                        }
+                        error={handleEmailError() ? true : false}
                         helperText={
-                          upgradeError
-                            ? upgradeError.code === "auth/invalid-email"
-                              ? "Invalid email"
-                              : null
-                            : null
+                          handleEmailError() ? handleEmailError() : false
                         }
                         fullWidth
                         onChange={e => {
@@ -395,7 +394,7 @@ const ProfileManageAccount = ({
                     </span>
                   </>
                 ) : (
-                  test()
+                  renderEmailTypography()
                 )}
               </Grid>
             </Grid>
