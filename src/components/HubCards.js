@@ -37,11 +37,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
     let array = []
 
     if (requested && cards) {
-      for (
-        let i = 0;
-        i <= 8;
-        i++ 
-      ) {
+      for (let i = 0; i <= 8; i++) {
         if (cards[i]) {
           console.log(cards[i].date_created)
           array.push(
@@ -84,12 +80,15 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
           {displayCards()}
         </Grid>
       </Paper>
-      {console.log("TODAYS DATE IN UNIX TIME ",  Math.floor(Date.now() / 1000) - Math.floor(1590330899238 / 1000))}
+      {console.log(
+        "TODAYS DATE IN UNIX TIME ",
+        Math.floor(Date.now() / 1000) - Math.floor(1590330899238 / 1000)
+      )}
     </>
   )
 }
 
-const mapStateToProps = ({ firestore, cards }) => {
+const mapStateToProps = ({ firebase, firestore, cards }) => {
   return {
     cards: firestore.ordered.cards,
     requested: firestore.status.requested,
@@ -97,6 +96,7 @@ const mapStateToProps = ({ firestore, cards }) => {
     user: cards.find,
     lastVisible: cards.lastItem,
     currentPage: cards.currentPage,
+    currentUsername: cards.currentUsername
   }
 }
 
@@ -118,7 +118,11 @@ export default compose(
         startAfter: checkPage(),
         limit: 10,
       },
-
+      {
+        collection: "cards",
+        where: ["username", "==", props.currentUsername],
+        storeAs: "currentProfile",
+      },
     ]
   })
 )(HubCards)

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react"
+import React, { useEffect } from "react"
 import { lrhrMonsters, mrMonsters } from "../utils/FireSos.js"
 import { addCard } from "../store/actions/cards"
 import { signInAnonymously } from "../store/actions/auth"
@@ -25,6 +25,7 @@ import Icon from "@material-ui/core/Icon"
 import { Typography } from "@material-ui/core"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import Layout from "../components/layout"
+import { Redirect } from "@reach/router"
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
@@ -106,7 +107,16 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
+const FireSos = ({
+  addCard,
+  isLoading,
+  userTaken,
+  isPermanent,
+  isAnon,
+  cardAdded,
+  currentProfile,
+  uid
+}) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -119,6 +129,7 @@ const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
   const [autoCompleteError, setAutoCompleteState] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+  const [redirect, setRedirect] = React.useState(false)
 
   const handleUsername = event => {
     setUsername(event.target.value)
@@ -251,216 +262,229 @@ const FireSos = ({ addCard, isLoading, userTaken, isPermanent, isAnon }) => {
     }
   }, [platform])
 
-  return (
-    <Layout>
-      <div>
-          {console.log(username, checkIfAnon())}
-        <Typography className={classes.announcement} variant="h4">
-          Your SOS flare has expired. Please fire a new flare.
-        </Typography>
-        <Paper className={classes.formContainer}>
-          <form onSubmit={handleSubmit}>
-            <h2>SOS Details</h2>
+  useEffect(() => {
+    if (cardAdded === false) {
+      setRedirect(true)
+    }
+  }, [cardAdded])
 
-            <Grid
-              className={classes.gridContainer}
-              container
-              direction="column"
-              spacing={5}
-            >
-              <Grid item sm={12}>
-                {/*
+  if (redirect && currentProfile) {
+    return <Redirect from="/firesos" to="/hub" noThrow />
+  } else {
+    return (
+      <Layout>
+        <div>
+          {console.log(username, checkIfAnon())}
+          <Typography className={classes.announcement} variant="h4">
+            Your SOS flare has expired. Please fire a new flare.
+          </Typography>
+          <Paper className={classes.formContainer}>
+            <form onSubmit={handleSubmit}>
+              <h2>SOS Details</h2>
+
+              <Grid
+                className={classes.gridContainer}
+                container
+                direction="column"
+                spacing={5}
+              >
+                <Grid item sm={12}>
+                  {/*
             USERNAME FIELD
             */}
-                {!checkIfAnon() ? (
-                  <>
-                    <FormControl
-                      className={classes.formControl}
-                      variant="filled"
-                    >
-                      <TextField
-                        className={classes.usernameField}
-                        label="Hunter name"
-                        placeholder="Username"
+                  {!checkIfAnon() ? (
+                    <>
+                      <FormControl
+                        className={classes.formControl}
                         variant="filled"
-                        size="small"
-                        onChange={handleUsername}
-                        inputProps={{ maxLength: 16 }}
-                        error={userTaken ? true : false}
-                        helperText={userTaken ? userTaken : null}
-                      />
-                      <br />
-                    </FormControl>
-                    &nbsp;
-                  </>
-                ) : null}
+                      >
+                        <TextField
+                          className={classes.usernameField}
+                          label="Hunter name"
+                          placeholder="Username"
+                          variant="filled"
+                          size="small"
+                          onChange={handleUsername}
+                          inputProps={{ maxLength: 16 }}
+                          error={userTaken ? true : false}
+                          helperText={userTaken ? userTaken : null}
+                        />
+                        <br />
+                      </FormControl>
+                      &nbsp;
+                    </>
+                  ) : null}
 
-                {/*
+                  {/*
             PLATFORM FIELD
             */}
-                <FormControl
-                  className={classes.formControl}
-                  variant="filled"
-                  size="small"
-                >
-                  <InputLabel>Platform</InputLabel>
-                  <Select value={platform} onChange={handlePlatform}>
-                    <MenuItem value={"PC"}>PC</MenuItem>
-                    <MenuItem value={"XBOX"}>XBOX</MenuItem>
-                    <MenuItem value={"PS4"}>PS4</MenuItem>
-                  </Select>
-                  <br />
-                </FormControl>
-                {/*
+                  <FormControl
+                    className={classes.formControl}
+                    variant="filled"
+                    size="small"
+                  >
+                    <InputLabel>Platform</InputLabel>
+                    <Select value={platform} onChange={handlePlatform}>
+                      <MenuItem value={"PC"}>PC</MenuItem>
+                      <MenuItem value={"XBOX"}>XBOX</MenuItem>
+                      <MenuItem value={"PS4"}>PS4</MenuItem>
+                    </Select>
+                    <br />
+                  </FormControl>
+                  {/*
             SESSION FIELD
             */}
-                <TextField
-                  label="Session ID"
-                  placeholder="Enter your current session ID"
-                  variant="filled"
-                  fullWidth
-                  onChange={handleSessionId}
-                  inputProps={{ maxLength: 12 }}
-                />
-              </Grid>
-              <hr />
-              <Grid item sm={12}>
-                {/*
+                  <TextField
+                    label="Session ID"
+                    placeholder="Enter your current session ID"
+                    variant="filled"
+                    fullWidth
+                    onChange={handleSessionId}
+                    inputProps={{ maxLength: 12 }}
+                  />
+                </Grid>
+                <hr />
+                <Grid item sm={12}>
+                  {/*
             RANK FIELD
             */}
-                <FormControl
-                  className={classes.formControl}
-                  variant="filled"
-                  size="small"
-                >
-                  <InputLabel>Rank</InputLabel>
-                  <Select value={rank} onChange={handleRank}>
-                    <MenuItem value={"LR"}>Low Rank</MenuItem>
-                    <MenuItem value={"HR"}>High Rank</MenuItem>
-                    <MenuItem value={"MR"}>Master Rank</MenuItem>
-                  </Select>
-                  <br />
-                </FormControl>
-                &nbsp;
-                {/*
+                  <FormControl
+                    className={classes.formControl}
+                    variant="filled"
+                    size="small"
+                  >
+                    <InputLabel>Rank</InputLabel>
+                    <Select value={rank} onChange={handleRank}>
+                      <MenuItem value={"LR"}>Low Rank</MenuItem>
+                      <MenuItem value={"HR"}>High Rank</MenuItem>
+                      <MenuItem value={"MR"}>Master Rank</MenuItem>
+                    </Select>
+                    <br />
+                  </FormControl>
+                  &nbsp;
+                  {/*
             MONSTER TYPE FIELD
             */}
-                <FormControl
-                  disabled={!rank ? true : false}
-                  className={classes.formControl}
-                  variant="filled"
-                  size="small"
-                >
-                  <InputLabel>Monster type</InputLabel>
-                  <Select value={monsterType} onChange={handleMonsterType}>
-                    {rank === "LR" ? (
-                      <MenuItem value={"Normal"}>Normal</MenuItem>
-                    ) : (
-                      createMenuItems().map(item => {
-                        return item
-                      })
-                    )}
-                  </Select>
-                  <br />
-                </FormControl>
-                {/*
+                  <FormControl
+                    disabled={!rank ? true : false}
+                    className={classes.formControl}
+                    variant="filled"
+                    size="small"
+                  >
+                    <InputLabel>Monster type</InputLabel>
+                    <Select value={monsterType} onChange={handleMonsterType}>
+                      {rank === "LR" ? (
+                        <MenuItem value={"Normal"}>Normal</MenuItem>
+                      ) : (
+                        createMenuItems().map(item => {
+                          return item
+                        })
+                      )}
+                    </Select>
+                    <br />
+                  </FormControl>
+                  {/*
             TARGET MONSTER FIELD
             */}
-                <Autocomplete
-                  fullWidth
-                  disabled={!rank || !monsterType ? true : false}
-                  options={rank === "MR" ? mrMonsters : lrhrMonsters}
-                  getOptionLabel={option => option.monster}
-                  renderInput={params => {
-                    return (
-                      <TextField
-                        onSelect={handleTargetMonster}
-                        // onChange={() => {setTargetMonster("")}}
-                        autoComplete="false"
-                        {...params}
-                        label="Choose monster"
-                        variant="filled"
-                        fullWidth
-                        error={
-                          checkAutocompleteInput(params.inputProps.value)
-                            ? false
-                            : true
-                        }
-                      />
-                    )
-                  }}
-                />
-              </Grid>
-              <hr />
-              {/*
+                  <Autocomplete
+                    fullWidth
+                    disabled={!rank || !monsterType ? true : false}
+                    options={rank === "MR" ? mrMonsters : lrhrMonsters}
+                    getOptionLabel={option => option.monster}
+                    renderInput={params => {
+                      return (
+                        <TextField
+                          onSelect={handleTargetMonster}
+                          // onChange={() => {setTargetMonster("")}}
+                          autoComplete="false"
+                          {...params}
+                          label="Choose monster"
+                          variant="filled"
+                          fullWidth
+                          error={
+                            checkAutocompleteInput(params.inputProps.value)
+                              ? false
+                              : true
+                          }
+                        />
+                      )
+                    }}
+                  />
+                </Grid>
+                <hr />
+                {/*
             DESCRIPTION FIELD
             */}
-              <Grid item sm={12}>
-                <TextField
-                  onChange={handleDescription}
-                  label="Description"
-                  placeholder="Let people know what you need help with!"
-                  variant="filled"
-                  fullWidth
-                  multiline
-                  rows={10}
-                  inputProps={{ maxLength: 250 }}
-                />
+                <Grid item sm={12}>
+                  <TextField
+                    onChange={handleDescription}
+                    label="Description"
+                    placeholder="Let people know what you need help with!"
+                    variant="filled"
+                    fullWidth
+                    multiline
+                    rows={10}
+                    inputProps={{ maxLength: 250 }}
+                  />
+                </Grid>
+                <Grid item sm={12} />
               </Grid>
-              <Grid item sm={12} />
-            </Grid>
-            {/**
-             * FIRE SOS BUTTON
-             */}
-            {handleWhitespace() ||
-            autoCompleteError ||
-            !username ||
-            !platform ||
-            !sessionId ||
-            !rank ||
-            !monsterType ||
-            !targetMonster ||
-            !description ? (
-              <Tooltip
-                title="Please fill up the form"
-                placement="bottom"
-                enterTouchDelay={1}
-              >
-                <div>
-                  <Button disabled fullWidth>
-                    FIRE SOS
-                  </Button>
-                </div>
-              </Tooltip>
-            ) : (
-              <>
-                {isLoading ? (
-                  <CircularProgress className={classes.circularProgress} />
-                ) : (
-                  <>
-                    <Button type="submit" fullWidth>
-                      FIRE SOS &nbsp;{" "}
+              {/**
+               * FIRE SOS BUTTON
+               */}
+              {handleWhitespace() ||
+              autoCompleteError ||
+              !username ||
+              !platform ||
+              !sessionId ||
+              !rank ||
+              !monsterType ||
+              !targetMonster ||
+              !description ? (
+                <Tooltip
+                  title="Please fill up the form"
+                  placement="bottom"
+                  enterTouchDelay={1}
+                >
+                  <div>
+                    <Button disabled fullWidth>
+                      FIRE SOS
                     </Button>
-                  </>
-                )}
-              </>
-            )}
-          </form>
-          {/* {handleLoading()} */}
-        </Paper>
-      </div>
-    </Layout>
-  )
+                  </div>
+                </Tooltip>
+              ) : (
+                <>
+                  {isLoading ? (
+                    <CircularProgress className={classes.circularProgress} />
+                  ) : (
+                    <>
+                      <Button type="submit" fullWidth>
+                        FIRE SOS &nbsp;{" "}
+                      </Button>
+                    </>
+                  )}
+                </>
+              )}
+            </form>
+            {/* {handleLoading()} */}
+          </Paper>
+        </div>
+        {console.log(uid)}
+      </Layout>
+    )
+  }
 }
 
 const mapStateToProps = ({ firestore, firebase, cards, auth }) => {
   return {
     cards: firestore.data,
+    cardAdded: cards.error,
     uid: firebase.auth.uid,
     userTaken: cards.error,
     isLoading: cards.loading,
     isPermanent: auth.isPermanent,
     isAnon: firebase.auth.isAnonymous,
+    currentProfile: firestore.ordered.currentProfile,
   }
 }
 
@@ -485,7 +509,7 @@ const mapDispatchToProps = dispatch => {
           monsterType,
           targetMonster,
           description,
-          checkIfAnon,
+          checkIfAnon
         )
       ),
 

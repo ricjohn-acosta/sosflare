@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Profile = ({ currentProfile }) => {
+const Profile = ({ currentProfile, cardAdded }) => {
   const classes = useStyles()
   const [currentView, setCurrentView] = React.useState(<ProfileManageAccount />)
 
@@ -53,10 +53,6 @@ const Profile = ({ currentProfile }) => {
       default:
         return null
     }
-  }
-
-  const test = test => {
-    console.log(test)
   }
 
   return currentProfile ? (
@@ -117,10 +113,11 @@ const Profile = ({ currentProfile }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, firebase, auth }) => {
+const mapStateToProps = ({ firestore, firebase, auth,cards }) => {
   return {
     user: firebase.auth,
     currentProfile: firestore.ordered.currentProfile,
+    cardAdded: cards.error,
   }
 }
 
