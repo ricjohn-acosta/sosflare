@@ -20,6 +20,8 @@ import IconButton from "@material-ui/core/IconButton"
 import EditIcon from "@material-ui/icons/Edit"
 import CheckIcon from "@material-ui/icons/Check"
 import CloseIcon from "@material-ui/icons/Close"
+import { useSelector } from "react-redux"
+import { useFirestoreConnect } from "react-redux-firebase"
 
 const useStyles = makeStyles(theme => ({
   accountTypeWrapper: { display: "flex" },
@@ -72,7 +74,18 @@ const ProfileManageAccount = ({
   changedUsernameError,
   changedEmailError,
   authError,
+  uid
 }) => {
+  useFirestoreConnect([
+    {
+      collection: "cards",
+      doc: uid,
+    },
+  ])
+  const currentCard = useSelector(
+    ({ firestore: { data } }) => data.cards && data.cards[uid]
+  )
+
   const classes = useStyles()
   const currentTime = moment()
   const [username, setUsername] = React.useState("")
@@ -161,15 +174,17 @@ const ProfileManageAccount = ({
   }
 
   const loadCurrentUsername = () => {
-    if (loadCurrentProfile && currentProfile) {
-      return currentProfile[0].username
-    }
+    // if (loadCurrentProfile && currentProfile) {
+    //   return currentProfile[0].username
+    // }
+    return currentCard.username
   }
 
   const loadProfileSessionId = () => {
-    if (loadCurrentProfile && currentProfile) {
-      return currentProfile[0].session_id
-    }
+    // if (loadCurrentProfile && currentProfile) {
+    //   return currentProfile[0].session_id
+    // }
+    return currentCard.session_id
   }
 
   const renderEmailTextField = () => {
@@ -301,15 +316,15 @@ const ProfileManageAccount = ({
                     {/* {user.displayName || newUsername ? newUsername : user.displayName} */}
                     {newUsername ? newUsername : loadCurrentUsername()}
                     &nbsp;
-                    {checkIfAnon() ? 
-                    <IconButton
-                      onClick={() => {
-                        handleEditing("username")
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                     : null}
+                    {checkIfAnon() ? (
+                      <IconButton
+                        onClick={() => {
+                          handleEditing("username")
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    ) : null}
                   </Typography>
                 ) : (
                   <span className={classes.fieldBtn}>
@@ -491,6 +506,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     loadCurrentProfile: firestore.status.requested,
     newEmail: auth.user.email,
     user: firebase.auth,
+    uid: firebase.auth.uid,
     emailModalView: auth.emailModal,
   }
 }

@@ -17,6 +17,8 @@ import ListItemText from "@material-ui/core/ListItemText"
 import MailIcon from "@material-ui/icons/Mail"
 import Divider from "@material-ui/core/Divider"
 import { Redirect } from "@reach/router"
+import { useSelector } from "react-redux"
+import { useFirestoreConnect } from "react-redux-firebase"
 
 const useStyles = makeStyles(theme => ({
   rootWrapper: {
@@ -38,7 +40,17 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Profile = ({ currentProfile, cardAdded }) => {
+const Profile = ({ currentProfile, cardAdded, user, uid }) => {
+  useFirestoreConnect([
+    {
+      collection: "cards",
+      doc: uid,
+    },
+  ])
+  const currentCard = useSelector(
+    ({ firestore: { data } }) => data.cards && data.cards[uid]
+  )
+
   const classes = useStyles()
   const [currentView, setCurrentView] = React.useState(<ProfileManageAccount />)
 
@@ -55,9 +67,73 @@ const Profile = ({ currentProfile, cardAdded }) => {
     }
   }
 
-  return currentProfile ? (
-    currentProfile.length !== 0 ? (
+  const loadCurrentProfile = () => {
+    if (currentProfile) {
+      return currentProfile.length === 1 ? true : false
+    }
+  }
+
+  // return currentProfile ? (
+  //   currentProfile.length !== 0 ? (
+  //     <div className={classes.rootWrapper}>
+  //       <Grid className={classes.rootWrapper} container direction="row">
+  //         <Grid
+  //           className={classes.leftGrid}
+  //           item
+  //           container
+  //           direction="column"
+  //           xs={12}
+  //           sm={12}
+  //           md={2}
+  //           component={Paper}
+  //         >
+  //           <List>
+  //             {["Manage account", "Your flare", "Link third party apps"].map(
+  //               (text, index) => (
+  //                 <ListItem
+  //                   button
+  //                   disabled={text === "Link third party apps" ? true : false}
+  //                   value={"tests"}
+  //                   key={text}
+  //                   onClick={() => {
+  //                     handleView(text)
+  //                   }}
+  //                 >
+  //                   <ListItemIcon>
+  //                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+  //                   </ListItemIcon>
+  //                   <ListItemText primary={text} />
+  //                 </ListItem>
+  //               )
+  //             )}
+  //             <Divider />
+  //           </List>
+  //         </Grid>
+  //         <Grid
+  //           className={classes.rightGrid}
+  //           item
+  //           container
+  //           direction="column"
+  //           xs={12}
+  //           sm={12}
+  //           md={9}
+  //           component={Paper}
+  //         >
+  //           {currentView}
+  //         </Grid>
+  //       </Grid>
+  //     </div>
+  //   ) : (
+  //     <Redirect from="/profile" to="/firesos" noThrow />
+  //   )
+  // ) : (
+  //   "LOADING"
+  // )
+
+  if (currentCard) {
+    return (
       <div className={classes.rootWrapper}>
+        {console.log(currentCard)}
         <Grid className={classes.rootWrapper} container direction="row">
           <Grid
             className={classes.leftGrid}
@@ -105,15 +181,15 @@ const Profile = ({ currentProfile, cardAdded }) => {
           </Grid>
         </Grid>
       </div>
-    ) : (
-      <Redirect from="/profile" to="/firesos" noThrow />
     )
-  ) : (
-    "LOADING"
-  )
+  }
+
+  if (!loadCurrentProfile()) {
+    return <Redirect from="/profile" to="/firesos" noThrow />
+  }
 }
 
-const mapStateToProps = ({ firestore, firebase, auth,cards }) => {
+const mapStateToProps = ({ firestore, firebase, auth, cards }) => {
   return {
     user: firebase.auth,
     currentProfile: firestore.ordered.currentProfile,

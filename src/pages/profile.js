@@ -13,7 +13,7 @@ const profile = ({ user }) => {
         <Helmet>
           <title>{"SOS flare | Profile"}</title>
         </Helmet>
-        <Profile />
+        <Profile uid={user} />
       </Layout>
     )
   } else {

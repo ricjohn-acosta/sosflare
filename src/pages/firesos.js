@@ -4,6 +4,7 @@ import Layout from "../components/layout"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
+import CircularProgress from "@material-ui/core/CircularProgress"
 
 const FireSosPage = ({ uid }) => {
   if (uid) {
@@ -13,7 +14,7 @@ const FireSosPage = ({ uid }) => {
       </Layout>
     )
   } else {
-    return "Loading.."
+    return <CircularProgress/>
   }
 }
 
