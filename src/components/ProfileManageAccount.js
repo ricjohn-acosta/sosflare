@@ -74,7 +74,7 @@ const ProfileManageAccount = ({
   changedUsernameError,
   changedEmailError,
   authError,
-  uid
+  uid,
 }) => {
   useFirestoreConnect([
     {
@@ -522,15 +522,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  firestoreConnect(props => {
-    return [
-      {
-        collection: "cards",
-        where: ["id", "==", props.user.uid],
-        storeAs: "currentProfile",
-      },
-    ]
-  })
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
 )(ProfileManageAccount)

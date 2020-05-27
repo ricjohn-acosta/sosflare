@@ -7,6 +7,8 @@ import moment from "moment"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import HubCard from "./HubCard"
+import { useSelector } from "react-redux"
+import { useFirestoreConnect } from "react-redux-firebase"
 
 const useStyles = makeStyles(theme => ({
   parentWrapper: {},
@@ -15,30 +17,37 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const ProfileManageFlare = ({ currentProfile, loadCurrentProfile }) => {
+const ProfileManageFlare = ({ uid }) => {
+  useFirestoreConnect([
+    {
+      collection: "cards",
+      doc: uid,
+    },
+  ])
+  const currentProfile = useSelector(
+    ({ firestore: { data } }) => data.cards && data.cards[uid]
+  )
   const classes = useStyles()
   const currentTime = moment()
 
   const loadCard = () => {
-    if (loadCurrentProfile && currentProfile) {
-      return (
-        <HubCard
-          id={currentProfile[0].id}
-          username={currentProfile[0].username}
-          description={currentProfile[0].description}
-          monsterType={currentProfile[0].monster_type}
-          platform={currentProfile[0].platform}
-          rank={currentProfile[0].rank}
-          sessionId={currentProfile[0].session_id}
-          targetMonster={currentProfile[0].target_monster}
-          monsterImage={require(`../images/monsters/${currentProfile[0].target_monster}.png`)}
-          startTime={currentTime.from(currentProfile[0].date_created, true)}
-          timestamp={currentProfile[0].date_created}
-          unixTime={currentProfile[0].unix_time}
-          dateCreated={currentProfile[0].dateCreated}
-        />
-      )
-    }
+    return (
+      <HubCard
+        id={currentProfile.id}
+        username={currentProfile.username}
+        description={currentProfile.description}
+        monsterType={currentProfile.monster_type}
+        platform={currentProfile.platform}
+        rank={currentProfile.rank}
+        sessionId={currentProfile.session_id}
+        targetMonster={currentProfile.target_monster}
+        monsterImage={require(`../images/monsters/${currentProfile.target_monster}.png`)}
+        startTime={currentTime.from(currentProfile.date_created, true)}
+        timestamp={currentProfile.date_created}
+        unixTime={currentProfile.unix_time}
+        dateCreated={currentProfile.dateCreated}
+      />
+    )
   }
 
   return (
@@ -61,6 +70,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
   return {
     currentProfile: firestore.ordered.currentProfile,
     loadCurrentProfile: firestore.status.requested,
+    uid: firebase.auth.uid,
   }
 }
 export default connect(mapStateToProps)(ProfileManageFlare)

@@ -197,15 +197,4 @@ const mapStateToProps = ({ firestore, firebase, auth, cards }) => {
   }
 }
 
-export default compose(
-  connect(mapStateToProps),
-  firestoreConnect(props => {
-    return [
-      {
-        collection: "cards",
-        where: ["id", "==", props.user.uid],
-        storeAs: "currentProfile",
-      },
-    ]
-  })
-)(Profile)
+export default connect(mapStateToProps)(Profile)
