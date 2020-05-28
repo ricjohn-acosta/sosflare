@@ -73,6 +73,12 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
     }
   }
 
+  const displayTime = () => {
+    var date = 1590330899238
+    var cutoff = date - 604800000
+    return cutoff
+  }
+
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
@@ -82,7 +88,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
       </Paper>
       {console.log(
         "TODAYS DATE IN UNIX TIME ",
-        Math.floor(Date.now() / 1000) - Math.floor(1590330899238 / 1000)
+        displayTime()
       )}
     </>
   )
