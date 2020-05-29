@@ -22,3 +22,4 @@ exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
       return console.log("DOCUMENT REMOVED")
     })
 })
+
