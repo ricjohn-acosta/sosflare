@@ -15,7 +15,7 @@ exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
   return admin
     .firestore()
     .collection("cards")
-    .where("unix_timestamp", "<", cutoff)
+    .where("unix_time", "<", cutoff)
     .get()
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
