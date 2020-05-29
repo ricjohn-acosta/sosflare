@@ -106,7 +106,6 @@ const Detail = ({ uid, userDetails, editCard }) => {
       monsterType === "" &&
       rank === ""
     ) {
-      console.log("didnt update firestore")
       return setEditing(false)
     } else {
       editCard(
@@ -122,12 +121,10 @@ const Detail = ({ uid, userDetails, editCard }) => {
   }
   const handleSessionID = e => {
     setSessionID(e.target.value)
-    console.log(description)
   }
 
   const handleDescription = e => {
     setDescription(e.target.value)
-    console.log(description)
   }
 
   const handleMonsterType = event => {
@@ -136,7 +133,6 @@ const Detail = ({ uid, userDetails, editCard }) => {
 
   const handleTargetMonster = event => {
     if (checkAutocompleteInput(event.target.value)) {
-      console.log("test")
       setTargetMonster(event.target.value)
     } else {
       handleAutocompleteErrorTrue()
@@ -250,8 +246,6 @@ const Detail = ({ uid, userDetails, editCard }) => {
   }
   return (
     <div className={classes.rootWrapper}>
-      {console.log(targetMonster)}
-      {console.log("AUTOCOMPLETE ERROR? ", autoCompleteError)}
       <Paper className={classes.paper}>
         <Grid container direction="column">
           <Grid item xs={12} sm={12}>

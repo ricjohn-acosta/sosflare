@@ -2,7 +2,6 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-console.log("PROJECT ID ", process.env.API_KEY)
 if (process.env.ENVIRONMENT === "development") {
   const firebaseConfig = {
     apiKey: process.env.API_KEY,

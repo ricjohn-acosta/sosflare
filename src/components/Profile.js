@@ -135,7 +135,6 @@ const Profile = ({ currentProfile, cardAdded, user, uid }) => {
   // if (currentCard) {
     return (
       <div className={classes.rootWrapper}>
-        {console.log("Profile.js current card", currentCard)}
         <Grid className={classes.rootWrapper} container direction="row">
           <Grid
             className={classes.leftGrid}

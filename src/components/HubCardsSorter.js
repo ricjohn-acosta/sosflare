@@ -46,7 +46,6 @@ const HubCardsSorter = ({ children, sortBy, find }) => {
     return React.Children.toArray(children).sort(sortMonster)
   } else if (sortBy === "newest" || null) {
     const testArray = React.Children.toArray(children).sort(sortNewest)
-    console.log(testArray)
     return testArray
   } else if (sortBy === "oldest" || null) {
     return React.Children.toArray(children).sort(sortOldest)

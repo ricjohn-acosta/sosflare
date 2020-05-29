@@ -53,8 +53,6 @@ const Login = ({ login }) => {
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log(email)
-    console.log(password)
     login(email, password)
   }
   return (

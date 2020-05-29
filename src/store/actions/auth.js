@@ -12,19 +12,16 @@ export function signUp(email, username, password, sessionId, id) {
       .then(res => {
         const currentUser = firebase.auth().currentUser
         currentUser.updateProfile({ displayName: username }).then(() => {
-          console.log("DISPLAY NAME SET")
         })
         firestore
           .collection("users")
           .doc(res.user.uid)
           .set({ user_name: username, flare: sessionId, id: id })
           .then(() => {
-            console.log("USER ADDED TO FIRESTORE")
           })
         dispatch({ type: actions.AUTH_SUCCESS })
       })
       .catch(err => {
-        console.log(err)
         dispatch({ type: actions.AUTH_FAIL, payload: err.message })
       })
     dispatch({ type: actions.AUTH_END })
@@ -48,14 +45,11 @@ export function upgradeProfile(username, sessionId, email, password) {
           .doc(uid)
           .set({ user_name: username, flare: sessionId, id: uid })
           .then(() => {
-            console.log("USER ADDED TO FIRESTORE")
             // dispatch({ type: actions.CHANGE_EMAIL, payload: email })
             dispatch({ type: actions.CONVERT_TO_PERM, payload: email })
           })
-        console.log("Account upgraded to permanent")
       })
       .catch(err => {
-        console.log(err)
         dispatch({ type: actions.CONVERT_TO_PERM_FAIL, payload: err })
       })
   }
@@ -89,7 +83,6 @@ export function reauthenticate(password, invokedAt) {
           })
         }
       })
-    console.log("reauthenticated")
   }
 }
 
@@ -105,7 +98,6 @@ export function editProfile(type, input) {
     const currentUser = firebase.auth().currentUser
     const uid = getState().firebase.auth.uid
 
-    console.log(uid)
     switch (type) {
       case "saveUsername":
         return firestore
@@ -125,7 +117,6 @@ export function editProfile(type, input) {
                     .doc(uid)
                     .update({ user_name: input })
                     .then(() => {
-                      console.log("USERNAME UPDATED")
                       dispatch({ type: actions.CHANGE_USERNAME_SUCCESS})
 
                     })
@@ -139,7 +130,6 @@ export function editProfile(type, input) {
         return currentUser
           .updateEmail(input)
           .then(data => {
-            console.log("EMAIL UPDATED")
             dispatch({ type: actions.CHANGE_EMAIL, payload: input })
             dispatch({ type: actions.CHANGE_EMAIL_SUCCESS })
           })
@@ -183,7 +173,6 @@ export function logIn(email, password) {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        console.log("USER LOGGED IN ")
         dispatch({ type: actions.AUTH_SUCCESS })
       })
       .catch(err => {
@@ -200,7 +189,7 @@ export function logOut() {
       .auth()
       .signOut()
       .then(() => {
-        console.log("USER SIGNED OUT")
+        return
       })
       .catch(err => {
         console.log(err)

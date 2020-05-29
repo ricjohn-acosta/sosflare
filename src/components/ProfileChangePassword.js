@@ -31,7 +31,6 @@ const ProfileChangePassword = ({
 
   const handleInput = e => {
     setPassword(e.target.value)
-    console.log(password)
   }
 
   const handleOpenPassword = () => {
@@ -85,8 +84,6 @@ const ProfileChangePassword = ({
 
   const changeEmail = (
     <Dialog open={emailModalView} aria-labelledby="form-dialog-title">
-      {console.log("modal state", open)}
-      {console.log("user email, ", userEmail)}
 
       <DialogTitle id="form-dialog-title">
         Confirm identity before updating email
@@ -142,7 +139,6 @@ const ProfileChangePassword = ({
   } else {
     return (
       <div>
-        {console.log("CHANGE PASSWORD STATE, ", openPassword)}
         <Button variant="contained" size="large" onClick={handleOpenPassword}>
           Change password
         </Button>
@@ -233,7 +229,6 @@ const ProfileChangePassword = ({
             >
               Cancel
             </Button>
-            {console.log("savePassword ", password)}
             <Button
               onClick={() => {
                 editProfile("savePassword", password)

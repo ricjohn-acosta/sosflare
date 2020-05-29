@@ -134,9 +134,6 @@ const ProfileManageAccount = ({
 
   const handleSubmit = e => {
     e.preventDefault()
-    console.log(username)
-    console.log(email)
-    console.log(password)
     upgradeProfile(
       loadCurrentUsername(),
       loadProfileSessionId(),
@@ -232,7 +229,6 @@ const ProfileManageAccount = ({
   }
 
   const renderEmailTypography = () => {
-    console.log("EDIT USER STATE", editUser)
     if (
       (checkIfAnon() && !reauthenticated) ||
       reauthenticated === "password" ||
@@ -280,7 +276,6 @@ const ProfileManageAccount = ({
 
   return loadCurrentUsername() ? (
     <form className={classes.form} onSubmit={handleSubmit}>
-      {console.log(currentProfile)}
       <Grid container direction="column">
         <Grid item xs={12} sm={12}>
           <Typography variant={"h4"}>
@@ -392,8 +387,6 @@ const ProfileManageAccount = ({
                 />
               ) : null}
               <Grid item sm={6}>
-                {console.log(checkIfAnon())}
-                {console.log(editEmail)}
                 {!checkIfAnon() ? (
                   <>
                     <span className={classes.fieldBtn}>

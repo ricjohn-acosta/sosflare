@@ -156,20 +156,14 @@ const FireSosPaper = ({
 
   const handleTargetMonster = event => {
     if (checkAutocompleteInput(event.target.value)) {
-      console.log("test")
       setTargetMonster(event.target.value)
     } else {
       handleAutocompleteErrorTrue()
     }
-    // setResetMonsters(false)
   }
 
   const handleDescription = event => {
     setDescription(event.target.value)
-  }
-
-  const handleAutoCompleteField = event => {
-    console.log(event.target.value)
   }
 
   const handleAutocompleteErrorTrue = () => {
@@ -197,9 +191,6 @@ const FireSosPaper = ({
       !username.replace(/\s/g, "").length ||
       !sessionId.replace(/\s/g, "").length
     ) {
-      console.log(
-        "string only contains whitespace (ie. spaces, tabs or line breaks)"
-      )
       return true
     }
   }
@@ -268,7 +259,6 @@ const FireSosPaper = ({
 
   useEffect(() => {
     if (checkIfAnon()) {
-      console.log("effecting")
       setUsername("placeholder")
     }
   }, [platform])
@@ -284,7 +274,6 @@ const FireSosPaper = ({
   } else {
     return (
       <div>
-        {console.log(username, checkIfAnon())}
         <Typography className={classes.announcement} variant="h4">
           Your SOS flare has expired. Please fire a new flare.
         </Typography>
@@ -476,9 +465,7 @@ const FireSosPaper = ({
               </>
             )}
           </form>
-          {/* {handleLoading()} */}
         </Paper>
-        {console.log(uid)}
       </div>
     )
   }

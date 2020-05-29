@@ -57,7 +57,6 @@ export function addCard(
             .signInAnonymously()
             .then(res => {
               const currentUser = firebase.auth().currentUser
-              console.log(res)
               firestore
                 .collection("cards")
                 .doc(res.user.uid)
@@ -75,14 +74,12 @@ export function addCard(
                   unix_time: unixTime,
                 })
                 .then(() => {
-                  console.log("CARD ADDED TO DB")
                   dispatch({
                     type: actions.ADD_CARD_SUCCESS,
                     payload: username,
                   })
                 })
                 .catch(err => {
-                  console.log(err)
                   dispatch({
                     type: actions.ADD_CARD_FAIL,
                     payload: err.message,
@@ -91,12 +88,11 @@ export function addCard(
               dispatch({ type: actions.ADD_CARD_END })
             })
             .catch(e => {
-              console.log(e.message)
+              console.log("Error")
             })
         } else if (userId) {
           // if user is authenticated, match userId with a user document, get its username field and then make a new card
           if (!checkIfAnon) {
-            console.log("ADD CARD IF USER IS ANON AND NO CARD")
             firestore
               .collection("users")
               .where("user_name", "==", userId)
@@ -121,14 +117,12 @@ export function addCard(
                       unix_time: unixTime,
                     })
                     .then(() => {
-                      console.log("CARD ADDED TO DB")
                       dispatch({
                         type: actions.ADD_CARD_SUCCESS,
                         payload: username,
                       })
                     })
                     .catch(err => {
-                      console.log(err)
                       dispatch({
                         type: actions.ADD_CARD_FAIL,
                         payload: err.message,
@@ -144,10 +138,9 @@ export function addCard(
                 }
               })
               .catch(e => {
-                console.log(e.message)
+                console.log("Error")
               })
           } else {
-            console.log("ADD CARD IF USER IS UPGRADED AND NO CARD")
             firestore
               .collection("users")
               .where("id", "==", userId)
@@ -159,7 +152,6 @@ export function addCard(
                   existingUsername = doc.data().user_name
                 })
                 const currentUser = firebase.auth().currentUser
-                console.log(existingUsername)
                 firestore
                   .collection("cards")
                   .doc(userId)
@@ -177,14 +169,13 @@ export function addCard(
                     unix_time: unixTime,
                   })
                   .then(() => {
-                    console.log("CARD ADDED TO DB")
                     dispatch({
                       type: actions.ADD_CARD_SUCCESS,
                       payload: username,
                     })
                   })
                   .catch(err => {
-                    console.log(err)
+                    console.log("Error")
                     dispatch({
                       type: actions.ADD_CARD_FAIL,
                       payload: err.message,
@@ -227,11 +218,10 @@ export function addCard(
               //   dispatch({ type: actions.ADD_CARD_END })
               // })
               .catch(e => {
-                console.log(e.message)
+                console.log("Error")
               })
           }
         } else {
-          console.log("USERNAME TAKEN!")
           dispatch({
             type: actions.ADD_CARD_FAIL,
             payload: "Someone with that username has already fired an SOS!",
@@ -265,7 +255,7 @@ export function editCard(
         unix_time: unixTime,
       })
       .then(() => {
-        console.log("CARD UPDATED")
+        return
       })
   }
 }

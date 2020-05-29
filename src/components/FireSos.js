@@ -136,7 +136,6 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
 
   const handleTargetMonster = event => {
     if (checkAutocompleteInput(event.target.value)) {
-      console.log("test")
       setTargetMonster(event.target.value)
     } else {
       handleAutocompleteErrorTrue()
@@ -148,9 +147,6 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
     setDescription(event.target.value)
   }
 
-  const handleAutoCompleteField = event => {
-    console.log(event.target.value)
-  }
 
   const handleAutocompleteErrorTrue = () => {
     setAutoCompleteState(true)
@@ -177,9 +173,6 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
       !username.replace(/\s/g, "").length ||
       !sessionId.replace(/\s/g, "").length
     ) {
-      console.log(
-        "string only contains whitespace (ie. spaces, tabs or line breaks)"
-      )
       return true
     }
   }
@@ -236,7 +229,6 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
 
   return (
     <>
-      {console.log(targetMonster)}
       <Button
         onClick={handleOpen}
         className={classes.fireSosBtn}

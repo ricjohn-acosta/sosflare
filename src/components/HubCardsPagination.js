@@ -29,7 +29,6 @@ const HubCardsPagination = ({
 
   const handleNextPage = event => {
     setCurrentPage(++event.currentTarget.value)
-    console.log("Current page when pressed next page: ", currentPage)
     loadNextPage(getLastItem())
     // loadNextPage(getLastItem().charAt(0))
     if (lastMonsterRef.indexOf(getLastItem()) === -1) {
@@ -42,29 +41,10 @@ const HubCardsPagination = ({
   }
 
   const handlePrevPage = event => {
-    // console.log(lastMonsterRef[currentPage - 2])
     setCurrentPage(--event.currentTarget.value)
-    // loadNextPage(test)
-    // loadPrevPage(getFirstItem())
-    console.log("Current page: ", currPage)
     loadNextPage(lastMonRef[currPage - 3])
     changePage(Number(event.currentTarget.value))
     sendToTop()
-  }
-
-  const checkPageCount = () => {
-    if (requested && cards) {
-      console.log("number of cards in array: ", cards.length)
-      console.log(
-        "number of pages: ",
-        cards.length % 9 === 0
-          ? cards.length / 9
-          : Math.trunc(cards.length / 9 + 1)
-      )
-      return cards.length % 9 === 0
-        ? cards.length / 9
-        : Math.trunc(cards.length / 9 + 1)
-    }
   }
 
   const getLastItem = () => {
@@ -86,7 +66,6 @@ const HubCardsPagination = ({
 
   return (
     <>
-      {console.log(lastMonsterRef)}
       {currPage !== 1 ? (
         <IconButton
           className={classes.iconButtons}

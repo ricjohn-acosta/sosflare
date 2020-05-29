@@ -19,7 +19,6 @@ const ProfileSnackbars = ({
       setCurrentDescription("Username changed")
       setTimeout(() => {
         setOpen(true)
-        console.log("SET OPEN TO TRUE", open)
       }, 1000)
       setOpen(false)
     }
@@ -47,7 +46,6 @@ const ProfileSnackbars = ({
 
 
 
-  console.log(open)
   // if (hasUpgraded) {
   //   return <ProfileSnackbar description={"Account upgraded"} />
   // }

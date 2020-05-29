@@ -153,9 +153,7 @@ const HubBarTools = props => {
                   checked={sortByMonster}
                   color="primary"
                   value={"test"}
-                  // disabled={sortByOldest || sortByNewest ? true : false}
                   onChange={handleCheckboxMonster}
-                  // onChange={e => {console.log(e.target.value)}}
                 />
               }
               label={

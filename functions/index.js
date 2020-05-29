@@ -32,7 +32,7 @@ exports.deleteExpiredDocuments = functions.https.onRequest(async (req, res) => {
         querySnapshot.forEach(doc => {
           doc.ref.delete()
         })
-        return console.log(res)
+        return console.log("DOCUMENT DELETED")
       })
   } else {
     res.status(400).json({

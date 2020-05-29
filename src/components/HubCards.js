@@ -39,7 +39,6 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
     if (requested && cards) {
       for (let i = 0; i <= 8; i++) {
         if (cards[i]) {
-          console.log(cards[i].date_created)
           array.push(
             <HubCard
               id={cards[i].id}
@@ -86,10 +85,6 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
           {displayCards()}
         </Grid>
       </Paper>
-      {console.log(
-        "TODAYS DATE IN UNIX TIME ",
-        displayTime()
-      )}
     </>
   )
 }
