@@ -177,14 +177,19 @@ const ProfileManageAccount = ({
     // if (loadCurrentProfile && currentProfile) {
     //   return currentProfile[0].username
     // }
-    return currentCard.username
+    if (loadCurrentProfile && currentProfile) {
+      return currentProfile[uid].username
+    } else {
+      return ""
+    }
   }
 
   const loadProfileSessionId = () => {
-    // if (loadCurrentProfile && currentProfile) {
-    //   return currentProfile[0].session_id
-    // }
-    return currentCard.session_id
+    if (loadCurrentProfile && currentProfile) {
+      return currentProfile[uid].session_id
+    } else {
+      return ""
+    }
   }
 
   const renderEmailTextField = () => {
@@ -273,7 +278,7 @@ const ProfileManageAccount = ({
     }
   }, [changedUsername])
 
-  return (
+  return loadCurrentUsername() ? (
     <form className={classes.form} onSubmit={handleSubmit}>
       {console.log(currentProfile)}
       <Grid container direction="column">
@@ -337,16 +342,12 @@ const ProfileManageAccount = ({
                       }
                       error={
                         changedUsernameError
-                          ? authError.source === "updatePassword"
-                            ? false
-                            : true
+                          ? true
                           : false
                       }
                       helperText={
                         changedUsernameError
-                          ? authError.source === "updatePassword"
-                            ? false
-                            : "Username taken"
+                          ? "Username taken"
                           : false
                       }
                       onChange={e => {
@@ -484,6 +485,8 @@ const ProfileManageAccount = ({
         hasChangedPassword={changedPassword}
       />
     </form>
+  ) : (
+    "Your card has expired. Please fire a new flare here."
   )
 }
 
@@ -502,7 +505,7 @@ const mapStateToProps = ({ firestore, firebase, auth }) => {
     changedEmailError: auth.user.changedEmailError,
     changedPassword: auth.user.changedPassword,
     changedUsernameError: auth.user.changedUsernameError,
-    currentProfile: firestore.ordered.currentProfile,
+    currentProfile: firestore.data.currentProfile,
     loadCurrentProfile: firestore.status.requested,
     newEmail: auth.user.email,
     user: firebase.auth,

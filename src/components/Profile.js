@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { connect } from "react-redux"
 import { compose } from "redux"
 import { firestoreConnect } from "react-redux-firebase"
@@ -73,6 +73,8 @@ const Profile = ({ currentProfile, cardAdded, user, uid }) => {
     }
   }
 
+  
+
   // return currentProfile ? (
   //   currentProfile.length !== 0 ? (
   //     <div className={classes.rootWrapper}>
@@ -130,10 +132,10 @@ const Profile = ({ currentProfile, cardAdded, user, uid }) => {
   //   "LOADING"
   // )
 
-  if (currentCard) {
+  // if (currentCard) {
     return (
       <div className={classes.rootWrapper}>
-        {console.log(currentCard)}
+        {console.log("Profile.js current card", currentCard)}
         <Grid className={classes.rootWrapper} container direction="row">
           <Grid
             className={classes.leftGrid}
@@ -182,11 +184,11 @@ const Profile = ({ currentProfile, cardAdded, user, uid }) => {
         </Grid>
       </div>
     )
-  }
+  // }
 
-  if (!loadCurrentProfile()) {
-    return <Redirect from="/profile" to="/firesos" noThrow />
-  }
+  // if (!loadCurrentProfile()) {
+  //   return <Redirect from="/profile" to="/firesos" noThrow />
+  // }
 }
 
 const mapStateToProps = ({ firestore, firebase, auth, cards }) => {
@@ -197,4 +199,15 @@ const mapStateToProps = ({ firestore, firebase, auth, cards }) => {
   }
 }
 
-export default connect(mapStateToProps)(Profile)
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect(props => {
+    return [
+      {
+        collection: "cards",
+        where: ["id", "==", props.user.uid],
+        storeAs: "currentProfile",
+      },
+    ]
+  })
+)(Profile)

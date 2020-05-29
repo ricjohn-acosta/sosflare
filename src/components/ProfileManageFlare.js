@@ -51,7 +51,7 @@ const ProfileManageFlare = ({ uid }) => {
   }
 
   return (
-    <div className={classes.parentWrapper}>
+    currentProfile ? <div className={classes.parentWrapper}>
       <Grid container>
         <Grid item xs={12} sm={12}>
           <Typography variant={"h4"}>Your flare</Typography>
@@ -62,13 +62,13 @@ const ProfileManageFlare = ({ uid }) => {
           {loadCard()}
         </Grid>
       </Grid>
-    </div>
+    </div> : "Your flare has expired. Please fire a new one here."
   )
 }
 
 const mapStateToProps = ({ firestore, firebase, auth }) => {
   return {
-    currentProfile: firestore.ordered.currentProfile,
+    currentProfile: firestore.data.currentProfile,
     loadCurrentProfile: firestore.status.requested,
     uid: firebase.auth.uid,
   }

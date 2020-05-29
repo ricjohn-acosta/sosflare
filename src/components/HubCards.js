@@ -124,11 +124,7 @@ export default compose(
         startAfter: checkPage(),
         limit: 10,
       },
-      {
-        collection: "cards",
-        where: ["username", "==", props.currentUsername],
-        storeAs: "currentProfile",
-      },
+
     ]
   })
 )(HubCards)

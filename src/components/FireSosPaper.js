@@ -258,9 +258,12 @@ const FireSosPaper = ({
   }
 
   const loadCurrentProfile = () => {
-      if(currentProfile) {
-          return currentProfile.length === 1 ? true : false
-      }
+    if (currentProfile) {
+      // return currentProfile.length === 1 ? true : false
+      return true
+    } else {
+      return false
+    }
   }
 
   useEffect(() => {
@@ -490,7 +493,7 @@ const mapStateToProps = ({ firestore, firebase, cards, auth }) => {
     isLoading: cards.loading,
     isPermanent: auth.isPermanent,
     isAnon: firebase.auth.isAnonymous,
-    currentProfile: firestore.ordered.currentProfile,
+    currentProfile: firestore.data.currentProfile,
   }
 }
 

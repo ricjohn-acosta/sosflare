@@ -17,30 +17,37 @@ const ProfileSnackbars = ({
   useEffect(() => {
     if (hasChangedUsername) {
       setCurrentDescription("Username changed")
-      setInterval(() => {
+      setTimeout(() => {
         setOpen(true)
+        console.log("SET OPEN TO TRUE", open)
       }, 1000)
+      setOpen(false)
     }
-  })
+  }, [hasChangedUsername])
 
   useEffect(() => {
     if (hasChangedEmail) {
       setCurrentDescription("Email updated")
-      setInterval(() => {
+      setTimeout(() => {
         setOpen(true)
       }, 1000)
+      setOpen(false)
     }
   })
 
   useEffect(() => {
     if (hasChangedPassword) {
       setCurrentDescription("Password updated")
-      setInterval(() => {
+      setTimeout(() => {
         setOpen(true)
       }, 1000)
+      setOpen(false)
     }
   }, [hasChangedPassword])
 
+
+
+  console.log(open)
   // if (hasUpgraded) {
   //   return <ProfileSnackbar description={"Account upgraded"} />
   // }
