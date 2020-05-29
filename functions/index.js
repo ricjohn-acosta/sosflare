@@ -12,6 +12,7 @@ admin.initializeApp();
 exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
   const currentDate = Date.now()
   const cutoff = currentDate - 604800000
+  console.log(res)
   return admin
     .firestore()
     .collection("cards")
@@ -21,7 +22,7 @@ exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
       querySnapshot.forEach(doc => {
         doc.ref.delete()
       })
-      return console.log("DOCUMENT REMOVED")
+      return console.log(res)
     })
 })
 
