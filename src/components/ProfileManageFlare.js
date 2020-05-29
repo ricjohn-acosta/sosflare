@@ -62,7 +62,7 @@ const ProfileManageFlare = ({ uid }) => {
           {loadCard()}
         </Grid>
       </Grid>
-    </div> : "Your flare has expired. Please fire a new one here."
+    </div> : <div>Your flare has expired. Please fire a new flare <a href="http://firesosflare.com/firesos">here</a></div>
   )
 }
 

@@ -479,7 +479,7 @@ const ProfileManageAccount = ({
       />
     </form>
   ) : (
-    "Your card has expired. Please fire a new flare here."
+    <div>Your flare has expired. Please fire a new flare <a href="http://firesosflare.com/firesos">here</a></div>
   )
 }
 

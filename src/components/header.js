@@ -130,7 +130,7 @@ const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
             }
           >
             You are currently on a temporary account. Click{" "}
-            <a href="http://sos-flare.web.app/profile">here</a> to upgrade your
+            <a href="http://firesosflare.com/profile">here</a> to upgrade your
             account by changing your email and password to be able to link third
             party apps
           </Alert>
