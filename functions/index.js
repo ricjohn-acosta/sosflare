@@ -12,11 +12,7 @@ admin.initializeApp()
 exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
   const currentDate = Date.now()
   const cutoff = currentDate - 604800000
-  console.log(res)
-
-  if (res.auth.token.admin !== true) {
-    return { error: "Access forbidden " }
-  }
+  
   return admin
     .firestore()
     .collection("cards")
