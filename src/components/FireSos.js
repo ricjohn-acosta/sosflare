@@ -282,7 +282,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
                     managing your flares!
                   </Typography>
                 </div>
-                <Grid item sm={12}>
+                <Grid item xs={12} sm={12}>
                   {/*
             USERNAME FIELD
             */}
@@ -330,7 +330,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
                   />
                 </Grid>
                 <hr />
-                <Grid item sm={12}>
+                <Grid item xs={12} sm={12}>
                   {/*
             RANK FIELD
             */}
@@ -401,7 +401,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
                 {/*
             DESCRIPTION FIELD
             */}
-                <Grid item sm={12}>
+                <Grid item xs={12} sm={12}>
                   <TextField
                     onChange={handleDescription}
                     label="Description"
@@ -413,7 +413,7 @@ const FireSos = ({ addCard, isLoading, userTaken }) => {
                     inputProps={{ maxLength: 250 }}
                   />
                 </Grid>
-                <Grid item sm={12} />
+                <Grid item xs={12} sm={12} />
               </Grid>
               {/**
                * FIRE SOS BUTTON

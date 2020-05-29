@@ -309,7 +309,7 @@ const ProfileManageAccount = ({
                   Username:{" "}
                 </Typography>
               </Grid>
-              <Grid item sm={6}>
+              <Grid item xs={12} sm={6}>
                 {!editUser && !changedUsername ? (
                   <Typography className={classes.accountValues}>
                     {/* {newUsername ? newUsername : user.displayName} */}
@@ -386,7 +386,7 @@ const ProfileManageAccount = ({
                   isOpen={emailModalView}
                 />
               ) : null}
-              <Grid item sm={6}>
+              <Grid item xs={12} sm={6}>
                 {!checkIfAnon() ? (
                   <>
                     <span className={classes.fieldBtn}>
@@ -423,7 +423,7 @@ const ProfileManageAccount = ({
                   Password:{" "}
                 </Typography>
               </Grid>
-              <Grid item sm={6}>
+              <Grid item xs={12} sm={6}>
                 {checkIfAnon() ? (
                   <ProfileChangePassword />
                 ) : (

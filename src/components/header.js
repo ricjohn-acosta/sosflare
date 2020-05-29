@@ -67,7 +67,7 @@ const Header = ({ siteTitle, uid, isAnon, isPermanent, logout }) => {
     >
       <AppBar className={classes.appBar} position="static">
         <Grid container direction={"row"}>
-          <Grid item sm={4} />
+          <Grid item xs={12} sm={4} />
           <Grid item xs={6} sm={4}>
             <h1 className={classes.headerText}>
               <Link to="/" className={classes.link}>

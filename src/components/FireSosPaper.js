@@ -287,7 +287,7 @@ const FireSosPaper = ({
               direction="column"
               spacing={5}
             >
-              <Grid item sm={12}>
+              <Grid item xs={12} sm={12}>
                 {/*
             USERNAME FIELD
             */}
@@ -343,7 +343,7 @@ const FireSosPaper = ({
                 />
               </Grid>
               <hr />
-              <Grid item sm={12}>
+              <Grid item xs={12} sm={12}>
                 {/*
             RANK FIELD
             */}
@@ -414,7 +414,7 @@ const FireSosPaper = ({
               {/*
             DESCRIPTION FIELD
             */}
-              <Grid item sm={12}>
+              <Grid item xs={12} sm={12}>
                 <TextField
                   onChange={handleDescription}
                   label="Description"
@@ -426,7 +426,7 @@ const FireSosPaper = ({
                   inputProps={{ maxLength: 250 }}
                 />
               </Grid>
-              <Grid item sm={12} />
+              <Grid item xs={12} sm={12} />
             </Grid>
             {/**
              * FIRE SOS BUTTON
