@@ -1,6 +1,6 @@
 const functions = require("firebase-functions")
 const admin = require("firebase-admin")
-admin.initializeApp();
+admin.initializeApp()
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -13,6 +13,10 @@ exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
   const currentDate = Date.now()
   const cutoff = currentDate - 604800000
   console.log(res)
+
+  if (res.auth.token.admin !== true) {
+    return { error: "Access forbidden " }
+  }
   return admin
     .firestore()
     .collection("cards")
@@ -25,4 +29,3 @@ exports.deleteExpiredDocuments = functions.https.onRequest((req, res) => {
       return console.log(res)
     })
 })
-
