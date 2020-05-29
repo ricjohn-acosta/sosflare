@@ -16,7 +16,6 @@ const Details = ({ cards, requested, uid}) => {
   }
 
   if (getUserDetails()) {
-    console.log(cards)
     return <Detail uid={uid} userDetails={cards}/>
   } else {
     return <DetailsNotFound />

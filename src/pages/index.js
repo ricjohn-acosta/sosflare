@@ -1,5 +1,6 @@
 import React from "react"
 import { Redirect } from "@reach/router"
+import { Helmet } from "react-helmet"
 import { Link } from "gatsby"
 import { connect } from "react-redux"
 import { compose } from "redux"
@@ -41,6 +42,8 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     marginBottom: "10vh",
+    marginLeft: "5vw",
+    marginRight: "5vw"
   },
   divider: {
     height: "10vh",
@@ -65,6 +68,9 @@ const useStyles = makeStyles(theme => ({
       paddingRight: "50px",
     },
   },
+  paragraph: {
+    fontSize: "1.5rem"
+  }
 }))
 
 const IndexPage = ({ cards, uid }) => {
@@ -75,13 +81,16 @@ const IndexPage = ({ cards, uid }) => {
   } else {
     return (
       <Layout>
+        <Helmet>
+          <title>SOS Flare</title>
+        </Helmet>
         <div className={classes.wrapper}>
           <Box className={classes.title}>
             <h1>Hunt with friends!</h1>
-            <h3>
+            <p className={classes.paragraph}>
               Get other hunters to help you with your hunts by firing an SOS or
               assist your fellow hunters by responding to their SOS!
-            </h3>
+            </p>
           </Box>
           <Paper className={classes.paper} elevation={2}>
             <Box component="div" className={classes.box}>

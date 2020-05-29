@@ -1,4 +1,5 @@
 import React from "react"
+import { Helmet } from "react-helmet"
 import { connect } from "react-redux"
 import { Redirect } from "@reach/router"
 import Login from "../components/Login"
@@ -10,6 +11,9 @@ const login = ({uid}) => {
   } else {
     return (
       <Layout>
+        <Helmet>
+          <title>SOS Flare | Login</title>
+        </Helmet>
         <Login />
       </Layout>
     )

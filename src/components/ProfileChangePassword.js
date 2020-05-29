@@ -21,7 +21,8 @@ const ProfileChangePassword = ({
   emailModalView,
   reauthenticated,
   resetReauth,
-  changedPassword
+  changedPassword,
+  reauthenticateError,
 }) => {
   const [open, setOpen] = React.useState(isOpen)
   const [openPassword, setOpenPassword] = React.useState(false)
@@ -30,7 +31,6 @@ const ProfileChangePassword = ({
 
   const handleInput = e => {
     setPassword(e.target.value)
-    console.log(password)
   }
 
   const handleOpenPassword = () => {
@@ -51,8 +51,11 @@ const ProfileChangePassword = ({
 
   // Close modal when user is reauthenticated
   useEffect(() => {
-    if (reauthenticated) {
+    if (reauthenticated === "email") {
       handleEmailModal(false)
+    }
+
+    if (reauthenticated === "password") {
       handleClosePassword()
     }
   })
@@ -74,14 +77,13 @@ const ProfileChangePassword = ({
   useEffect(() => {
     if (reauthenticated === "password") {
       setOpenNewPassword(true)
+      setPassword("")
       resetReauth()
     }
   }, [reauthenticated])
 
   const changeEmail = (
     <Dialog open={emailModalView} aria-labelledby="form-dialog-title">
-      {console.log("modal state", open)}
-      {console.log("user email, ", userEmail)}
 
       <DialogTitle id="form-dialog-title">
         Confirm identity before updating email
@@ -95,7 +97,16 @@ const ProfileChangePassword = ({
           label="Password"
           type="password"
           error={
-            authError && authError.source === "updatePassword" ? true : false
+            reauthenticateError.error
+              ? reauthenticateError.from === "email"
+                ? true
+                : false
+              : false
+          }
+          helperText={
+            reauthenticateError.error && reauthenticateError.from === "email"
+              ? "Invalid password"
+              : null
           }
           fullWidth
           onChange={handleInput}
@@ -147,7 +158,19 @@ const ProfileChangePassword = ({
               id="name"
               label="Password"
               type="password"
-              error={authError ? true : false}
+              error={
+                reauthenticateError.error
+                  ? reauthenticateError.from === "password"
+                    ? true
+                    : false
+                  : false
+              }
+              helperText={
+                reauthenticateError.error &&
+                reauthenticateError.from === "password"
+                  ? "Invalid password"
+                  : null
+              }
               fullWidth
               onChange={handleInput}
             />
@@ -188,6 +211,11 @@ const ProfileChangePassword = ({
                   ? true
                   : false
               }
+              helperText={
+                authError && authError.source === "updatePassword"
+                  ? "Invalid password"
+                  : false
+              }
               fullWidth
               onChange={handleInput}
             />
@@ -221,13 +249,15 @@ const mapStateToProps = ({ auth }) => {
     authError: auth.error,
     emailModalView: auth.emailModal,
     reauthenticated: auth.user.reauthenticated,
-    changedPassword: auth.user.changedPassword
+    changedPassword: auth.user.changedPassword,
+    reauthenticateError: auth.reauthenticateAccount,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    reauthenticate: (password, source) => dispatch(reauthenticate(password, source)),
+    reauthenticate: (password, source) =>
+      dispatch(reauthenticate(password, source)),
     editProfile: (type, input) => dispatch(editProfile(type, input)),
     handleEmailModal: bool => dispatch(editEmail(bool)),
     resetReauth: () => dispatch(resetReauth()),

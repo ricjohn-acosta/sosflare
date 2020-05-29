@@ -13,11 +13,11 @@ const ProfileThirdParty = () => {
   return (
     <div>
       <Grid container direction="column">
-        <Grid item sm={12}>
+        <Grid item xs={12} sm={12}>
           <Typography variant={"h4"}>Link your account to third party platforms</Typography>
           <hr />
         </Grid>
-        <Grid item sm={12}>
+        <Grid item xs={12} sm={12}>
           test
         </Grid>
       </Grid>

@@ -23,6 +23,7 @@ const addCardSuccess = (state, payload) => {
   return {
     ...state,
     error: false,
+    loading: false,
     currentUsername: payload
   }
 }
@@ -31,6 +32,7 @@ const addCardFail = (state, payload) => {
   return {
     ...state,
     error: payload,
+    loading: false,
   }
 }
 

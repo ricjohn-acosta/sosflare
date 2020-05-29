@@ -106,7 +106,6 @@ const Detail = ({ uid, userDetails, editCard }) => {
       monsterType === "" &&
       rank === ""
     ) {
-      console.log("didnt update firestore")
       return setEditing(false)
     } else {
       editCard(
@@ -122,12 +121,10 @@ const Detail = ({ uid, userDetails, editCard }) => {
   }
   const handleSessionID = e => {
     setSessionID(e.target.value)
-    console.log(description)
   }
 
   const handleDescription = e => {
     setDescription(e.target.value)
-    console.log(description)
   }
 
   const handleMonsterType = event => {
@@ -135,7 +132,11 @@ const Detail = ({ uid, userDetails, editCard }) => {
   }
 
   const handleTargetMonster = event => {
-    setTargetMonster(event.target.value)
+    if (checkAutocompleteInput(event.target.value)) {
+      setTargetMonster(event.target.value)
+    } else {
+      handleAutocompleteErrorTrue()
+    }
   }
 
   const handleRank = event => {
@@ -245,8 +246,6 @@ const Detail = ({ uid, userDetails, editCard }) => {
   }
   return (
     <div className={classes.rootWrapper}>
-      {console.log(targetMonster)}
-      {console.log("AUTOCOMPLETE ERROR? ", autoCompleteError)}
       <Paper className={classes.paper}>
         <Grid container direction="column">
           <Grid item xs={12} sm={12}>
@@ -312,7 +311,7 @@ const Detail = ({ uid, userDetails, editCard }) => {
               <br />
 
               {/**
-               * DESCRIPTION
+               * DESCRIPTION FIELD
                */}
 
               <div>
@@ -339,6 +338,7 @@ const Detail = ({ uid, userDetails, editCard }) => {
                       <TextField
                         placeholder={profileData.description}
                         onChange={handleDescription}
+                        inputProps={{ maxLength: 250 }}
                       />
                     ) : (
                       profileData.description

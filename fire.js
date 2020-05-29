@@ -2,17 +2,33 @@ import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAB1i-ulKCLaF_0niwmXw6ciypsPCsdCEw",
-  authDomain: "sos-flare.firebaseapp.com",
-  databaseURL: "https://sos-flare.firebaseio.com",
-  projectId: "sos-flare",
-  storageBucket: "sos-flare.appspot.com",
-  messagingSenderId: "8242918205",
-  appId: "1:8242918205:web:ea5d132abc302eedc5cb54",
-  measurementId: "G-N5G3ZTNSCV",
+if (process.env.ENVIRONMENT === "development") {
+  const firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
+    projectId: "sos-flare",
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID,
+  }
+  
+  firebase.initializeApp(firebaseConfig) 
+} else {
+  const firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DATABASE_URL,
+    projectId: "live-sos-flare",
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID,
+  }
+  
+  firebase.initializeApp(firebaseConfig)
 }
 
-firebase.initializeApp(firebaseConfig)
 firebase.firestore()
 export default firebase

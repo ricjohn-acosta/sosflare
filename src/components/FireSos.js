@@ -94,9 +94,12 @@ const useStyles = makeStyles(theme => ({
     left: "10px",
     padding: "5px",
   },
+  circularProgress: {
+    marginLeft: "45%",
+  },
 }))
 
-const FireSos = ({ addCard, cardLoading, userTaken }) => {
+const FireSos = ({ addCard, isLoading, userTaken }) => {
   const classes = useStyles()
   const [username, setUsername] = React.useState("")
   const [platform, setPlatform] = React.useState("")
@@ -133,7 +136,6 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
 
   const handleTargetMonster = event => {
     if (checkAutocompleteInput(event.target.value)) {
-      console.log("test")
       setTargetMonster(event.target.value)
     } else {
       handleAutocompleteErrorTrue()
@@ -145,9 +147,6 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
     setDescription(event.target.value)
   }
 
-  const handleAutoCompleteField = event => {
-    console.log(event.target.value)
-  }
 
   const handleAutocompleteErrorTrue = () => {
     setAutoCompleteState(true)
@@ -174,9 +173,6 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
       !username.replace(/\s/g, "").length ||
       !sessionId.replace(/\s/g, "").length
     ) {
-      console.log(
-        "string only contains whitespace (ie. spaces, tabs or line breaks)"
-      )
       return true
     }
   }
@@ -191,7 +187,9 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
       rank,
       monsterType,
       targetMonster,
-      description
+      description,
+      null,
+      "home"
     )
   }
 
@@ -231,7 +229,6 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
 
   return (
     <>
-      {console.log(targetMonster)}
       <Button
         onClick={handleOpen}
         className={classes.fireSosBtn}
@@ -285,19 +282,19 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                     managing your flares!
                   </Typography>
                 </div>
-                <Grid item sm={12}>
+                <Grid item xs={12} sm={12}>
                   {/*
             USERNAME FIELD
             */}
                   <FormControl className={classes.formControl} variant="filled">
                     <TextField
                       className={classes.usernameField}
-                      label="Username"
+                      label="Hunter name"
                       placeholder="Username"
                       variant="filled"
                       size="small"
                       onChange={handleUsername}
-                      inputProps={{ maxLength: 12 }}
+                      inputProps={{ maxLength: 16 }}
                       error={userTaken ? true : false}
                       helperText={userTaken ? userTaken : null}
                     />
@@ -329,11 +326,11 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                     variant="filled"
                     fullWidth
                     onChange={handleSessionId}
-                    inputProps={{ maxLength: 30 }}
+                    inputProps={{ maxLength: 12 }}
                   />
                 </Grid>
                 <hr />
-                <Grid item sm={12}>
+                <Grid item xs={12} sm={12}>
                   {/*
             RANK FIELD
             */}
@@ -404,7 +401,7 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                 {/*
             DESCRIPTION FIELD
             */}
-                <Grid item sm={12}>
+                <Grid item xs={12} sm={12}>
                   <TextField
                     onChange={handleDescription}
                     label="Description"
@@ -413,10 +410,10 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                     fullWidth
                     multiline
                     rows={10}
-                    inputProps={{ maxLength: 350 }}
+                    inputProps={{ maxLength: 250 }}
                   />
                 </Grid>
-                <Grid item sm={12} />
+                <Grid item xs={12} sm={12} />
               </Grid>
               {/**
                * FIRE SOS BUTTON
@@ -443,10 +440,15 @@ const FireSos = ({ addCard, cardLoading, userTaken }) => {
                 </Tooltip>
               ) : (
                 <>
-                  <Button type="submit" fullWidth>
-                    FIRE SOS &nbsp;{" "}
-                    {loading && !userTaken ? <CircularProgress /> : null}
-                  </Button>
+                  {isLoading ? (
+                    <CircularProgress className={classes.circularProgress} />
+                  ) : (
+                    <>
+                      <Button type="submit" fullWidth>
+                        FIRE SOS &nbsp;{" "}
+                      </Button>
+                    </>
+                  )}
                 </>
               )}
             </form>
@@ -463,6 +465,7 @@ const mapStateToProps = ({ firestore, firebase, cards }) => {
     cards: firestore.data,
     uid: firebase.auth.uid,
     userTaken: cards.error,
+    isLoading: cards.loading,
   }
 }
 
@@ -475,7 +478,9 @@ const mapDispatchToProps = dispatch => {
       rank,
       monsterType,
       targetMonster,
-      description
+      description,
+      checkIfAnon,
+      source
     ) =>
       dispatch(
         addCard(
@@ -485,7 +490,9 @@ const mapDispatchToProps = dispatch => {
           rank,
           monsterType,
           targetMonster,
-          description
+          description,
+          checkIfAnon,
+          source
         )
       ),
 

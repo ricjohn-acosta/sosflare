@@ -37,11 +37,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
     let array = []
 
     if (requested && cards) {
-      for (
-        let i = 0;
-        i <= 8;
-        i++ 
-      ) {
+      for (let i = 0; i <= 8; i++) {
         if (cards[i]) {
           array.push(
             <HubCard
@@ -56,6 +52,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
               monsterImage={require(`../images/monsters/${cards[i].target_monster}.png`)}
               startTime={currentTime.from(cards[i].date_created, true)}
               timestamp={cards[i].date_created}
+              unixTime={cards[i].unix_time}
               dateCreated={cards[i].dateCreated}
             />
           )
@@ -75,6 +72,12 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
     }
   }
 
+  const displayTime = () => {
+    var date = 1590330899238
+    var cutoff = date - 604800000
+    return cutoff
+  }
+
   return (
     <>
       <Paper className={classes.wrapper} elevation={1}>
@@ -86,7 +89,7 @@ const HubCards = ({ requested, cards, type, user, currentPage, test }) => {
   )
 }
 
-const mapStateToProps = ({ firestore, cards }) => {
+const mapStateToProps = ({ firebase, firestore, cards }) => {
   return {
     cards: firestore.ordered.cards,
     requested: firestore.status.requested,
@@ -94,6 +97,7 @@ const mapStateToProps = ({ firestore, cards }) => {
     user: cards.find,
     lastVisible: cards.lastItem,
     currentPage: cards.currentPage,
+    currentUsername: cards.currentUsername
   }
 }
 
@@ -111,7 +115,7 @@ export default compose(
     return [
       {
         collection: "cards",
-        orderBy: ["timestamp", "desc"],
+        orderBy: ["unix_time", "desc"],
         startAfter: checkPage(),
         limit: 10,
       },

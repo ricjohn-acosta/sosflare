@@ -115,7 +115,7 @@ const HubCard = ({
       <Card className={classes.cardWrapper}>
         <CardContent className={classes[monsterType]}>
           <Grid container direction="row">
-            <Grid item sm={3}>
+            <Grid item xs={12} sm={3}>
               <Icon>
                 <img
                   className={classes.consoleIcons}
@@ -123,7 +123,7 @@ const HubCard = ({
                 />
               </Icon>
             </Grid>
-            <Grid item sm={9}>
+            <Grid item xs={12} sm={9}>
               <Typography className={classes.rank}>{rank}</Typography>
             </Grid>
           </Grid>
@@ -208,7 +208,6 @@ const HubCard = ({
           )}
         </CardContent>
       </Card>
-      {console.log(Date.now())}
     </Grid>
   )
 }

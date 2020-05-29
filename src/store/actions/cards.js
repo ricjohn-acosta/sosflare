@@ -9,7 +9,9 @@ export function addCard(
   rank,
   monsterType,
   targetMonster,
-  description
+  description,
+  checkIfAnon,
+  source
 ) {
   return (dispatch, getState, { getFirebase }) => {
     dispatch({ type: actions.ADD_CARD_START })
@@ -17,21 +19,44 @@ export function addCard(
     const firestore = getFirebase().firestore()
     const date_created = moment().format("LLLL")
     const timestamp = new Date()
-    const id = Date.now()
+    const unixTime = Date.now()
     const userId = getState().firebase.auth.uid
 
+    const checkIfCardExists = async () => {
+      let doc = await firestore
+        .collection("cards")
+        .where("id", "==", userId)
+        .get()
+        .then(data => {
+          return data
+        })
+      return doc
+    }
+
+    // const getUsername = async () => {
+    //   let username = await firestore
+    //     .collection("users")
+    //     .where("id", "==", userId)
+    //     .get("user_name")
+    //     .then(data => {
+    //       return data
+    //     })
+    //   return username
+    // }
+
+    // console.log(getUsername())
+    // console.log(checkIfCardExists())
     firestore
-      .collection("cards")
-      .where("username", "==", username)
+      .collection("users")
+      .where("user_name", "==", username)
       .get()
       .then(data => {
-        if (data.empty) {
+        if (data.empty && source === "home") {
           firebase
             .auth()
             .signInAnonymously()
             .then(res => {
               const currentUser = firebase.auth().currentUser
-              console.log(res)
               firestore
                 .collection("cards")
                 .doc(res.user.uid)
@@ -46,30 +71,157 @@ export function addCard(
                   description,
                   date_created: date_created,
                   timestamp,
+                  unix_time: unixTime,
                 })
                 .then(() => {
-                  console.log("CARD ADDED TO DB")
-                  dispatch({ type: actions.ADD_CARD_SUCCESS, payload: username })
+                  dispatch({
+                    type: actions.ADD_CARD_SUCCESS,
+                    payload: username,
+                  })
                 })
                 .catch(err => {
-                  console.log(err)
                   dispatch({
                     type: actions.ADD_CARD_FAIL,
                     payload: err.message,
                   })
                 })
               dispatch({ type: actions.ADD_CARD_END })
-              // currentUser
-              //   .updateProfile({ displayName: id.toString() })
-              //   .then(data => {
-              //     console.log(data)
-              //   })
             })
             .catch(e => {
-              console.log(e.message)
+              console.log("Error")
             })
+        } else if (userId) {
+          // if user is authenticated, match userId with a user document, get its username field and then make a new card
+          if (!checkIfAnon) {
+            firestore
+              .collection("users")
+              .where("user_name", "==", userId)
+              .get()
+              .then(data => {
+                const currentUser = firebase.auth().currentUser
+                if (data.empty) {
+                  firestore
+                    .collection("cards")
+                    .doc(userId)
+                    .set({
+                      id: userId,
+                      username: username,
+                      platform,
+                      session_id: sessionId,
+                      rank,
+                      monster_type: monsterType,
+                      target_monster: targetMonster,
+                      description,
+                      date_created: date_created,
+                      timestamp,
+                      unix_time: unixTime,
+                    })
+                    .then(() => {
+                      dispatch({
+                        type: actions.ADD_CARD_SUCCESS,
+                        payload: username,
+                      })
+                    })
+                    .catch(err => {
+                      dispatch({
+                        type: actions.ADD_CARD_FAIL,
+                        payload: err.message,
+                      })
+                    })
+                  dispatch({ type: actions.ADD_CARD_END })
+                } else {
+                  dispatch({
+                    type: actions.ADD_CARD_FAIL,
+                    payload:
+                      "Someone with that username has already fired an SOS!",
+                  })
+                }
+              })
+              .catch(e => {
+                console.log("Error")
+              })
+          } else {
+            firestore
+              .collection("users")
+              .where("id", "==", userId)
+              .get()
+              .then(function (querySnapshot) {
+                let existingUsername
+                querySnapshot.forEach(function (doc) {
+                  // doc.data() is never undefined for query doc snapshots
+                  existingUsername = doc.data().user_name
+                })
+                const currentUser = firebase.auth().currentUser
+                firestore
+                  .collection("cards")
+                  .doc(userId)
+                  .set({
+                    id: userId,
+                    username: existingUsername,
+                    platform,
+                    session_id: sessionId,
+                    rank,
+                    monster_type: monsterType,
+                    target_monster: targetMonster,
+                    description,
+                    date_created: date_created,
+                    timestamp,
+                    unix_time: unixTime,
+                  })
+                  .then(() => {
+                    dispatch({
+                      type: actions.ADD_CARD_SUCCESS,
+                      payload: username,
+                    })
+                  })
+                  .catch(err => {
+                    console.log("Error")
+                    dispatch({
+                      type: actions.ADD_CARD_FAIL,
+                      payload: err.message,
+                    })
+                  })
+                dispatch({ type: actions.ADD_CARD_END })
+              })
+              // .then(data => {
+              //   const currentUser = firebase.auth().currentUser
+              //   firestore
+              //     .collection("cards")
+              //     .doc(userId)
+              //     .set({
+              //       id: userId,
+              //       username: data.user_name,
+              //       platform,
+              //       session_id: sessionId,
+              //       rank,
+              //       monster_type: monsterType,
+              //       target_monster: targetMonster,
+              //       description,
+              //       date_created: date_created,
+              //       timestamp,
+              //       unix_time: unixTime,
+              //     })
+              //     .then(() => {
+              //       console.log("CARD ADDED TO DB")
+              //       dispatch({
+              //         type: actions.ADD_CARD_SUCCESS,
+              //         payload: username,
+              //       })
+              //     })
+              //     .catch(err => {
+              //       console.log(err)
+              //       dispatch({
+              //         type: actions.ADD_CARD_FAIL,
+              //         payload: err.message,
+              //       })
+              //     })
+              //   dispatch({ type: actions.ADD_CARD_END })
+              // })
+              .catch(e => {
+                console.log("Error")
+              })
+          }
         } else {
-          console.log("USERNAME TAKEN!")
           dispatch({
             type: actions.ADD_CARD_FAIL,
             payload: "Someone with that username has already fired an SOS!",
@@ -89,12 +241,21 @@ export function editCard(
 ) {
   return (dispatch, getState, { getFirebase }) => {
     const firestore = getFirebase().firestore()
+    const unixTime = Date.now()
     firestore
       .collection("cards")
       .doc(id)
-      .update({ session_id, description, target_monster, monster_type, rank, date_created: moment().format("LLLL") })
+      .update({
+        session_id,
+        description,
+        target_monster,
+        monster_type,
+        rank,
+        date_created: moment().format("LLLL"),
+        unix_time: unixTime,
+      })
       .then(() => {
-        console.log("CARD UPDATED")
+        return
       })
   }
 }

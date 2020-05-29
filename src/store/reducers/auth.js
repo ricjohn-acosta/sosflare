@@ -12,11 +12,22 @@ const initialState = {
   user: {
     username: null,
     changedUsername: false,
+    changedUsernameError: false,
     email: null,
     changedEmail: false,
+    changedEmailError: false,
     password: false,
     changedPassword: false,
     reauthenticated: null,
+  },
+  upgradeAccount: {
+    error: null,
+    loading: false,
+  },
+  reauthenticateAccount: {
+    error: null,
+    loading: false,
+    source: null,
   },
 }
 
@@ -37,11 +48,30 @@ const authSuccess = state => {
 }
 
 const authFail = (state, payload) => {
-  return { ...state, error: payload }
+  return {
+    ...state,
+    error: payload,
+    user: {
+      ...state.user,
+      changedEmailError: payload.error,
+    },
+    reauthenticateAccount: {
+      error: payload.error,
+      loading: false,
+      from: payload.from,
+    },
+  }
 }
 
 const reauthenticated = (state, payload) => {
-  return { ...state, user: { ...state.user, reauthenticated: payload } }
+  return {
+    ...state,
+    user: { ...state.user, reauthenticated: payload },
+  }
+}
+
+const reauthenticatedStart = (state, payload) => {
+  return { ...state, reauthenticateAccount: { error: null, loading: true } }
 }
 
 const resetReauth = state => {
@@ -51,8 +81,26 @@ const resetReauth = state => {
   }
 }
 
-const convertToPerm = state => {
-  return { ...state, isPermanent: true }
+const convertToPerm = (state, payload) => {
+  return {
+    ...state,
+    isPermanent: true,
+    user: { ...state.user, email: payload },
+  }
+}
+
+const convertToPermStart = state => {
+  return {
+    ...state,
+    upgradeAccount: { error: null, loading: true },
+  }
+}
+
+const convertToPermFail = (state, payload) => {
+  return {
+    ...state,
+    upgradeAccount: { error: payload, loading: false },
+  }
 }
 
 const changeUsername = (state, payload) => {
@@ -63,7 +111,21 @@ const changeUsername = (state, payload) => {
 }
 
 const changeUsernameSuccess = state => {
-  return { ...state, user: { ...state.user, changedUsername: false } }
+  return {
+    ...state,
+    user: {
+      ...state.user,
+      changedUsername: false,
+      changedUsernameError: false,
+    },
+  }
+}
+
+const changeUsernameFail = state => {
+  return {
+    ...state,
+    user: { ...state.user, changedUsername: false, changedUsernameError: true },
+  }
 }
 
 const changeEmail = (state, payload) => {
@@ -74,15 +136,25 @@ const changeEmail = (state, payload) => {
 }
 
 const changeEmailSuccess = state => {
-  return { ...state, user: { ...state.user, changedEmail: false } }
+  return {
+    ...state,
+    user: { ...state.user, changedEmail: false, changedEmailError: false },
+  }
 }
 
 const changePassword = (state, payload) => {
-  return { ...state, user: { ...state.user, changedPassword: true, password: true } }
+  return {
+    ...state,
+    user: { ...state.user, password: true },
+  }
 }
 
-const changePasswordSuccess = (state) => {
-  return { ...state, user: { ...state.user, password: false } }
+const changePasswordSuccess = state => {
+  return {
+    ...state,
+    error: null,
+    user: { ...state.user, password: false, changedPassword: true },
+  }
 }
 
 const handleEmailModal = (state, payload) => {
@@ -107,17 +179,29 @@ export default (state = initialState, { type, payload }) => {
     case actions.AUTH_REAUTHENTICATED:
       return reauthenticated(state, payload)
 
+    case actions.AUTH_REAUTHENTICATED_START:
+      return reauthenticatedStart(state)
+
     case actions.RESET_REAUTHENTICATED:
       return resetReauth(state)
 
     case actions.CONVERT_TO_PERM:
-      return convertToPerm(state)
+      return convertToPerm(state, payload)
+
+    case actions.CONVERT_TO_PERM_START:
+      return convertToPermStart(state)
+
+    case actions.CONVERT_TO_PERM_FAIL:
+      return convertToPermFail(state, payload)
 
     case actions.CHANGE_USERNAME:
       return changeUsername(state, payload)
 
     case actions.CHANGE_USERNAME_SUCCESS:
       return changeUsernameSuccess(state)
+
+    case actions.CHANGE_USERNAME_FAIL:
+      return changeUsernameFail(state)
 
     case actions.CHANGE_EMAIL:
       return changeEmail(state, payload)
