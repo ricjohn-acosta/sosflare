@@ -6,4 +6,5 @@
 
 // You can delete this file if you're not using it
 import wrapWithProvider from "./src/store/wrap-with-provider"
+import 'babel-polyfill'
 export const wrapRootElement = wrapWithProvider

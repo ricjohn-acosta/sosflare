@@ -12,6 +12,11 @@ exports.onCreatePage = async ({ page, actions }) => {
   }
 }
 
+exports.modifyBabelrc = ({ babelrc }) => ({
+  ...babelrc,
+  plugins: babelrc.plugins.concat(['transform-decorators-legacy', 'transform-regenerator']),
+})
+
 // exports.onCreatePage = async ({ page, actions }) => {
 //   const { createPage } = actions
 //   // Only update the `/app` page.
